@@ -1,7 +1,6 @@
 ﻿using System;
 using ZXing.Mobile;
 
-
 namespace Ingrediscan
 {
 	public class BarcodeScanner : FormTemplate
