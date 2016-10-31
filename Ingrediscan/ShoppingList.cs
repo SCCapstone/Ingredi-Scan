@@ -81,5 +81,28 @@ namespace Ingrediscan
 				dictRecipes [aRec] = !dictRecipes [aRec];
 			}
 		}
+
+		/// <summary>
+		/// Returns a list of all the ingredients, including those in the recipe.
+		/// </summary>
+		/// <remarks>
+		/// This is, of course, subject to change. If we want to add ingredients to
+		/// the ingredients list at the time the user adds the recipe to their recipe list
+		/// that is an option as well. However, we should still try to keep track of the
+		/// recipes that are saved on the list to allow the user to remove entire recipes
+		/// their shopping list.
+		/// </remarks>
+		/// <returns>A list of ingredients that contains 'ingredients' as well as all the
+		/// ingredients from every recipe in 'recipes'.
+		/// </returns>
+		public List<Ingredient> getAllIngredients()
+		{
+			List<Ingredient> allIngredients = ingredients;
+			foreach(Recipe r in recipes)
+			{
+				allIngredients.AddRange(r.ingredients);
+			}
+			return allIngredients;
+		}
 	}
 }
