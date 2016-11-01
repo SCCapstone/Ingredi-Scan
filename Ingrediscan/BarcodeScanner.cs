@@ -5,7 +5,7 @@ namespace Ingrediscan
 {
 	public class BarcodeScanner : FormTemplate
 	{
-		private int lastUPC = 0;
+		private long lastUPC = 0;
 
 		public BarcodeScanner ()
 		{
@@ -26,7 +26,7 @@ namespace Ingrediscan
 			if (upc != null) 
 			{
 				Console.WriteLine ("Scanned Barcode: " + upc.Text);
-				this.setUPC (int.Parse (upc.Text));
+				this.setUPC (long.Parse (upc.Text));
 			}
 
 			return 0;//TODO Do we need to return something else here?
@@ -36,7 +36,7 @@ namespace Ingrediscan
 		/// Sets the upc.
 		/// </summary>
 		/// <param name="upc">Upc.</param>
-		public void setUPC(int upc)
+		public void setUPC(long upc)
 		{
 			lastUPC = upc;
 		}
@@ -44,7 +44,7 @@ namespace Ingrediscan
 		/// Gets the upc.
 		/// </summary>
 		/// <returns>The upc.</returns>
-		public int getUPC()
+		public long getUPC()
 		{
 			return lastUPC;
 		}
