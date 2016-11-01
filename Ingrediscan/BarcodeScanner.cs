@@ -15,10 +15,13 @@ namespace Ingrediscan
 		/// Scans the barcode.
 		/// </summary>
 		/// <returns>The barcode.</returns>
-		//TODO Use ZebraXing to do this part
 		public async System.Threading.Tasks.Task<int> scanBarcode (MobileBarcodeScanner barcodeScanner)
 		{
-			var upc = await barcodeScanner.Scan ();
+			Console.WriteLine ("Scan in progress...");
+
+			ZXing.Result upc = await barcodeScanner.Scan ();
+
+			Console.WriteLine ("Scan completed!");
 
 			if (upc != null) 
 			{

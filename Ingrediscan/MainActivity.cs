@@ -23,11 +23,33 @@ namespace Ingrediscan
 			MobileBarcodeScanner.Initialize (Application);
 			BarcodeScanner barScan = new BarcodeScanner ();
 
+			Button button = FindViewById<Button> (Resource.Id.navButton);
+
+			FormTemplate newForm = new FormTemplate ();
+
+			Xamarin.Forms.StackLayout newLayout = new Xamarin.Forms.StackLayout {
+				Spacing = 20, Padding = 50,
+				VerticalOptions = Xamarin.Forms.LayoutOptions.Center,
+				Children = {
+					new Xamarin.Forms.Entry { Placeholder = "Username" },
+					new Xamarin.Forms.Entry { Placeholder = "Password", IsPassword = true },
+					new Xamarin.Forms.Button {
+						Text = "Login",
+						TextColor = Xamarin.Forms.Color.White,
+						BackgroundColor = Xamarin.Forms.Color.Green
+					}
+				},
+			};
+			Xamarin.Forms.Page newPage = newForm.createPage ("Test", "N/A", newLayout);
+
+			button.Click += async (sender, e) => {
+
+				await newForm.NavigateToPage (newPage);
+
+			};
+
 			// Get our button from the layout resource,
 			// and attach an event to it
-			Button button = FindViewById<Button> (Resource.Id.myButton);
-
-			button.Click += delegate { button.Text = string.Format ("{0} clicks!", count++); };
 
 			Button scannerButton = FindViewById<Button> (Resource.Id.scannerButton);
 

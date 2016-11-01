@@ -1,20 +1,34 @@
 ﻿using System;
-using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
-	public class FormTemplate
+	public class FormTemplate : ContentPage
 	{
 		private int formID = 0;
 		private string formName = "";
 		private static Image logo = new Image ();
 		private static List<Color> colorPalette = new List<Color> ();
 
-		public void openMenu()
+		public FormTemplate()
 		{
-			//TODO
+			
+		}
+
+		public Page createPage(string title, string icon, StackLayout layout) 
+		{
+			return new ContentPage {
+				Title = title,
+				Icon = icon,
+				Content = layout
+			};
+		}
+
+		public async Task NavigateToPage(Page page)
+		{
+			await Navigation.PushAsync (page);
 		}
 
 	}

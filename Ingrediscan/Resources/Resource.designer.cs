@@ -2498,8 +2498,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c002e
 			public const int multiply = 2131492910;
 			
-			// aapt resource value: 0x7f0c0072
-			public const int myButton = 2131492978;
+			// aapt resource value: 0x7f0c0073
+			public const int navButton = 2131492979;
 			
 			// aapt resource value: 0x7f0c006d
 			public const int navigation_header_container = 2131492973;
@@ -2534,8 +2534,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c001a
 			public const int right = 2131492890;
 			
-			// aapt resource value: 0x7f0c0073
-			public const int scannerButton = 2131492979;
+			// aapt resource value: 0x7f0c0072
+			public const int scannerButton = 2131492978;
 			
 			// aapt resource value: 0x7f0c002f
 			public const int screen = 2131492911;
