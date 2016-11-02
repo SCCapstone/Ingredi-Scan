@@ -36,9 +36,12 @@ namespace Ingrediscan
 					new Xamarin.Forms.Button {
 						Text = "Login",
 						TextColor = Xamarin.Forms.Color.White,
-						BackgroundColor = Xamarin.Forms.Color.Green
-					}
-				},
+						BackgroundColor = Xamarin.Forms.Color.Green },
+					new Xamarin.Forms.Button {
+						Text = "Sign Up",
+						TextColor = Xamarin.Forms.Color.White,
+						BackgroundColor = Xamarin.Forms.Color.Red },
+				}
 			};
 			Xamarin.Forms.Page newPage = newForm.createPage ("Test", "N/A", newLayout);
 
