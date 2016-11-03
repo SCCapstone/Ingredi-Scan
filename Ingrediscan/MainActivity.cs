@@ -58,6 +58,17 @@ namespace Ingrediscan
 				await barScan.scanBarcode (barcodeScanner);
 
 			};
+
+			// TODO Remove below tests
+
+			Button testUPCButton = FindViewById<Button> (Resource.Id.upcButton);
+			//long upc = 1230001103410;
+			string itemName = "strawberries";
+
+			testUPCButton.Click += async (sender, e) => {
+				//await REST_API.GET (upc);
+				await REST_API.GET (itemName);
+			};
 		}
 	}
 }

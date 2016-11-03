@@ -19,6 +19,7 @@ namespace Ingrediscan
 		{
 			Console.WriteLine ("Scan in progress...");
 
+			// This handles the scanning
 			ZXing.Result upc = await barcodeScanner.Scan ();
 
 			Console.WriteLine ("Scan completed!");
@@ -26,7 +27,18 @@ namespace Ingrediscan
 			if (upc != null) 
 			{
 				Console.WriteLine ("Scanned Barcode: " + upc.Text);
+
+				// Set our last UPC scanned from the text which we parse to a long
 				this.setUPC (long.Parse (upc.Text));
+				// Grab our item json from this GET call
+				var upcJson = await REST_API.GET (this.lastUPC);
+
+				// TODO Maybe move this into a different class?
+				// TODO Just grab what's needed from the title
+				string itemName = upcJson.items [0].title;
+
+				// Get the item recipes from this GET call
+				var recipes = await REST_API.GET (itemName);
 			}
 
 			return 0;//TODO Do we need to return something else here?
