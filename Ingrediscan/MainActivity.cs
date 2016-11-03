@@ -24,6 +24,8 @@ namespace Ingrediscan
 			BarcodeScanner barScan = new BarcodeScanner ();
 
 			Button button = FindViewById<Button> (Resource.Id.navButton);
+			
+			Button testButton = null; 
 
 			FormTemplate newForm = new FormTemplate ();
 
