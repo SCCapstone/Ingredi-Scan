@@ -57,6 +57,8 @@ namespace Ingrediscan
 			// and attach an event to it
 
 			Button scannerButton = FindViewById<Button> (Resource.Id.scannerButton);
+			TextView upcText = FindViewById<TextView> (Resource.Id.upcText);
+			TextView spoonText = FindViewById<TextView> (Resource.Id.spoonText);
 
 			scannerButton.Click += async (sender, e) => {
 
@@ -67,12 +69,21 @@ namespace Ingrediscan
 			// TODO Remove below tests
 
 			Button testUPCButton = FindViewById<Button> (Resource.Id.upcButton);
-			//long upc = 1230001103410;
-			string itemName = "strawberries";
+			string upc = "1230001103410";
 
 			testUPCButton.Click += async (sender, e) => {
-				//await REST_API.GET (upc);
-				await REST_API.GET (itemName);
+				var text = await REST_API.GET_UPC (upc);
+				upcText.Text = text.items [0].title;
+			};
+
+
+
+			Button testSpoonacularButton = FindViewById<Button> (Resource.Id.spoonButton);
+			string itemName = "strawberries";
+
+			testSpoonacularButton.Click += async (sender, e) => {
+				var text = await REST_API.GET_SpoonacularRecipe (itemName);
+				spoonText.Text = text [0].title;
 			};
 		}
 	}

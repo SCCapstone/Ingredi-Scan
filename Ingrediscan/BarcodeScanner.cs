@@ -5,7 +5,7 @@ namespace Ingrediscan
 {
 	public class BarcodeScanner : FormTemplate
 	{
-		private long lastUPC = 0;
+		private string lastUPC = "";
 
 		public BarcodeScanner ()
 		{
@@ -29,16 +29,16 @@ namespace Ingrediscan
 				Console.WriteLine ("Scanned Barcode: " + upc.Text);
 
 				// Set our last UPC scanned from the text which we parse to a long
-				this.setUPC (long.Parse (upc.Text));
+				this.setUPC (upc.Text);
 				// Grab our item json from this GET call
-				var upcJson = await REST_API.GET (this.lastUPC);
+				var upcJson = await REST_API.GET_UPC (this.lastUPC);
 
 				// TODO Maybe move this into a different class?
 				// TODO Just grab what's needed from the title
 				string itemName = upcJson.items [0].title;
 
 				// Get the item recipes from this GET call
-				var recipes = await REST_API.GET (itemName);
+				var recipes = await REST_API.GET_SpoonacularRecipe (itemName);
 			}
 
 			return 0;//TODO Do we need to return something else here?
@@ -48,7 +48,7 @@ namespace Ingrediscan
 		/// Sets the upc.
 		/// </summary>
 		/// <param name="upc">Upc.</param>
-		public void setUPC(long upc)
+		public void setUPC(string upc)
 		{
 			lastUPC = upc;
 		}
@@ -56,7 +56,7 @@ namespace Ingrediscan
 		/// Gets the upc.
 		/// </summary>
 		/// <returns>The upc.</returns>
-		public long getUPC()
+		public string getUPC()
 		{
 			return lastUPC;
 		}

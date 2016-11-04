@@ -13,15 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/navButton" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/upcText"
-        android:text="078742020112"
-        android:textAlignment="center" />
     <Button
         android:text="Test UPC Get Request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/upcButton" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/upcText" />
+    <Button
+        android:text="Test Spoonacular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spoonButton" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spoonText" />
 </LinearLayout>
