@@ -62,27 +62,44 @@ namespace Ingrediscan
 
 			scannerButton.Click += async (sender, e) => {
 
-				await barScan.scanBarcode (barcodeScanner);
+				var itemResp = await barScan.scanBarcode (barcodeScanner);
 
+				if(itemResp != null)
+				{
+					// TODO Maybe move this into a different class?
+					// TODO Just grab what's needed from the title
+					//string itemTitle = Utilities.ParseTitle (itemJson);
+
+					// Get the item recipes from this GET call
+					var recipes = await REST_API.GET_FindByIngredients (false, itemResp.title, false, 5, 1);
+				}
 			};
 
 			// TODO Remove below tests
 
 			Button testUPCButton = FindViewById<Button> (Resource.Id.upcButton);
-			string upc = "1230001103410";
+			string upc = "043000955314";
 
 			testUPCButton.Click += async (sender, e) => {
-				var text = await REST_API.GET_UPC (upc);
-				upcText.Text = text.items [0].title;
+				var text = await REST_API.GET_FindByUPC (upc);
+
+				if (text != null) {
+					// TODO Maybe move this into a different class?
+					// TODO Just grab what's needed from the title
+					upcText.Text = text.title;
+
+					// Get the item recipes from this GET call
+					var recipes = await REST_API.GET_FindByIngredients (false, upcText.Text, false, 5, 1);
+				}
 			};
 
 
 
 			Button testSpoonacularButton = FindViewById<Button> (Resource.Id.spoonButton);
-			string itemName = "strawberries";
+			string itemName = "strawberries,chocolate";
 
 			testSpoonacularButton.Click += async (sender, e) => {
-				var text = await REST_API.GET_SpoonacularRecipe (itemName);
+				var text = await REST_API.GET_FindByIngredients (false, itemName, false, 5, 1);
 				spoonText.Text = text [0].title;
 			};
 		}

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-using RestSharp;
 using System.Collections.Generic;
-using RestSharp.Deserializers;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Ingrediscan
 {
 	public class REST_API
 	{
 		// Base URLs
-		readonly static string UPCItemURL = "https://api.upcitemdb.com/prod";
+		//readonly static string UPCItemURL = "https://api.upcitemdb.com/prod";
 		readonly static string SpoonacularURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com";
 
 		// KEYS
 		readonly static string SpoonacularKey = "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK";
+
 		//static RestClient client = new RestClient ();
 		//public UPCItemAPI (string url)
 		//{
@@ -25,70 +25,239 @@ namespace Ingrediscan
 		/// Get the specified upc from the upcitemdb database.
 		/// </summary>
 		/// <param name="upc">Upc retrieved from the Scanner.</param>
-		public static async Task<UPCItemDBClasses.UPCJson> GET_UPC(string upc) // TODO Add await
+		public static async Task<SpoonacularClasses.FindByUPC> GET_FindByUPC(string upc) // TODO Add await
 		{
 			Console.WriteLine ("Enter GET - UPC");
 
 			// The URL we are currently using
-			string action = "/trial/lookup";
+			string action = "/food/products/upc/{upc}";
 
-			// Create a new client with the Uri of the above static string and the action
+			// Client creation
 			var client = new RestClient ();
-			client.BaseUrl = new Uri (UPCItemURL + action);
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
 
-			// Create a new empty request and attach the parameter of upc with param type of QueryString
-			var request = new RestRequest ("");
-			request.AddParameter ("upc", upc, ParameterType.QueryString);
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("Accept", "application/json");
+			request.AddUrlSegment ("upc", upc);
+			request.RequestFormat = DataFormat.Json;
 
-			// TODO Make this async
-			// Create a new response from the Execution of the client with the request
-			// TODO For some reason the .Data Json deserialization can't be coupled with the response like the Spoonacular
-			var response = client.Execute<UPCItemDBClasses.UPCJson>(request);
-			// Create an instance of ItemsResponse deserialized from the response's content
-			var itemResp = JsonConvert.DeserializeObject<UPCItemDBClasses.UPCJson> (response.Content);
+			// Generate a response TODO Make async
+			var response = client.Execute<SpoonacularClasses.FindByUPC> (request).Data;
 
-			// TODO Remove these as these are just testing the results
-			// Found in the Application Output window
-			Console.WriteLine ("Response: " + itemResp);
-			if (itemResp != null)
-				itemResp.DisplayItemsResponse ();
-			
-
+			Console.WriteLine ("RESPONSE: " + response.title);
+			//var itemResp = JsonConvert.DeserializeObject<SpoonacularClasses.FindByUPC> (response.Body);
 			Console.WriteLine ("Exit GET - UPC");
-			return itemResp;//TODO Do we need to return something else here?
+			return response;
 		}
+
 
 		/// <summary>
 		/// Get the recipes from Spoonacular.
 		/// </summary>
 		/// <param name="itemName">Item name which we get from the UPC's title.</param>
-		public static async Task<List<SpoonacularClasses.FindByIngredients>> GET_SpoonacularRecipe(string itemName) // TODO Add await
+		public static async Task<List<SpoonacularClasses.FindByIngredients>> 
+		                                                GET_FindByIngredients(bool fillIngredients, string ingredients,
+		                                                                     bool limitLicense, int number, int ranking) // TODO Add await
 		{
 			Console.WriteLine ("Enter GET - SPOONACULAR");
 
 			// The URL we are currently using
 			string action = "/recipes/findByIngredients";
 
-			// Create a new client with the Uri of the above static string and the action
+			// Client creation
 			var client = new RestClient ();
-			client.BaseUrl = new Uri (SpoonacularURL + action);
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
 
-			// Create a new empty request and attach the parameter of upc with param type of QueryString + 
-			// Add neccessary items to header
-			var request = new RestRequest ("");
-			request.AddParameter ("ingredients", itemName, ParameterType.QueryString);
-			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
 			request.AddHeader ("Accept", "application/json");
+			request.AddQueryParameter ("fillIngredients", fillIngredients.ToString());
+			request.AddQueryParameter ("ingredients", ingredients);
+			request.AddQueryParameter ("limitLicense", limitLicense.ToString ());
+			request.AddQueryParameter ("number", number.ToString());
+			request.AddQueryParameter ("ranking", ranking.ToString ());
+			request.RequestFormat = DataFormat.Json;
 
-			// Create a new response from the Execution of the client with the request and parse the Json directly with .Data
+			// Generate a response TODO Make async
 			var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
 
-			// TODO Remove these as these are just testing the results
-			// Found in the Application Output window
-			response.ForEach (x => Console.WriteLine (x.title));
+			Console.WriteLine (client.BaseUrl.ToString () + client.BuildUri (request).ToString());
+
+			Console.WriteLine ("RESPONSE: ");
+			response.ForEach(x => Console.WriteLine(x.title));
 
 			Console.WriteLine ("Exit GET - SPOONACULAR");
 			return response;//TODO Do we need to return something else here?
+		}
+
+		public static async Task<List<SpoonacularClasses.AutocompleteIngredientSearch>> 
+		                                                GET_AutocompleteIngredientSeach(bool metaInfo, int number, string query)
+		{
+			Console.WriteLine ("Enter GET - AUTOCOMPLETE INGREDIENT SEARCH");
+
+			if (number >= 1 && number <= 100) 
+			{
+				string action = "/food/ingredients/autocomplete";
+
+				// Client creation
+				var client = new RestClient ();
+				client.BaseUrl = new Uri (SpoonacularURL);
+				client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+				// Request creation
+				var request = new RestRequest (action);
+				request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+				request.AddHeader ("Accept", "application/json");
+				request.AddQueryParameter ("metaInformation", metaInfo.ToString ());
+				request.AddQueryParameter ("number", number.ToString ());
+				request.AddQueryParameter ("query", query);
+				request.RequestFormat = DataFormat.Json;
+
+				// Generate a response TODO Make async
+				var response = client.Execute<List<SpoonacularClasses.AutocompleteIngredientSearch>> (request).Data;
+
+				Console.WriteLine ("RESPONSE: ");
+				response.ForEach (x => Console.WriteLine (x.name));
+				Console.WriteLine ("Exit GET - AUTOCOMPLETE INGREDIENT SEARCH");
+
+				return response;
+			}
+			else
+			{
+				Console.WriteLine ("ERROR: Number is less than 0 or greater than 100");
+				return null; // TODO Show an error message, but we should be able to do this ourselves wherein we won't need this check
+			}
+		}
+
+		public static async Task<List<SpoonacularClasses.AutocompleteRecipeSearch>>
+		                                                GET_AutocompleteRecipeSearch(int number, string query)
+		{
+			Console.WriteLine ("Enter GET - AUTOCOMPLETE RECIPE SEARCH");
+
+			if(number >= 1 && number <= 25)
+			{
+				string action = "/recipes/autocomplete";
+
+				// Client creation
+				var client = new RestClient ();
+				client.BaseUrl = new Uri (SpoonacularURL);
+				client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+				// Request creation
+				var request = new RestRequest (action);
+				request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+				request.AddHeader ("Accept", "application/json");
+				request.AddQueryParameter ("number", number.ToString ());
+				request.AddQueryParameter ("query", query);
+				request.RequestFormat = DataFormat.Json;
+
+				// Generate a response TODO Make async
+				var response = client.Execute<List<SpoonacularClasses.AutocompleteRecipeSearch>> (request).Data;
+
+				Console.WriteLine ("RESPONSE: ");
+				response.ForEach (x => Console.WriteLine (x.title));
+
+				Console.WriteLine ("Exit GET - AUTOCOMPLETE RECIPE SEARCH");
+
+				return response;
+			}
+			else
+			{
+				Console.WriteLine ("ERROR: Number is less than 0 or greater than 25");
+				return null; // TODO Show an error message, but we should be able to do this ourselves wherein we won't need this check
+			}
+		}
+
+		public static async Task<List<SpoonacularClasses.FindSimilarRecipes>> GET_FindSimilarRecipes(long id)
+		{
+			Console.WriteLine ("Enter GET - FIND SIMILAR RECIPES");
+
+			string action = "/recipes/{id}/similar";
+
+			// Client creation
+			var client = new RestClient ();
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("Accept", "application/json");
+			request.AddUrlSegment ("id", id.ToString());
+			request.RequestFormat = DataFormat.Json;
+
+			// Generate a response TODO Make async
+			var response = client.Execute<List<SpoonacularClasses.FindSimilarRecipes>> (request).Data;
+
+			Console.WriteLine ("RESPONSE: ");
+			response.ForEach (x => Console.WriteLine (x.title));
+
+			Console.WriteLine ("Exit GET - FIND SIMILAR RECIPES");
+
+			return response;
+		}
+
+		public static async Task<List<SpoonacularClasses.RecipeInstructions>> 
+		                                                GET_RecipeInstructions(string id, bool stepBreakdown)
+		{
+			Console.WriteLine ("Enter GET - RECIPE INSTRUCTIONS");
+
+			string action = "/recipes/{id}/analyzedInstructions";
+
+			// Client creation
+			var client = new RestClient ();
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("Accept", "application/json");
+			request.AddUrlSegment ("id", id.ToString ());
+			request.AddQueryParameter ("stepBreakdown", stepBreakdown.ToString());
+			request.RequestFormat = DataFormat.Json;
+
+			// Generate a response TODO Make async
+			var response = client.Execute<List<SpoonacularClasses.RecipeInstructions>> (request).Data;
+
+			Console.WriteLine ("RESPONSE: ");
+			response.ForEach (x => Console.WriteLine (x.name));
+
+			Console.WriteLine ("Exit GET - RECIPE INSTRUCTIONS");
+
+			return response;
+		}
+
+		public static async Task<SpoonacularClasses.SummarizeRecipe> GET_SummarizeRecipe (long id)
+		{
+			Console.WriteLine ("Enter GET - SUMMARIZE RECIPE");
+
+			string action = "/recipes/{id}/summary";
+
+			// Client creation
+			var client = new RestClient ();
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("Accept", "application/json");
+			request.AddUrlSegment ("id", id.ToString ());
+			request.RequestFormat = DataFormat.Json;
+
+			// Generate a response TODO Make async
+			var response = client.Execute<SpoonacularClasses.SummarizeRecipe> (request).Data;
+
+			Console.WriteLine ("RESPONSE: " + response.title);
+
+			Console.WriteLine ("Exit GET - SUMMARIZE RECIPE");
+			return response;
 		}
 	}
 }
