@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <group android:checkableBehavior="single">
+    <item
+      android:id="@+id/nav_scan"
+ 
+      android:icon="@drawable/ic_scanner_black_24dp"
+      android:title="Scanner" />
+      <item
+      android:id="@+id/nav_search"
+      android:icon="@drawable/ic_search_black_24dp"
+      android:title="Search" />
+    <item
+      android:id="@+id/nav_cart"
+      android:icon="@drawable/ic_shopping_cart_black_24dp"
+      android:title="Shopping Cart" />
+    
+    <item
+      android:id="@+id/nav_settings"
+      android:icon="@drawable/ic_settings_black_24dp"
+      android:title="Settings" />
+  </group>
+  <item android:title="About">
+    <menu>
+        <group android:checkableBehavior="single">
+            <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:title="About me"/>
+        </group>
+         
+    </menu>
+  </item>
+  
+</menu>

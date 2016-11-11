@@ -8,10 +8,10 @@ using Android.Content;
 
 namespace Ingrediscan
 {
-	[Activity (Label = "Ingrediscan", MainLauncher = true, Icon = "@mipmap/icon")]
+	[Activity (Label = "Ingrediscan", MainLauncher = true, Theme = "@style/AppTheme", Icon = "@mipmap/icon")]
 	public class MainActivity : Activity
 	{
-		int count = 1;
+		private Android.Support.V4.Widget.DrawerLayout mDrawerLayout;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -28,7 +28,7 @@ namespace Ingrediscan
 
 			button.Click += delegate {
 				StartActivity (typeof(SettingsActivity));
-				Finish ();
+				//Finish ();
 			};
 
 			// Get our button from the layout resource,
@@ -50,6 +50,8 @@ namespace Ingrediscan
 
 					// Get the item recipes from this GET call
 					var recipes = await REST_API.GET_FindByIngredients (false, itemResp.title, false, 5, 1);
+					upcText.Text = itemResp.title;
+					spoonText.Text = recipes [0].title;
 				}
 			};
 
@@ -69,7 +71,7 @@ namespace Ingrediscan
 					// Get the item recipes from this GET call
 					var recipes = await REST_API.GET_FindByIngredients (false, upcText.Text, false, 5, 1);
 
-					upcText.Text = recipes [0].title;
+					spoonText.Text = recipes [0].title;
 				}
 			};
 

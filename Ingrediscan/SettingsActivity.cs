@@ -28,7 +28,7 @@ namespace Ingrediscan
 			back.Click += delegate {
 				
 				StartActivity (typeof(MainActivity));
-				Finish ();
+				//Finish ();
 			};
 		}
 	}

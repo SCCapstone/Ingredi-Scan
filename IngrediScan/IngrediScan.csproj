@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
     <AndroidSupportedAbis>armeabi;armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -130,6 +130,9 @@
     <Compile Include="SpoonacularClasses.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="SettingsActivity.cs" />
+    <Compile Include="Resources\layout\MyPage.xaml.cs">
+      <DependentUpon>MyPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -146,9 +149,24 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
     <AndroidResource Include="Resources\layout\Settings.axml" />
+    <AndroidResource Include="Resources\layout\drawer_header.xml" />
+    <AndroidResource Include="Resources\drawable\ic_chevron_left_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_info_outline_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_menu_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_scanner_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_search_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_settings_black_24dp.png" />
+    <AndroidResource Include="Resources\drawable\ic_shopping_cart_black_24dp.png" />
+    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\values\colors.xml" />
+    <AndroidResource Include="Resources\menu\drawer.xml" />
+    <AndroidResource Include="Resources\layout\MyPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
+    <Folder Include="Resources\menu\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
