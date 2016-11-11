@@ -39,7 +39,7 @@ namespace Ingrediscan
 
 			// Request creation
 			var request = new RestRequest (action);
-			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddUrlSegment ("upc", upc);
 			request.RequestFormat = DataFormat.Json;
@@ -74,7 +74,7 @@ namespace Ingrediscan
 
 			// Request creation
 			var request = new RestRequest (action);
-			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddQueryParameter ("fillIngredients", fillIngredients.ToString());
 			request.AddQueryParameter ("ingredients", ingredients);
@@ -111,7 +111,7 @@ namespace Ingrediscan
 
 				// Request creation
 				var request = new RestRequest (action);
-				request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+				request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 				request.AddHeader ("Accept", "application/json");
 				request.AddQueryParameter ("metaInformation", metaInfo.ToString ());
 				request.AddQueryParameter ("number", number.ToString ());
@@ -150,7 +150,7 @@ namespace Ingrediscan
 
 				// Request creation
 				var request = new RestRequest (action);
-				request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+				request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 				request.AddHeader ("Accept", "application/json");
 				request.AddQueryParameter ("number", number.ToString ());
 				request.AddQueryParameter ("query", query);
@@ -186,7 +186,7 @@ namespace Ingrediscan
 
 			// Request creation
 			var request = new RestRequest (action);
-			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddUrlSegment ("id", id.ToString());
 			request.RequestFormat = DataFormat.Json;
@@ -216,7 +216,7 @@ namespace Ingrediscan
 
 			// Request creation
 			var request = new RestRequest (action);
-			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddUrlSegment ("id", id.ToString ());
 			request.AddQueryParameter ("stepBreakdown", stepBreakdown.ToString());
@@ -246,7 +246,7 @@ namespace Ingrediscan
 
 			// Request creation
 			var request = new RestRequest (action);
-			request.AddHeader ("X-Mashape-Key", "BpCpihtIUZmshgWQYLdikVI5LIpMp1c2OCPjsn90PEmdR1oKcK");
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddUrlSegment ("id", id.ToString ());
 			request.RequestFormat = DataFormat.Json;

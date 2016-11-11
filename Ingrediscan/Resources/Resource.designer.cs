@@ -2270,6 +2270,9 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c0035
 			public const int always = 2131492917;
 			
+			// aapt resource value: 0x7f0c009e
+			public const int backToMain = 2131493022;
+			
 			// aapt resource value: 0x7f0c0033
 			public const int beginning = 2131492915;
 			
@@ -2306,8 +2309,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c0036
 			public const int collapseActionView = 2131492918;
 			
-			// aapt resource value: 0x7f0c009e
-			public const int contentFrame = 2131493022;
+			// aapt resource value: 0x7f0c009f
+			public const int contentFrame = 2131493023;
 			
 			// aapt resource value: 0x7f0c004a
 			public const int contentPanel = 2131492938;
@@ -2934,13 +2937,16 @@ namespace Ingrediscan
 			public const int select_dialog_singlechoice_material = 2130968630;
 			
 			// aapt resource value: 0x7f040037
-			public const int support_simple_spinner_dropdown_item = 2130968631;
+			public const int Settings = 2130968631;
 			
 			// aapt resource value: 0x7f040038
-			public const int zxingscanneractivitylayout = 2130968632;
+			public const int support_simple_spinner_dropdown_item = 2130968632;
 			
 			// aapt resource value: 0x7f040039
-			public const int zxingscannerfragmentlayout = 2130968633;
+			public const int zxingscanneractivitylayout = 2130968633;
+			
+			// aapt resource value: 0x7f04003a
+			public const int zxingscannerfragmentlayout = 2130968634;
 			
 			static Layout()
 			{
