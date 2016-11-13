@@ -9,7 +9,7 @@ using Android.Content;
 namespace Ingrediscan
 {
 	[Activity (Label = "Ingrediscan", MainLauncher = true, Theme = "@style/AppTheme", Icon = "@mipmap/icon")]
-	public class MainActivity : Activity
+	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 		private Android.Support.V4.Widget.DrawerLayout mDrawerLayout;
 
@@ -18,10 +18,15 @@ namespace Ingrediscan
 			base.OnCreate (savedInstanceState);
 
 			// Set our view from the "main" layout resource
+			MobileBarcodeScanner.Initialize (Application);
+
+			Xamarin.Forms.Forms.Init (this, savedInstanceState);
+			LoadApplication (new App ());
+
+			/*
 			SetContentView (Resource.Layout.Main);
 
-			MobileBarcodeScanner barcodeScanner = new MobileBarcodeScanner ();
-			MobileBarcodeScanner.Initialize (Application);
+			
 			BarcodeScanner barScan = new BarcodeScanner ();
 
 			Button button = FindViewById<Button> (Resource.Id.navButton);
@@ -83,7 +88,7 @@ namespace Ingrediscan
 			testSpoonacularButton.Click += async (sender, e) => {
 				var text = await REST_API.GET_FindByIngredients (false, itemName, false, 5, 1);
 				spoonText.Text = text [0].title;
-			};
+			};*/
 		}
 	}
 }

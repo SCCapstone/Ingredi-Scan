@@ -1,23 +1,22 @@
 ﻿using System;
-using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
-	public class FormTemplate : ContentPage
+	public class FormTemplate
 	{
 		private int formID = 0;
 		private string formName = "";
-		private static Image logo = new Image ();
-		private static List<Color> colorPalette = new List<Color> ();
+		//private static Image logo = new Image ();
+		//private static List<Color> colorPalette = new List<Color> ();
 
 		public FormTemplate()
 		{
 			
 		}
 
-		public Page createPage(string title, string icon, StackLayout layout) 
+		/*public Page createPage(string title, string icon, StackLayout layout) 
 		{
 			return new ContentPage {
 				Title = title,
@@ -29,7 +28,7 @@ namespace Ingrediscan
 		public async Task NavigateToPage(Page page)
 		{
 			await Navigation.PushAsync (page);
-		}
+		}*/
 
 	}
 }
