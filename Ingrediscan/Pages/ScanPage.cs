@@ -14,8 +14,8 @@ namespace Ingrediscan
 				Text = "Scan",
 				Font = Font.SystemFontOfSize (NamedSize.Large),
 				BorderWidth = 2,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				VerticalOptions = LayoutOptions.StartAndExpand
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				VerticalOptions = LayoutOptions.EndAndExpand
 			};
 			scanButton.Clicked += OnScanClicked;
 
@@ -37,7 +37,11 @@ namespace Ingrediscan
 
 				// Get the item recipes from this GET call
 				var recipes = await REST_API.GET_FindByIngredients (false, itemResp.title, false, 5, 1);
-
+				await DisplayAlert ("Successful Scan", "Food Item: " + itemResp.title + "\nFirst Recipe: " + recipes[0].title, "OK");
+			}
+			else
+			{
+				await DisplayAlert ("Failed Scan", "The barcode, \"" + GlobalVariables.barScan.getUPC() + "\" was not recognized.", "OK");
 			}
 		}
 	}

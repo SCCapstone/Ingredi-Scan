@@ -2297,9 +2297,6 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c0035
 			public const int always = 2131492917;
 			
-			// aapt resource value: 0x7f0c009e
-			public const int backToMain = 2131493022;
-			
 			// aapt resource value: 0x7f0c0033
 			public const int beginning = 2131492915;
 			
@@ -2336,8 +2333,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f0c0036
 			public const int collapseActionView = 2131492918;
 			
-			// aapt resource value: 0x7f0c009f
-			public const int contentFrame = 2131493023;
+			// aapt resource value: 0x7f0c009e
+			public const int contentFrame = 2131493022;
 			
 			// aapt resource value: 0x7f0c004a
 			public const int contentPanel = 2131492938;
@@ -2910,73 +2907,67 @@ namespace Ingrediscan
 			public const int design_navigation_menu_item = 2130968612;
 			
 			// aapt resource value: 0x7f040025
-			public const int drawer_header = 2130968613;
+			public const int Main = 2130968613;
 			
 			// aapt resource value: 0x7f040026
-			public const int Main = 2130968614;
+			public const int mr_chooser_dialog = 2130968614;
 			
 			// aapt resource value: 0x7f040027
-			public const int mr_chooser_dialog = 2130968615;
+			public const int mr_chooser_list_item = 2130968615;
 			
 			// aapt resource value: 0x7f040028
-			public const int mr_chooser_list_item = 2130968616;
+			public const int mr_controller_material_dialog_b = 2130968616;
 			
 			// aapt resource value: 0x7f040029
-			public const int mr_controller_material_dialog_b = 2130968617;
+			public const int mr_controller_volume_item = 2130968617;
 			
 			// aapt resource value: 0x7f04002a
-			public const int mr_controller_volume_item = 2130968618;
+			public const int mr_playback_control = 2130968618;
 			
 			// aapt resource value: 0x7f04002b
-			public const int mr_playback_control = 2130968619;
+			public const int mr_volume_control = 2130968619;
 			
 			// aapt resource value: 0x7f04002c
-			public const int mr_volume_control = 2130968620;
+			public const int notification_media_action = 2130968620;
 			
 			// aapt resource value: 0x7f04002d
-			public const int notification_media_action = 2130968621;
+			public const int notification_media_cancel_action = 2130968621;
 			
 			// aapt resource value: 0x7f04002e
-			public const int notification_media_cancel_action = 2130968622;
+			public const int notification_template_big_media = 2130968622;
 			
 			// aapt resource value: 0x7f04002f
-			public const int notification_template_big_media = 2130968623;
+			public const int notification_template_big_media_narrow = 2130968623;
 			
 			// aapt resource value: 0x7f040030
-			public const int notification_template_big_media_narrow = 2130968624;
+			public const int notification_template_lines = 2130968624;
 			
 			// aapt resource value: 0x7f040031
-			public const int notification_template_lines = 2130968625;
+			public const int notification_template_media = 2130968625;
 			
 			// aapt resource value: 0x7f040032
-			public const int notification_template_media = 2130968626;
+			public const int notification_template_part_chronometer = 2130968626;
 			
 			// aapt resource value: 0x7f040033
-			public const int notification_template_part_chronometer = 2130968627;
+			public const int notification_template_part_time = 2130968627;
 			
 			// aapt resource value: 0x7f040034
-			public const int notification_template_part_time = 2130968628;
+			public const int select_dialog_item_material = 2130968628;
 			
 			// aapt resource value: 0x7f040035
-			public const int select_dialog_item_material = 2130968629;
+			public const int select_dialog_multichoice_material = 2130968629;
 			
 			// aapt resource value: 0x7f040036
-			public const int select_dialog_multichoice_material = 2130968630;
+			public const int select_dialog_singlechoice_material = 2130968630;
 			
 			// aapt resource value: 0x7f040037
-			public const int select_dialog_singlechoice_material = 2130968631;
+			public const int support_simple_spinner_dropdown_item = 2130968631;
 			
 			// aapt resource value: 0x7f040038
-			public const int Settings = 2130968632;
+			public const int zxingscanneractivitylayout = 2130968632;
 			
 			// aapt resource value: 0x7f040039
-			public const int support_simple_spinner_dropdown_item = 2130968633;
-			
-			// aapt resource value: 0x7f04003a
-			public const int zxingscanneractivitylayout = 2130968634;
-			
-			// aapt resource value: 0x7f04003b
-			public const int zxingscannerfragmentlayout = 2130968635;
+			public const int zxingscannerfragmentlayout = 2130968633;
 			
 			static Layout()
 			{

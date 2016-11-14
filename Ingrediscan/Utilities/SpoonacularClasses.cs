@@ -91,5 +91,24 @@ namespace Ingrediscan
 			public string title { get; set; }
 			public string summary { get; set; }
 		}
+
+		public class SearchRecipes
+		{
+			public List<Results> results { get; set; }
+			public string baseUri { get; set; }
+			public int offset { get; set; }
+			public int number { get; set; }
+			public long processingTimeMs { get; set; }
+			public string expires { get; set; }
+			public bool isStale { get; set; }
+		}
+		public class Results
+		{
+			public string id { get; set; }
+			public string title { get; set; }
+			public int readInMinutes { get; set; }
+			public string image { get; set; }
+			public List<string> imageUrls { get; set; }
+		}
 	}
 }

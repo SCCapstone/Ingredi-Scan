@@ -139,6 +139,10 @@
     <Compile Include="Pages\ScanPage.cs" />
     <Compile Include="Pages\SearchPage.cs" />
     <Compile Include="Pages\SettingsPage.cs" />
+    <Compile Include="Common\SearchResultItem.cs" />
+    <Compile Include="Pages\RecipePage.cs" />
+    <Compile Include="Pages\RecipePageItem.cs" />
+    <Compile Include="Pages\RecipePageCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -156,8 +160,6 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
-    <AndroidResource Include="Resources\layout\Settings.axml" />
-    <AndroidResource Include="Resources\layout\drawer_header.xml" />
     <AndroidResource Include="Resources\drawable\about.png" />
     <AndroidResource Include="Resources\drawable\hamburger.png" />
     <AndroidResource Include="Resources\drawable\scan.png" />
