@@ -19,7 +19,7 @@ namespace Ingrediscan
 					imageCell.SetBinding (ImageCell.ImageSourceProperty, "Image");
 					return imageCell;
 				}),
-				VerticalOptions = LayoutOptions.StartAndExpand,
+				VerticalOptions = LayoutOptions.StartAndExpand
 			};
 
 			resultsViewIngredients.ItemsSource = this.CreateListViewFromInstructions (instructions);
@@ -35,21 +35,18 @@ namespace Ingrediscan
 
 			List<RecipePageItem.RecipePageStep> recipeSteps = new List<RecipePageItem.RecipePageStep> ();
 
+			// see the SessionCell implementation for how the variable row height is calculated
 			ListView resultsViewSteps = new ListView {
 				ItemsSource = recipeSteps,
-				ItemTemplate = new DataTemplate (() => {
-					var text = new TextCell ();
-					text.SetBinding (TextCell.TextProperty, "Number");
-					text.SetBinding (TextCell.DetailProperty, "Step");
-					return text;
-				}),
+				ItemTemplate = new DataTemplate (typeof (RecipePageCell)),
 				VerticalOptions = LayoutOptions.FillAndExpand,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
-
+				RowHeight = 20,
+				HasUnevenRows = true,
+				SeparatorVisibility = SeparatorVisibility.None
 			};
 
 			resultsViewSteps.ItemsSource = this.CreateListViewFromSteps (instructions);
-
 
 			var cookPage = new ContentPage {
 				Content = new StackLayout {

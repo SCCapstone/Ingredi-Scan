@@ -36,12 +36,16 @@ namespace Ingrediscan
 				//string itemTitle = Utilities.ParseTitle (itemJson);
 
 				// Get the item recipes from this GET call
-				var recipes = await REST_API.GET_FindByIngredients (false, itemResp.title, false, 5, 1);
-				await DisplayAlert ("Successful Scan", "Food Item: " + itemResp.title + "\nFirst Recipe: " + recipes[0].title, "OK");
+				//var recipes = await REST_API.GET_FindByIngredients (itemResp.title);//(false, itemResp.title, false, 5, 1);
+				await DisplayAlert ("Successful Scan", "Food Item: " + itemResp.title, "OK");
+				await Navigation.PushAsync (new ScanResultsPage (itemResp));
 			}
 			else
 			{
 				await DisplayAlert ("Failed Scan", "The barcode, \"" + GlobalVariables.barScan.getUPC() + "\" was not recognized.", "OK");
+				// TODO Test code
+				var upcJson = await REST_API.GET_FindByUPC ("041631000564");
+				await Navigation.PushAsync (new ScanResultsPage (upcJson));
 			}
 		}
 	}

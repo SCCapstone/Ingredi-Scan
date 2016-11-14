@@ -143,6 +143,7 @@
     <Compile Include="Pages\RecipePage.cs" />
     <Compile Include="Pages\RecipePageItem.cs" />
     <Compile Include="Pages\RecipePageCell.cs" />
+    <Compile Include="Pages\ScanResultsPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

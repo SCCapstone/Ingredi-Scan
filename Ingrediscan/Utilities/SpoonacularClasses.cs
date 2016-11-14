@@ -27,7 +27,7 @@ namespace Ingrediscan
 		// Used by REST_API.GET_FindByIngredients
 		public class FindByIngredients
 		{
-			public long id { get; set; }
+			public string id { get; set; }
 			public string title { get; set; }
 			public string image { get; set; }
 			public string imageType { get; set; }
