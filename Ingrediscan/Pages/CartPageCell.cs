@@ -4,17 +4,17 @@ using Xamarin.Forms;
 
 namespace Ingrediscan
 {
-	public class RecipePageCell : ViewCell
+	public class CartPageCell : ViewCell
 	{
 		Label title, label;
 		StackLayout layout;
 
-		public RecipePageCell ()
+		public CartPageCell ()
 		{
 			title = new Label {
 				VerticalTextAlignment = TextAlignment.Center
 			};
-			title.SetBinding (Label.TextProperty, "Number");
+			title.SetBinding (Label.TextProperty, "Recipe");
 
 			label = new Label {
 				VerticalTextAlignment = TextAlignment.Center,
@@ -38,25 +38,6 @@ namespace Ingrediscan
 			};
 
 			View = layout;
-
 		}
-
-		protected override void OnBindingContextChanged ()
-		{
-			base.OnBindingContextChanged ();
-			var recipe = (RecipePageItem.RecipePageStep)BindingContext;
-
-			// rough translation of character-count to cell height
-			// doesn't always work, but close enough for now
-			if (recipe.Step.Length > 75)
-				this.Height = 130;
-			else if (recipe.Step.Length > 60)
-				this.Height = 100;
-			else if (recipe.Step.Length > 30)
-				this.Height = 80;
-			else
-				this.Height = 60;
-		}
-
 	}
 }

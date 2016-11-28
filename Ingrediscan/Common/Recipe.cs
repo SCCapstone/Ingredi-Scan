@@ -5,10 +5,12 @@ namespace Ingrediscan
 {
 	public class Recipe
 	{
-		public List<Ingredient> ingredients = new List<Ingredient> ();
-		public string name = "";
-		public int id = 0;
-		public int prepTime = 0;
+		private List<Ingredient> ingredients = new List<Ingredient> ();
+		private string name = "";
+		private string id = "";
+		private string image = "";
+		private int prepTime = 0;
+		private int cookTime = 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ingrediscan.Recipe"/> class.
@@ -17,12 +19,14 @@ namespace Ingrediscan
 		/// <param name="aName">A name.</param>
 		/// <param name="anID">An identifier.</param>
 		/// <param name="aPrepTime">A prep time.</param>
-		public Recipe (List<Ingredient> ingList, string aName, int anID, int aPrepTime)
+		public Recipe (List<Ingredient> ingList, string aName, string anID, string anImage, int aPrepTime, int aCookTime)
 		{
 			this.setIngredientList (ingList);
 			this.setName (aName);
 			this.setID (anID);
 			this.setPrepTime (aPrepTime);
+			this.setCookTime (aCookTime);
+			this.setImage (anImage);
 		}
 
 		/// <summary>
@@ -33,6 +37,15 @@ namespace Ingrediscan
 		{
 			ingredients = ingList;
 		}
+		/// <summary>
+		/// Adds to ingredient list.
+		/// </summary>
+		/// <param name="item">Item.</param>
+		public void addToIngredientList(Ingredient item)
+		{
+			ingredients.Add (item);
+		}
+
 		/// <summary>
 		/// Sets the name.
 		/// </summary>
@@ -45,9 +58,17 @@ namespace Ingrediscan
 		/// Sets the identifier.
 		/// </summary>
 		/// <param name="anID">An identifier.</param>
-		public void setID(int anID)
+		public void setID(string anID)
 		{
 			id = anID;
+		}
+		/// <summary>
+		/// Sets the image.
+		/// </summary>
+		/// <param name="anImage">An image.</param>
+		public void setImage(string anImage)
+		{
+			image = anImage;
 		}
 		/// <summary>
 		/// Sets the prep time.
@@ -56,6 +77,15 @@ namespace Ingrediscan
 		public void setPrepTime(int aPrepTime)
 		{
 			prepTime = aPrepTime;
+		}
+
+		/// <summary>
+		/// Sets the cook time.
+		/// </summary>
+		/// <param name="aCookTime">A cook time.</param>
+		public void setCookTime(int aCookTime)
+		{
+			cookTime = aCookTime;
 		}
 
 		/// <summary>
@@ -78,9 +108,17 @@ namespace Ingrediscan
 		/// Gets the identifier.
 		/// </summary>
 		/// <returns>The identifier.</returns>
-		public int getID()
+		public string getID()
 		{
 			return id;
+		}
+		/// <summary>
+		/// Gets the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		public string getImage()
+		{
+			return image;
 		}
 		/// <summary>
 		/// Gets the prep time.
@@ -89,6 +127,20 @@ namespace Ingrediscan
 		public int getPrepTime()
 		{
 			return prepTime;
+		}
+
+		/// <summary>
+		/// Gets the cook time.
+		/// </summary>
+		/// <returns>The cook time.</returns>
+		public int getCookTime()
+		{
+			return cookTime;
+		}
+
+		public void addToCart()
+		{
+			GlobalVariables.CurrentRecipes.Add (this);
 		}
 	}
 }

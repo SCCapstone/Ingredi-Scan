@@ -288,5 +288,36 @@ namespace Ingrediscan
 			Console.WriteLine ("Exit GET - SEARCH RECIPE");
 			return response;
 		}
+
+		public static async Task<SpoonacularClasses.RecipeInformation>
+														GET_RecipeInformation (string id, bool includeNutrition = false)
+		{
+			Console.WriteLine ("Enter GET - RECIPE INSTRUCTIONS");
+
+			string action = "/recipes/{id}/information";
+
+			// Client creation
+			var client = new RestClient ();
+			client.BaseUrl = new Uri (SpoonacularURL);
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+			// Request creation
+			var request = new RestRequest (action);
+			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
+			request.AddHeader ("Accept", "application/json");
+			request.AddUrlSegment ("id", id.ToString ());
+			request.AddQueryParameter ("stepBreakdown", includeNutrition.ToString ());
+			request.RequestFormat = DataFormat.Json;
+
+			// Generate a response TODO Make async
+			var response = client.Execute<SpoonacularClasses.RecipeInformation> (request).Data;
+
+			Console.WriteLine ("RESPONSE: " + response.id);
+
+
+			Console.WriteLine ("Exit GET - RECIPE INSTRUCTIONS");
+
+			return response;
+		}
 	}
 }

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Ingrediscan</RootNamespace>
     <AssemblyName>Ingrediscan</AssemblyName>
-    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -144,8 +144,12 @@
     <Compile Include="Common\SearchResultItem.cs" />
     <Compile Include="Pages\RecipePage.cs" />
     <Compile Include="Pages\RecipePageItem.cs" />
-    <Compile Include="Pages\RecipePageCell.cs" />
     <Compile Include="Pages\ScanResultsPage.cs" />
+    <Compile Include="Utilities\SaveAndLoad.cs" />
+    <Compile Include="Pages\CartPageItem.cs" />
+    <Compile Include="Pages\CartPageCell.cs" />
+    <Compile Include="Pages\RecipePageCell.cs" />
+    <Compile Include="Pages\Group.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -171,10 +175,14 @@
     <AndroidResource Include="Resources\drawable\cart.png" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
+    <AndroidResource Include="Resources\drawable\addToCart.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
     <Folder Include="Pages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="SettingsAsset.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
