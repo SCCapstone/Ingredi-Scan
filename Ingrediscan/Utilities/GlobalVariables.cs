@@ -33,7 +33,7 @@ namespace Ingrediscan
 				for (int j = 0; j < item.getIngredientList ().Count; ++j) {
 					Ingredient subItem = item.getIngredientList () [j];
 					file += subItem.getName () + "," + subItem.getAmount () + "," + subItem.getUnits () + "," + subItem.getID () +
-								   "," + subItem.getImage () + "\n";
+					               "," + subItem.getImage () + "," + subItem.getSwitch() + "\n";
 				}
 			}
 
@@ -67,10 +67,12 @@ namespace Ingrediscan
 							int ing_n = int.Parse (reader.ReadLine ());
 							for (int j = 0; j < ing_n; ++j) {
 								string [] ing_items = reader.ReadLine ().Split (',');
-								Ingredient ing = new Ingredient (ing_items [0], int.Parse (ing_items [1]), ing_items [2], ing_items [3], ing_items [4]);
+								Ingredient ing = new Ingredient (ing_items [0], int.Parse (ing_items [1]), ing_items [2], 
+								                                 ing_items [3], ing_items [4], bool.Parse(ing_items [5]));
 								ingredients.Add (ing);
 							}
-							Recipe recipe = new Recipe (ingredients, items [0], items [1], items [2], int.Parse (items [3]), int.Parse (items [4]));
+							Recipe recipe = new Recipe (ingredients, items [0], items [1], items [2], int.Parse (items [3]), 
+							                            int.Parse (items [4]));
 
 							GlobalVariables.CurrentRecipes.Add (recipe);
 						}

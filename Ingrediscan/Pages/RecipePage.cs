@@ -13,7 +13,7 @@ namespace Ingrediscan
 			List<Ingredient> ingredients = new List<Ingredient> ();
 			foreach(var item in instructions.extendedIngredients)
 			{
-				Ingredient ing = new Ingredient (item.name, item.amount, item.unit, item.id, item.image);
+				Ingredient ing = new Ingredient (item.name, item.amount, item.unit, item.id, item.image, false);
 				ingredients.Add (ing);
 			}
 			Recipe recipe = new Recipe(ingredients, instructions.title, instructions.id, instructions.image,
@@ -41,7 +41,6 @@ namespace Ingrediscan
 					}
 
 				}
-				Console.WriteLine ("success: {0}", result);
 			}));
 
 			// Finished adding to toolbar
@@ -56,22 +55,23 @@ namespace Ingrediscan
 					imageCell.SetBinding (ImageCell.ImageSourceProperty, "Image");
 					return imageCell;
 				}),
-				VerticalOptions = LayoutOptions.StartAndExpand
 			};
 
 			resultsViewIngredients.ItemsSource = this.CreateListViewFromInstructions (recipe);
 
 			string prepTime = "";
-			if (instructions.preparationMinutes == 0) {
+			if (instructions.preparationMinutes == 0) 
+			{
 				prepTime = "N/A";
-			} else {
+			} else 
+			{
 				prepTime = instructions.preparationMinutes.ToString () + " Minutes";
 			}
 
 			var gridP = new Grid ();
 
 			gridP.Padding = new Thickness (5, 0, 2, 5);
-			gridP.Children.Add (new Label { Text = "Ingredients", FontSize = 10.0, FontAttributes = FontAttributes.Italic },0,1);
+			gridP.Children.Add (new Label { Text = "Ingredients", FontSize = 13.0, FontAttributes = FontAttributes.Italic },0,1);
 			gridP.Children.Add (new Label { Text = "Preparation Time: " + prepTime, FontSize = 13.0, FontAttributes = FontAttributes.Bold },1,1);
 
 			var prepPage = new ContentPage {
@@ -92,11 +92,12 @@ namespace Ingrediscan
 
 			ListView resultsViewSteps = new ListView {
 				//ItemsSource = recipeSteps,
+				IsGroupingEnabled = true,
+				GroupDisplayBinding = new Binding ("Number"),
+				GroupShortNameBinding = new Binding ("Number"),
+
 				ItemsSource = this.CreateListViewFromSteps (recipe),
 				ItemTemplate = new DataTemplate (typeof (RecipePageCell)),
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				//RowHeight = 20,
 				HasUnevenRows = true,
 				SeparatorVisibility = SeparatorVisibility.None
 			};
@@ -115,8 +116,8 @@ namespace Ingrediscan
 
 			var gridC = new Grid ();
 
-			gridC.Padding = new Thickness (0, 0, 2, 0);
-			gridC.Children.Add (new Label { Text = "Instructions", FontSize = 10.0, FontAttributes = FontAttributes.Italic }, 0, 1);
+			gridC.Padding = new Thickness (5, 0, -75, 5);
+			gridC.Children.Add (new Label { Text = "Instructions", FontSize = 13.0, FontAttributes = FontAttributes.Italic }, 0, 1);
 			gridC.Children.Add (new Label { Text = "Cook Time: " + cookTime, FontSize = 13.0, FontAttributes = FontAttributes.Bold }, 1, 1);
 
 
@@ -133,11 +134,24 @@ namespace Ingrediscan
 
 			// Cook Page Created
 
+			resultsViewSteps.ItemSelected += (sender, e) => {
+				resultsViewSteps.SelectedItem = null;
+			};
+
+			resultsViewIngredients.ItemSelected += (sender, e) => {
+				resultsViewIngredients.SelectedItem = null;
+			};
+
 			// Adding pages to tabbed page
 			Children.Add (prepPage);
 			Children.Add (cookPage);
 		}
 
+		/// <summary>
+		/// Creates the list view from instructions.
+		/// </summary>
+		/// <returns>The list view from instructions.</returns>
+		/// <param name="recipe">Recipe.</param>
 		public List<RecipePageItem.RecipePageIngredients> CreateListViewFromInstructions (Recipe recipe)
 		{
 			List<RecipePageItem.RecipePageIngredients> searchResultItems = new List<RecipePageItem.RecipePageIngredients> ();
@@ -149,19 +163,37 @@ namespace Ingrediscan
 
 			return searchResultItems;
 		}
-
-		public List<RecipePageItem.RecipePageStep> CreateListViewFromSteps (Recipe recipe)
+		/// <summary>
+		/// Creates the list view from steps.
+		/// </summary>
+		/// <returns>The list view from steps.</returns>
+		/// <param name="recipe">Recipe.</param>
+		public List<GroupRecipe> CreateListViewFromSteps (Recipe recipe)
 		{
-			List<RecipePageItem.RecipePageStep> searchResultItems = new List<RecipePageItem.RecipePageStep> ();
+			List<GroupRecipe> searchResultItems = new List<GroupRecipe> ();
 			// TODO An additional API Call... Able to parse steps from RecipeInformation, but format is not always the same
 			// Maybe we can create cases for the most general 
+
 			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.getID (), false).Result;
+
 			if (steps.Count > 0) 
 			{
-				steps [0].steps.ForEach (x => searchResultItems.Add (new RecipePageItem.RecipePageStep {
-					Number = "Step " + x.number,
-					Step = x.step
-				}));
+				int counter = 1;
+				for (int i = 0; i < steps[0].steps.Count; ++i)
+				{
+					if (!char.IsDigit (steps [0].steps [i].step [0]) && steps[0].steps[i].step.ToLower() != "kitchen-friendly view") 
+					{
+						GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
+						var text = new RecipePageItem.RecipePageStep ();
+						text.Step = steps [0].steps [i].step;
+
+						recGroup.Add (text);
+						Console.WriteLine (steps [0].steps [i].step);
+						searchResultItems.Add (recGroup);
+
+						++counter;
+					}
+				}
 			}
 
 			return searchResultItems;

@@ -123,8 +123,6 @@
     <Compile Include="Common\MenuItem.cs" />
     <Compile Include="Common\Recipe.cs" />
     <Compile Include="Activities\MainActivity.cs" />
-    <Compile Include="Forms\FormTemplate.cs" />
-    <Compile Include="Forms\NavigationMenu.cs" />
     <Compile Include="Forms\RecipeSearchScreen.cs" />
     <Compile Include="Forms\Settings.cs" />
     <Compile Include="Forms\ShoppingList.cs" />
@@ -149,7 +147,8 @@
     <Compile Include="Pages\CartPageItem.cs" />
     <Compile Include="Pages\CartPageCell.cs" />
     <Compile Include="Pages\RecipePageCell.cs" />
-    <Compile Include="Pages\Group.cs" />
+    <Compile Include="Pages\GroupCart.cs" />
+    <Compile Include="Pages\GroupRecipe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -162,20 +161,23 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\mipmap-hdpi\Icon.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\Icon.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\Icon.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\drawable\about.png" />
     <AndroidResource Include="Resources\drawable\hamburger.png" />
-    <AndroidResource Include="Resources\drawable\scan.png" />
     <AndroidResource Include="Resources\drawable\search.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
     <AndroidResource Include="Resources\drawable\cart.png" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\drawable\addToCart.png" />
+    <AndroidResource Include="Resources\drawable\edit.png" />
+    <AndroidResource Include="Resources\drawable\delete.png" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\scan.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

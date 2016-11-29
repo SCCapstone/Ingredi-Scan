@@ -10,6 +10,7 @@ namespace Ingrediscan
 		private string id = "";
 		private string image = "";
 		private string formattedName = "";
+		private bool itemSwitch = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ingrediscan.Ingredient"/> class.
@@ -17,7 +18,7 @@ namespace Ingrediscan
 		/// <param name="aName">A name.</param>
 		/// <param name="anAmount">An amount.</param>
 		/// <param name="anUPC">An upc.</param>
-		public Ingredient (string aName, int anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage)
+		public Ingredient (string aName, int anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage, bool aSwitch)
 		{
 			this.setName (aName);
 			this.setAmount (anAmount);
@@ -26,6 +27,7 @@ namespace Ingrediscan
 			this.setID (anID);
 			this.setImage (anImage);
 			this.setFormattedName ();
+			this.setSwitch (aSwitch);
 		}
 
 		/// <summary>
@@ -97,6 +99,11 @@ namespace Ingrediscan
 			formattedName = formattedString;
 		}
 
+		public void setSwitch(bool aSwitch)
+		{
+			itemSwitch = aSwitch;
+		}
+
 
 		/// <summary>
 		/// Gets the name.
@@ -158,6 +165,11 @@ namespace Ingrediscan
 		public string getFormattedName()
 		{
 			return formattedName;
+		}
+
+		public bool getSwitch()
+		{
+			return itemSwitch;
 		}
 	}
 }

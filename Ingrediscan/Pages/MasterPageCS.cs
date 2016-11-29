@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Xamarin.Forms;
 
 namespace Ingrediscan
@@ -48,18 +47,19 @@ namespace Ingrediscan
 					imageCell.SetBinding (ImageCell.ImageSourceProperty, "IconSource");
 					return imageCell;
 				}),
-				VerticalOptions = LayoutOptions.FillAndExpand,
+				VerticalOptions = LayoutOptions.Fill,
 				SeparatorVisibility = SeparatorVisibility.None
 			};
 
-			Padding = new Thickness (0, 40, 0, 0);
+			Padding = new Thickness (0, 20, 0, 0);
 			Icon = "Resources/drawable/hamburger.png";
-			Title = "Personal Organiser";
+			Title = "Navigation Menu";
 			Content = new StackLayout {
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children = {
-				listView
-			}
+				VerticalOptions = LayoutOptions.StartAndExpand,
+				Children =
+				{
+					listView
+				}
 			};
 		}
 	}

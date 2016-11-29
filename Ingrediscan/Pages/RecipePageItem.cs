@@ -11,7 +11,7 @@ namespace Ingrediscan
 
 		public class RecipePageStep
 		{
-			public string Number { get; set; }
+			//public string Number { get; set; }
 			public string Step { get; set; }
 		}
 	}

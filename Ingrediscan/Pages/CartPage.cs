@@ -9,18 +9,23 @@ namespace Ingrediscan
 	{
 		public CartPage ()
 		{
+			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", async () => {
+				await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
+			}));
+
+			ToolbarItems.Add (new ToolbarItem ("Delete Cart", "drawable/delete.png", async () => {
+				await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
+			}));
+
 			// Create our data from our load data
 			var list = this.CreateListViewFromList (GlobalVariables.CurrentRecipes);
 
-			var temp = new DataTemplate (typeof (ImageCell));//CartPageCell));
-			temp.SetBinding (TextCell.TextProperty, "Name");
-			temp.SetBinding (ImageCell.ImageSourceProperty, "Image");
-
-			var items = new List<Group> ();
+			var template = new DataTemplate (typeof (CartPageCell));
+			var items = new List<GroupCart> ();
 
 			foreach(var rec in list)
 			{
-				var group = new Group (rec.Name);
+				var group = new GroupCart (rec.Name);
 
 				foreach (var ing in rec.Ingredients) {
 					group.Add (ing);
@@ -29,15 +34,23 @@ namespace Ingrediscan
 				items.Add (group);
 			}
 
+			SearchBar searchBar = new SearchBar {
+				Placeholder = "Enter search term",
+				SearchCommand = new Command (() => {
+					DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
+				})
+			};
+
 			Title = "Cart Page";
 			Content = new StackLayout {
 				Children = {
+					searchBar,
 					new ListView {
 						IsGroupingEnabled = true,
 						GroupDisplayBinding = new Binding ("Name"),
 						GroupShortNameBinding = new Binding ("Name"),
 
-						ItemTemplate = temp,
+						ItemTemplate = template,
 						ItemsSource = items
 					}
 				}
@@ -47,7 +60,6 @@ namespace Ingrediscan
 		public List<string> searchCart(string query)
 		{
 			List<string> items = new List<string> ();
-
 
 
 			return items;
@@ -72,6 +84,8 @@ namespace Ingrediscan
 					//subItem.Name = ss.getName ();
 					subItem.Name = ss.getFormattedName ();
 					subItem.Image = ss.getImage ();
+					subItem.Switch = new Switch();
+					subItem.Switch.SetValue(Switch.IsEnabledProperty, ss.getSwitch ());
 
 					subItems.Add (subItem);
 				}

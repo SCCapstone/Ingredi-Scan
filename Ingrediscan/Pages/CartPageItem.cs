@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Xamarin.Forms;
 
 namespace Ingrediscan
 {
@@ -16,6 +17,7 @@ namespace Ingrediscan
 		{
 			public string Name { get; set; }
 			public string Image { get; set; }
+			public Switch Switch { get; set; }
 		}
 
 	}
