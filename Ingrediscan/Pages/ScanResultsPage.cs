@@ -25,7 +25,7 @@ namespace Ingrediscan
 			resultsView.ItemSelected += async (sender, e) => {
 				if (Navigation.NavigationStack.Count < 3) {
 					var id = ((SearchResultItem)e.SelectedItem).Id;
-					var recipe = REST_API.GET_RecipeInstructions (id, true).Result;
+					var recipe = REST_API.GET_RecipeInformation (id, false).Result;
 					await Navigation.PushAsync (new RecipePage (recipe));
 					((ListView)sender).SelectedItem = null;
 				}

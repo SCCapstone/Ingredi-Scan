@@ -6,15 +6,15 @@ namespace Ingrediscan
 {
 	public class RecipePageCell : ViewCell
 	{
-		
-		Label title, label;
+		Label label;
 		StackLayout layout;
+
 		public RecipePageCell ()
 		{
-			title = new Label {
+			/*title = new Label {
 				VerticalTextAlignment = TextAlignment.Center
 			};
-			title.SetBinding (Label.TextProperty, "Number");
+			title.SetBinding (Label.TextProperty, "Number");*/
 
 			label = new Label {
 				VerticalTextAlignment = TextAlignment.Center,
@@ -22,25 +22,28 @@ namespace Ingrediscan
 			};
 			label.SetBinding (Label.TextProperty, "Step");
 
-			var text = new StackLayout {
-				Orientation = StackOrientation.Vertical,
-				Padding = new Thickness (0, 0, 0, 0),
-				HorizontalOptions = LayoutOptions.StartAndExpand,
-				Children = { title, label }
-			};
+			//TODO Implement ListView?
+			/*var text = new ListView {
+				HasUnevenRows = true,
+				ItemsSource = 
+				//Orientation = StackOrientation.Vertical,
+				//Padding = new Thickness (0, 0, 0, 0),
+				//HorizontalOptions = LayoutOptions.StartAndExpand,
+				//Children = { title, label }
+			};*/
 
 			layout = new StackLayout {
 				Padding = new Thickness (10, 0, 0, 0),
-				Orientation = StackOrientation.Horizontal,
+				Orientation = StackOrientation.Vertical,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
-				Children = { text }
+				Children = { label }
 			};
 
 			View = layout;
 
 		}
 
-		protected override void OnBindingContextChanged ()
+		/*protected override void OnBindingContextChanged ()
 		{
 			base.OnBindingContextChanged ();
 			var recipe = (RecipePageItem.RecipePageStep)BindingContext;
@@ -55,7 +58,7 @@ namespace Ingrediscan
 				this.Height = 80;
 			else
 				this.Height = 60;
-		}
+		}*/
 
 	}
 }

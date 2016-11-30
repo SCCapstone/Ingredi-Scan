@@ -4,13 +4,9 @@ using ZXing.Mobile;
 
 namespace Ingrediscan
 {
-	public class BarcodeScanner : FormTemplate
+	public class BarcodeScanner
 	{
 		private string lastUPC = "";
-
-		public BarcodeScanner ()
-		{
-		}
 
 		/// <summary>
 		/// Scans the barcode.

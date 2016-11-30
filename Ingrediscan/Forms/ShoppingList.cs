@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ingrediscan
 {
-	public class ShoppingList : FormTemplate
+	public class ShoppingList
 	{
 		public List<Recipe> recipes = new List<Recipe> ();
 		public List<Ingredient> ingredients = new List<Ingredient> ();
@@ -100,7 +100,7 @@ namespace Ingrediscan
 			List<Ingredient> allIngredients = ingredients;
 			foreach(Recipe r in recipes)
 			{
-				allIngredients.AddRange(r.ingredients);
+				allIngredients.AddRange(r.getIngredientList());
 			}
 			return allIngredients;
 		}

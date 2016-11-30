@@ -12,7 +12,7 @@ namespace Ingrediscan
 			Content = new StackLayout {
 				Children = {
 					new Label {
-						Text = "Todo - list data goes here",
+						Text = "Well... We don't have anything to put here yet.",
 						HorizontalOptions = LayoutOptions.Center,
 						VerticalOptions = LayoutOptions.CenterAndExpand
 					}
