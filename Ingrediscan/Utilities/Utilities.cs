@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Ingrediscan
+namespace Ingrediscan.Utilities
 {
 	public static class Utilities
 	{

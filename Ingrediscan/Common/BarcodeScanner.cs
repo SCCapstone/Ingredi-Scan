@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ingrediscan.Utilities;
+using System;
 using ZXing.Mobile;
 
 namespace Ingrediscan

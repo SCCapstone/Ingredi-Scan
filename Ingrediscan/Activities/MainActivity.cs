@@ -5,6 +5,7 @@ using Android.OS;
 using ZXing.Mobile;
 using System;
 using Android.Content;
+using Ingrediscan.Utilities;
 
 namespace Ingrediscan
 {
@@ -22,6 +23,9 @@ namespace Ingrediscan
 
 			Xamarin.Forms.Forms.Init (this, savedInstanceState);
 			LoadApplication (new App ());
+
+			// Initialize the interface to Firebase.
+			// var fb = FirebaseInterface.Instance;
 
 			/*
 			SetContentView (Resource.Layout.Main);

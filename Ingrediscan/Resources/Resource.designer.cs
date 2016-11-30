@@ -26,6 +26,8 @@ namespace Ingrediscan
 		
 		public static void UpdateIdValues()
 		{
+			global::PCLCrypto.Resource.String.ApplicationName = global::Ingrediscan.Resource.String.ApplicationName;
+			global::PCLCrypto.Resource.String.Hello = global::Ingrediscan.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Ingrediscan.Resource.Attribute.actionBarSize;
 			global::ZXing.Mobile.Resource.Id.contentFrame = global::Ingrediscan.Resource.Id.contentFrame;
 			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::Ingrediscan.Resource.Layout.zxingscanneractivitylayout;
@@ -2998,6 +3000,12 @@ namespace Ingrediscan
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f090027
+			public const int ApplicationName = 2131296295;
+			
+			// aapt resource value: 0x7f090026
+			public const int Hello = 2131296294;
+			
 			// aapt resource value: 0x7f09000f
 			public const int abc_action_bar_home_description = 2131296271;
 			
@@ -3055,8 +3063,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f090021
 			public const int abc_toolbar_collapse_description = 2131296289;
 			
-			// aapt resource value: 0x7f090027
-			public const int app_name = 2131296295;
+			// aapt resource value: 0x7f090029
+			public const int app_name = 2131296297;
 			
 			// aapt resource value: 0x7f090023
 			public const int appbar_scrolling_view_behavior = 2131296291;
@@ -3067,8 +3075,8 @@ namespace Ingrediscan
 			// aapt resource value: 0x7f090025
 			public const int character_counter_pattern = 2131296293;
 			
-			// aapt resource value: 0x7f090026
-			public const int hello = 2131296294;
+			// aapt resource value: 0x7f090028
+			public const int hello = 2131296296;
 			
 			// aapt resource value: 0x7f090000
 			public const int mr_button_content_description = 2131296256;
