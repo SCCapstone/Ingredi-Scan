@@ -18,97 +18,65 @@ using Firebase.Xamarin.Auth;
 
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Auth;
 using Android.Content;
 using Firebase.Xamarin.Database.Query;
+using Newtonsoft.Json;
+using Auth0.SDK;
+
+using RestSharp;
 
 namespace Ingrediscan.Utilities
 {
 	public sealed class FirebaseInterface
 	{
-		private static readonly FirebaseInterface _instance = new FirebaseInterface();
-		private TokenGenerator _tokenGenerator;
-		private FirebaseClient _client;
-
-		private FirebaseInterface()
+		private FirebaseInterface ()
 		{
-			// If we do not already have an auth token in memory.
-			if(Globals.GoogleAuthToken == "" || Globals.AuthenticatedEmail == "")
-			{
-				// First we check if we have a saved google authentication token.
-				bool authenticated = false;
-				List<Account> accounts = AccountStore.Create(Forms.Context).FindAccountsForService("Google").ToList();
-				foreach(Account account in accounts)
-				{
-					if(account.Properties.ContainsKey("token"))
-					{
-						account.Properties.TryGetValue("token", out Globals.GoogleAuthToken);
-						Globals.AuthenticatedEmail = account.Username;
-						authenticated = true;
-						InitializeClient();
-						break;
-					}
-				}
-
-				// If we do not, we need to authenticate the user.
-				if(!authenticated)
-				{
-					var auth = new OAuth2Authenticator(
-						Globals.ClientId,
-						Globals.ClientSecret,
-						"profile",
-						new Uri("https://accounts.google.com/o/oauth2/auth"),
-						new Uri("https://www.googleapis.com/plus/v1/people/me"),
-						new Uri("https://accounts.google.com/o/oauth2/token"));
-
-					Forms.Context.StartActivity(auth.GetUI(Forms.Context));
-
-					auth.Completed += (sender, e) =>
-					{
-						if(e.IsAuthenticated)
-						{
-							if(e.Account.Properties.ContainsKey("token"))
-							{
-								e.Account.Properties.TryGetValue("token", out Globals.GoogleAuthToken);
-								Globals.AuthenticatedEmail = e.Account.Username;
-								authenticated = true;
-							}
-							AccountStore.Create(Forms.Context).Save(e.Account, "Google");
-							InitializeClient();
-						}
-					};
-				}
-			}
 		}
 
-		public void InitializeClient()
+		public static async void LoginAuth0()
 		{
-			_client = new FirebaseClient(Globals.FirebaseAppURI);
-			Console.WriteLine("Attempting to save a recipe.");
-			SaveRecipe();
-		}
+			var auth0 = new Auth0Client (
+				"ingrediscan.auth0.com",
+				"amWUGnPk4AnZT0BSDrbzmywxQruqG57W");
 
-		public async Task SaveRecipe()
-		{
-			Console.WriteLine("Saving an item.1");
-			var authProvider = new FirebaseAuthProvider(new FirebaseConfig("Avx3MuTyKyZzvTawHiegCFwX"));
-			Console.WriteLine("Saving an item.2");
-			var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, Globals.GoogleAuthToken);
-			Console.WriteLine("Saving an item.3");
-			Dictionary<string, string> test = new Dictionary<string, string>();
-			test.Add("test1Key", "test1Val");
-			test.Add("test2Key", "test2Val");
-			Console.WriteLine("Saving an item.4");
-			await _client.Child(Globals.AuthenticatedEmail).WithAuth(auth.FirebaseToken).PutAsync(test);
-			Console.WriteLine("Saving an item.5");
-		}
+			var user = await auth0.LoginAsync (Forms.Context);
 
-		public static FirebaseInterface Instance
-		{
-			get
-			{
-				return _instance;
-			}
+			Globals.user = user;
+			Globals.userData = JsonConvert.DeserializeObject<Auth0Json> (user.Profile.ToString ());
+
+			//TODO Remove this/ take it to another method
+
+			// The URL we are currently using
+			string action = "/delegation";
+
+			// Client creation
+			var client = new RestClient ();
+			client.BaseUrl = new Uri ("https://ingrediscan.auth0.com");
+			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
+
+			Dictionary<string, string> newJson = new Dictionary<string, string> ();
+
+			newJson.Add ("client_id", "amWUGnPk4AnZT0BSDrbzmywxQruqG57W");
+			newJson.Add ("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
+			newJson.Add ("id_token", user.IdToken);
+			newJson.Add ("target", "");
+			newJson.Add ("scope", "openid");
+			newJson.Add ("api_type", "firebase");
+
+			// Request creation
+			var request = new RestRequest (action, Method.POST);
+			request.AddJsonBody (newJson);
+
+			// Response creation TODO Make async
+			var response = client.Execute<Auth0Firebase> (request).Data;
+
+			var _client = new FirebaseClient ("https://ingrediscan-151115.firebaseio.com/");
+			Dictionary<string, string> test = new Dictionary<string, string> ();
+			test.Add ("test1Key", "test1Val");
+			test.Add ("test2Key", "test2Val");
+			Console.WriteLine (response.id_token);
+			await _client.Child ("test").WithAuth (response.id_token).PutAsync (test);
+
 		}
 	}
 }

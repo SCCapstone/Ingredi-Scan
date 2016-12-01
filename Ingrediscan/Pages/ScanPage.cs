@@ -3,6 +3,8 @@
 using Xamarin.Forms;
 using ZXing.Mobile;
 
+using Ingrediscan.Utilities;
+
 namespace Ingrediscan
 {
 	public class ScanPage : ContentPage

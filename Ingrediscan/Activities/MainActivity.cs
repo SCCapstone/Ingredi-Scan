@@ -3,6 +3,7 @@ using Android.OS;
 
 using ZXing.Mobile;
 using Ingrediscan.Utilities;
+using Auth0.SDK;
 
 namespace Ingrediscan
 {
@@ -18,12 +19,13 @@ namespace Ingrediscan
 			MobileBarcodeScanner.Initialize (Application);
 
 			GlobalVariables.loadRecipes ();
+			// Initialize the interface to Firebase.
+			//var fb = FirebaseInterface.Instance;
 
 			Xamarin.Forms.Forms.Init (this, savedInstanceState);
 			LoadApplication (new App ());
 
-			// Initialize the interface to Firebase.
-			// var fb = FirebaseInterface.Instance;
+			FirebaseInterface.LoginAuth0 ();
 		}
 	}
 }
