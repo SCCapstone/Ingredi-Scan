@@ -8,7 +8,7 @@ namespace Ingrediscan
 	{
 		public AboutPage ()
 		{
-			Title = "About Page";
+			Title = "About Us";
 			Content = new StackLayout {
 				Children = {
 					new Label {

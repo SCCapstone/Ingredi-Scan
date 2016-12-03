@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using Ingrediscan.Utilities;
+using System.Linq;
 
 namespace Ingrediscan
 {
@@ -11,15 +13,40 @@ namespace Ingrediscan
 		List<SearchResultItem> recipes = new List<SearchResultItem> ();
 
 		SearchBar searchBar;
+		string prevSearch = "";
 
 		public SearchPage ()
 		{
+			Picker picker = new Picker {
+				Title = "History",
+				VerticalOptions = LayoutOptions.CenterAndExpand,
+				IsEnabled = false,
+				IsVisible = false,
+			};
+
+			Globals.firebaseData.history.ToList().ForEach(x => picker.Items.Add(x));
+
+			picker.SelectedIndexChanged += (sender, args) => {
+				if (picker.SelectedIndex == -1) 
+				{
+					// Do nothing
+				} 
+				else
+				{
+					if (searchBar.Text != picker.Items [picker.SelectedIndex]) 
+					{
+						searchBar.Text = picker.Items [picker.SelectedIndex];
+						resultsView.ItemsSource = this.CreateListViewFromSearch (searchBar.Text);
+					}
+				}
+			};
+
 			resultsView = new ListView {
 				ItemsSource = recipes,
 				ItemTemplate = new DataTemplate (() => {
 					var imageCell = new ImageCell ();
-					imageCell.SetBinding (TextCell.TextProperty, "Text");
-					imageCell.SetBinding (ImageCell.ImageSourceProperty, "ImageSource");
+					imageCell.SetBinding (TextCell.TextProperty, "name");
+					imageCell.SetBinding (ImageCell.ImageSourceProperty, "image");
 					return imageCell;
 				}),
 				VerticalOptions = LayoutOptions.StartAndExpand,
@@ -34,20 +61,47 @@ namespace Ingrediscan
 				}
 			};
 
+			// Toolbar addition
+			ToolbarItems.Add (new ToolbarItem ("History", "drawable/history.png", () => {
+				picker.Focus ();
+			}));
+
 			searchBar = new SearchBar {
 				Placeholder = "Enter search term",
 				SearchCommand = new Command (() => {
-					resultsView.ItemsSource = this.CreateListViewFromSearch (searchBar.Text); })
+					if (prevSearch != searchBar.Text) 
+					{
+						resultsView.ItemsSource = this.CreateListViewFromSearch (searchBar.Text);
+
+						if (Globals.firebaseData.history.Count > 10) 
+						{
+							Globals.firebaseData.history.Reverse ();
+							Globals.firebaseData.history.RemoveAt (Globals.firebaseData.history.Count - 1);
+							Globals.firebaseData.history.Reverse ();
+						}
+
+						picker.Items.Add (searchBar.Text);
+
+						Globals.firebaseData.history.Reverse ();
+						Globals.firebaseData.history.Add (searchBar.Text);
+						Globals.firebaseData.history.Reverse ();
+
+						SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+
+						prevSearch = searchBar.Text;
+					}
+				})
 			};
 
-			Title = "Search Page";
+			Title = "Search By Recipe Name";
 			Content = new StackLayout {
-				VerticalOptions = LayoutOptions.Start,
+				VerticalOptions = LayoutOptions.StartAndExpand,
 				Children = {
 					searchBar,
 					resultsView,
+					picker
 				},
-				Padding = new Thickness (10, Device.OnPlatform (20, 0, 0), 10, 5)
+				Padding = new Thickness (10, Device.OnPlatform (20, 0, 0), 10, 0)
 			};
 		}
 
@@ -66,6 +120,14 @@ namespace Ingrediscan
 			}));
 
 			return searchResultItems;
+		}
+
+		public static void LoadSearchHistory(List<string> history)
+		{
+			//TODO Finish
+			Console.WriteLine ("History");
+			history.ForEach (x => Console.WriteLine (x));
+			Globals.firebaseData.history = history;
 		}
 	}
 }

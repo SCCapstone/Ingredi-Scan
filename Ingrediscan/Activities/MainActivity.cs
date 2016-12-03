@@ -18,7 +18,7 @@ namespace Ingrediscan
 			//TODO Is this slowing everything down?
 			MobileBarcodeScanner.Initialize (Application);
 
-			GlobalVariables.loadRecipes ();
+			//GlobalVariables.loadRecipes ();
 			// Initialize the interface to Firebase.
 			//var fb = FirebaseInterface.Instance;
 

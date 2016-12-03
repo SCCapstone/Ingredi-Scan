@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
+
+using Ingrediscan.Utilities;
 
 namespace Ingrediscan
 {
@@ -28,22 +31,27 @@ namespace Ingrediscan
 			intolSettings.Clear ();
 		}
 
-		/*public static void changeSettings(string item)
+		public static List<Dictionary<string, bool>> initialSettings()
 		{
-			if (cuisineSettings.ContainsKey(item))
-			{
-				cuisineSettings [item] = !cuisineSettings [item];
-			}
-			else if (dietSettings.ContainsKey(item))
-			{
-				dietSettings [item] = !dietSettings [item];
-			}
-			else if (intolSettings.ContainsKey(item))
-			{
-				intolSettings [item] = !intolSettings [item];
-			}
-			saveSettings ();
-		}*/
+			var cuisD = new Dictionary<string, bool> ();
+			foreach (var item in cuisines)
+				cuisD.Add(item, false);
+			
+			var dietD = new Dictionary<string, bool> ();
+			foreach (var item in diets)
+				dietD.Add (item, false);
+			
+			var intolD = new Dictionary<string, bool> ();
+			foreach (var item in intolerances)
+				intolD.Add (item, false);
+
+			var l = new List<Dictionary<string, bool>> ();
+			l.Add (cuisD);
+			l.Add (dietD);
+			l.Add (intolD);
+
+			return l;
+		}
 
 		public static List<SwitchCell> populateSettings(string item)
 		{
@@ -67,79 +75,57 @@ namespace Ingrediscan
 			return temp;
 		}
 
-		public static void saveSettings()
+		public static void SaveSettings()
 		{
-			Console.WriteLine ("SAVING...");
-			SaveAndLoad save = new SaveAndLoad ();
-			string file = "";
-
-			file += cuisineSettings.Count + "\n";
-			file += dietSettings.Count + "\n";
-			file += intolSettings.Count + "\n";
-
 			for (int i = 0; i < tableView.Root.Count; ++i)
 			{
 				for (int j = 0; j < tableView.Root [i].Count; ++j)
 				{
-					SwitchCell item = ((SwitchCell)tableView.Root [i] [j]);
-					file += item.Text + "," + item.On + "\n";
-				}
-			}
+					var s = (SwitchCell)tableView.Root [i] [j];
 
-			Console.WriteLine (file);
-			save.SaveText("settings.txt", file);
-			Console.WriteLine ("SAVING COMPLETED");
-		}
-
-		public static void loadSettings()
-		{
-			clearSettings ();
-
-			try 
-			{
-				SaveAndLoad load = new SaveAndLoad ();
-
-				string file = load.LoadText ("settings.txt");
-				Console.WriteLine ("LOADING..." + file);
-				//Stream stream = File.Open (file, FileMode.Open);
-				if (file != "") {
-					using (StreamReader reader = new StreamReader (file)) {
-
-						string line = "";//reader.ReadToEnd ();
-						//Console.WriteLine (line);
-
-						int cuisine_n = int.Parse (reader.ReadLine ());
-						int diet_n = int.Parse (reader.ReadLine ());
-						int intol_n = int.Parse (reader.ReadLine ());
-
-						for (int i = 0; i < cuisine_n; ++i) {
-							line = reader.ReadLine ();
-							string [] splitLine = line.Split (',');
-							cuisineSettings.Add (splitLine [0], bool.Parse (splitLine [1]));
-						}
-
-						for (int i = 0; i < diet_n; ++i) {
-							line = reader.ReadLine ();
-							string [] splitLine = line.Split (',');
-							dietSettings.Add (splitLine [0], bool.Parse (splitLine [1]));
-						}
-
-						for (int i = 0; i < intol_n; ++i) {
-							line = reader.ReadLine ();
-							string [] splitLine = line.Split (',');
-							intolSettings.Add (splitLine [0], bool.Parse (splitLine [1]));
-						}
+					if(i == 0)
+					{
+						Globals.firebaseData.searchSettings.cuisine[s.Text] = s.On;
+					}
+					else if(i == 1)
+					{
+						Globals.firebaseData.searchSettings.diets[s.Text] = s.On;
+					}
+					else if(i == 2)
+					{
+						Globals.firebaseData.searchSettings.intolerances[s.Text] = s.On;
 					}
 				}
-
-				//stream.Close ();
-				Console.WriteLine ("LOAD DONE");
 			}
-			catch (IOException e)
+
+			SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+		}
+
+		public static void LoadSettings(SearchSettings searchSettings)
+		{
+			if (searchSettings.cuisine.Count == 0 || searchSettings.diets.Count == 0 || searchSettings.intolerances.Count == 0) 
 			{
-				Console.WriteLine (e.Message);
-			}
+				var l = initialSettings ();
 
+				foreach (KeyValuePair<string, bool> k in l [0])
+					Console.WriteLine (k.Key + " " + k.Value);
+
+				cuisineSettings = l [0];
+				dietSettings = l [1];
+				intolSettings = l [2];
+
+				Globals.firebaseData.searchSettings.cuisine = cuisineSettings;
+				Globals.firebaseData.searchSettings.diets = dietSettings;
+				Globals.firebaseData.searchSettings.intolerances = intolSettings;
+
+				SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+			} 
+			else 
+			{
+				cuisineSettings = searchSettings.cuisine;
+				dietSettings = searchSettings.diets;
+				intolSettings = searchSettings.intolerances;
+			}
 		}
 	}
 }

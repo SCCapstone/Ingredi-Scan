@@ -33,7 +33,7 @@ namespace Ingrediscan
 
 			resultsView.ItemsSource = this.CreateListViewFromUPC (resultsFromUPC);
 
-			Title = "Search Results Page";
+			Title = "Search Results";
 			Content = new StackLayout {
 				VerticalOptions = LayoutOptions.Start,
 				Children = {

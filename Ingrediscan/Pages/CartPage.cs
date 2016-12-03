@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Xamarin.Forms;
 
+using Ingrediscan.Utilities;
+
 namespace Ingrediscan
 {
 	public class CartPage : ContentPage
@@ -18,7 +20,7 @@ namespace Ingrediscan
 			}));
 
 			// Create our data from our load data
-			var list = this.CreateListViewFromList (GlobalVariables.CurrentRecipes);
+			var list = this.CreateListViewFromList (Globals.firebaseData.cart);//GlobalVariables.CurrentRecipes);
 
 			var template = new DataTemplate (typeof (CartPageCell));
 			var items = new List<GroupCart> ();
@@ -41,7 +43,7 @@ namespace Ingrediscan
 				})
 			};
 
-			Title = "Cart Page";
+			Title = "Shopping Cart";
 			Content = new StackLayout {
 				Children = {
 					searchBar,
@@ -65,27 +67,27 @@ namespace Ingrediscan
 			return items;
 		}
 
-		public List<CartPageItem.Recipes> CreateListViewFromList (List<Recipe> recipes)
+		public List<CartPageItem.Recipes> CreateListViewFromList (Dictionary<string, Recipe> recipes)
 		{
 			List<CartPageItem.Recipes> items = new List<CartPageItem.Recipes> ();
 
-			foreach(var s in recipes)
+			foreach(KeyValuePair<string, Recipe> recipe in recipes)
 			{
 				// Create item
 				CartPageItem.Recipes item = new CartPageItem.Recipes ();
-				item.Name = s.getName();
-				item.Image = s.getImage();
+				item.Name = recipe.Value.name;
+				item.Image = recipe.Value.image;
 
 				// Create sub items
 				List<CartPageItem.Ingredients> subItems = new List<CartPageItem.Ingredients> ();
-				foreach(var ss in s.getIngredientList())
+				foreach(var ss in recipe.Value.ingredients)
 				{
 					CartPageItem.Ingredients subItem = new CartPageItem.Ingredients ();
 					//subItem.Name = ss.getName ();
-					subItem.Name = ss.getFormattedName ();
-					subItem.Image = ss.getImage ();
+					subItem.Name = ss.formattedName;
+					subItem.Image = ss.image;
 					subItem.Switch = new Switch();
-					subItem.Switch.SetValue(Switch.IsEnabledProperty, ss.getSwitch ());
+					subItem.Switch.SetValue(Switch.IsEnabledProperty, ss.itemSwitch);
 
 					subItems.Add (subItem);
 				}

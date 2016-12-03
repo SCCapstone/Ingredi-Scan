@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Xamarin.Forms;
 
 namespace Ingrediscan
@@ -27,15 +26,6 @@ namespace Ingrediscan
 				Console.WriteLine (item.TargetType + " Finished");
 				masterPage.ListView.SelectedItem = null;
 				IsPresented = false;
-
-				if (prevPageStr == "Ingrediscan.SettingsPage")
-				{
-					Settings.saveSettings ();
-				}
-				else if (prevPageStr == "Ingrediscan.CartPage")
-				{
-					GlobalVariables.saveRecipes ();
-				}
 
 				prevPageStr = item.TargetType.FullName;
 			}

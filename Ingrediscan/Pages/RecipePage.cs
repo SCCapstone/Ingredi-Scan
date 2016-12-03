@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 
+using Ingrediscan.Utilities;
+
 namespace Ingrediscan
 {
 	public class RecipePage : TabbedPage
 	{
+		ToolbarItem faveBefore, addToCart;
+
 		public RecipePage (SpoonacularClasses.RecipeInformation instructions)
 		{
 			// Creation of ingredients and recipe
@@ -14,34 +18,74 @@ namespace Ingrediscan
 			foreach(var item in instructions.extendedIngredients)
 			{
 				Ingredient ing = new Ingredient (item.name, item.amount, item.unit, item.id, item.image, false);
+				ing.setFormattedName ();
+				Console.WriteLine (ing.formattedName);
 				ingredients.Add (ing);
 			}
-			Recipe recipe = new Recipe(ingredients, instructions.title, instructions.id, instructions.image,
-			                           instructions.preparationMinutes, instructions.cookingMinutes);
+			Recipe recipe = new Recipe (ingredients, instructions.title, instructions.id, instructions.image,
+									   instructions.preparationMinutes, instructions.cookingMinutes);//, false);
 
 			//End of creation
 
 			// Addition to toolbar
-			ToolbarItems.Add (new ToolbarItem ("Add To Cart", "drawable/addToCart.png", async () => {
+			addToCart = new ToolbarItem ("Add To Cart", "drawable/addToCart.png", async () => {
 				bool result = await DisplayAlert ("Add To Cart", "Would you like to add all of these items to your cart?", "Confirm", "Cancel");
-				if (result == true) 
-				{
-					if(GlobalVariables.CurrentRecipes.Contains(recipe))
-					{
+				if (result == true) {
+					if (Globals.firebaseData.cart.ContainsKey (recipe.name)) {
 						bool cont = await DisplayAlert ("Add To Cart", "This item is already contained within your cart. " +
-						                                    "Would you still like to add all of these items to your cart?", "Confirm", "Cancel");
-						if(cont == true)
-						{
+															"Would you still like to add all of these items to your cart?", "Confirm", "Cancel");
+						if (cont == true) {
 							recipe.addToCart ();
+
+							await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
 						}
-					}
-					else
-					{
+					} else {
 						recipe.addToCart ();
+
+						await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
 					}
 
 				}
-			}));
+			});
+
+			faveBefore = new ToolbarItem ("Favorite Recipe", "drawable/faveBefore.png", async () => {
+				try
+				{
+					bool contains = false;
+
+					foreach(var tempR in Globals.firebaseData.savedRecipes)
+					{
+						if(recipe.name == tempR.name)
+						{
+							contains = true;
+							break;
+						}
+					}
+
+					if (!contains) 
+					{
+						Globals.firebaseData.savedRecipes.Add (recipe);
+
+						await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+					}
+					else
+					{
+						await DisplayAlert ("Favorite Recipe", "This recipe is already a favorited recipe.", "Ok");
+					}
+				}
+				catch(Exception e)
+				{
+					Globals.firebaseData.savedRecipes = new List<Recipe> ();
+					Globals.firebaseData.savedRecipes.Add (recipe);
+
+					await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+				}
+
+				SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+			});
+
+			ToolbarItems.Add (addToCart);
+			ToolbarItems.Add (faveBefore);
 
 			// Finished adding to toolbar
 
@@ -83,7 +127,7 @@ namespace Ingrediscan
 				}
 			};
 
-			prepPage.Title = "Preparation Page";
+			prepPage.Title = "Preparation";
 			// Prep Page Created
 
 			// Creation of Cook Page
@@ -130,7 +174,14 @@ namespace Ingrediscan
 				}
 			};
 
-			cookPage.Title = "Cook Page";
+			resultsViewSteps.ItemSelected += (sender, e) => {
+				resultsViewSteps.SelectedItem = null;
+			};
+			resultsViewIngredients.ItemSelected += (sender, e) => {
+				resultsViewIngredients.SelectedItem = null;
+			};
+
+			cookPage.Title = "Cook";
 
 			// Cook Page Created
 
@@ -156,9 +207,9 @@ namespace Ingrediscan
 		{
 			List<RecipePageItem.RecipePageIngredients> searchResultItems = new List<RecipePageItem.RecipePageIngredients> ();
 
-			recipe.getIngredientList().ForEach(x => searchResultItems.Add (new RecipePageItem.RecipePageIngredients {
-				Name = x.getFormattedName(),
-				Image = x.getImage()
+			recipe.ingredients.ForEach(x => searchResultItems.Add (new RecipePageItem.RecipePageIngredients {
+				Name = x.formattedName,
+				Image = x.image
 			}));
 
 			return searchResultItems;
@@ -174,7 +225,7 @@ namespace Ingrediscan
 			// TODO An additional API Call... Able to parse steps from RecipeInformation, but format is not always the same
 			// Maybe we can create cases for the most general 
 
-			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.getID (), false).Result;
+			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.id, false).Result;
 
 			if (steps.Count > 0) 
 			{
@@ -188,7 +239,6 @@ namespace Ingrediscan
 						text.Step = steps [0].steps [i].step;
 
 						recGroup.Add (text);
-						Console.WriteLine (steps [0].steps [i].step);
 						searchResultItems.Add (recGroup);
 
 						++counter;

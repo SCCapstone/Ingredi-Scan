@@ -16,6 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,8 +28,8 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
-    <AndroidSupportedAbis>armeabi;armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <AndroidSupportedAbis>armeabi;armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
-    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
@@ -194,7 +194,6 @@
     <Compile Include="Utilities\REST_API.cs" />
     <Compile Include="Utilities\SpoonacularClasses.cs" />
     <Compile Include="Utilities\Utilities.cs" />
-    <Compile Include="Utilities\GlobalVariables.cs" />
     <Compile Include="Pages\AboutPage.cs" />
     <Compile Include="Pages\App.cs" />
     <Compile Include="Pages\CartPage.cs" />
@@ -217,6 +216,8 @@
     <Compile Include="Utilities\Auth0Json.cs" />
     <Compile Include="Utilities\Auth0Post.cs" />
     <Compile Include="Utilities\Auth0Firebase.cs" />
+    <Compile Include="Utilities\FirebaseSaveFormat.cs" />
+    <Compile Include="Pages\FavoriteRecipesPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -247,6 +248,10 @@
     <AndroidResource Include="Resources\drawable\delete.png" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\drawable\scan.png" />
+    <AndroidResource Include="Resources\drawable\history.png" />
+    <AndroidResource Include="Resources\drawable\save.png" />
+    <AndroidResource Include="Resources\drawable\faveAfter.png" />
+    <AndroidResource Include="Resources\drawable\faveBefore.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

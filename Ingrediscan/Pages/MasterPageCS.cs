@@ -29,6 +29,11 @@ namespace Ingrediscan
 				TargetType = typeof (CartPage)
 			});
 			masterPageItems.Add (new MasterPageItem {
+				Title = "Favorited Recipes",
+				IconSource = "Resources/drawable/faveAfter.png",
+				TargetType = typeof (FavoriteRecipesPage)
+			});
+			masterPageItems.Add (new MasterPageItem {
 				Title = "Settings",
 				IconSource = "Resources/drawable/settings.png",
 				TargetType = typeof (SettingsPage)

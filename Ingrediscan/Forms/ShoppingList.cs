@@ -100,7 +100,7 @@ namespace Ingrediscan
 			List<Ingredient> allIngredients = ingredients;
 			foreach(Recipe r in recipes)
 			{
-				allIngredients.AddRange(r.getIngredientList());
+				allIngredients.AddRange(r.ingredients);
 			}
 			return allIngredients;
 		}
