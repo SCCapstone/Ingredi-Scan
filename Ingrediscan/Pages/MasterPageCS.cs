@@ -52,17 +52,21 @@ namespace Ingrediscan
 					imageCell.SetBinding (ImageCell.ImageSourceProperty, "IconSource");
 					return imageCell;
 				}),
-				VerticalOptions = LayoutOptions.Fill,
+				//VerticalOptions = LayoutOptions.Fill,
 				SeparatorVisibility = SeparatorVisibility.None
 			};
+
+			Image header = new Image ();
+			header.Source = "Resources/drawable/logo.png";
 
 			Padding = new Thickness (0, 20, 0, 0);
 			Icon = "Resources/drawable/hamburger.png";
 			Title = "Navigation Menu";
 			Content = new StackLayout {
-				VerticalOptions = LayoutOptions.StartAndExpand,
+				VerticalOptions = LayoutOptions.Start,
 				Children =
 				{
+					header,
 					listView
 				}
 			};

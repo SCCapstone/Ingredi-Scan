@@ -45,8 +45,8 @@ namespace Ingrediscan
 				ItemsSource = recipes,
 				ItemTemplate = new DataTemplate (() => {
 					var imageCell = new ImageCell ();
-					imageCell.SetBinding (TextCell.TextProperty, "name");
-					imageCell.SetBinding (ImageCell.ImageSourceProperty, "image");
+					imageCell.SetBinding (TextCell.TextProperty, "Text");
+					imageCell.SetBinding (ImageCell.ImageSourceProperty, "ImageSource");
 					return imageCell;
 				}),
 				VerticalOptions = LayoutOptions.StartAndExpand,

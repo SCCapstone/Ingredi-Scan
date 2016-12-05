@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 
 using Ingrediscan.Utilities;
+using Android.Widget;
 
 namespace Ingrediscan
 {
@@ -27,6 +28,8 @@ namespace Ingrediscan
 
 			//End of creation
 
+			Title = recipe.name;
+
 			// Addition to toolbar
 			addToCart = new ToolbarItem ("Add To Cart", "drawable/addToCart.png", async () => {
 				bool result = await DisplayAlert ("Add To Cart", "Would you like to add all of these items to your cart?", "Confirm", "Cancel");
@@ -37,18 +40,20 @@ namespace Ingrediscan
 						if (cont == true) {
 							recipe.addToCart ();
 
-							await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
+							//await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
+							Toast.MakeText (Forms.Context, "This item has been added to your cart.", ToastLength.Short).Show ();
 						}
 					} else {
 						recipe.addToCart ();
 
-						await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
+						//await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
+						Toast.MakeText (Forms.Context, "This item has been added to your cart.", ToastLength.Short).Show ();
 					}
 
 				}
 			});
 
-			faveBefore = new ToolbarItem ("Favorite Recipe", "drawable/faveBefore.png", async () => {
+			faveBefore = new ToolbarItem ("Favorite Recipe", "drawable/faveBefore.png", () => {
 				try
 				{
 					bool contains = false;
@@ -66,19 +71,23 @@ namespace Ingrediscan
 					{
 						Globals.firebaseData.savedRecipes.Add (recipe);
 
-						await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+						//await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+						Toast.MakeText (Forms.Context, "This recipe has been favorited.", ToastLength.Short).Show ();
 					}
 					else
 					{
-						await DisplayAlert ("Favorite Recipe", "This recipe is already a favorited recipe.", "Ok");
+						//await DisplayAlert ("Favorite Recipe", "This recipe is already a favorited recipe.", "Ok");
+						Toast.MakeText (Forms.Context, "This recipe is already a favorited recipe.", ToastLength.Short).Show ();
 					}
 				}
 				catch(Exception e)
 				{
+					Console.WriteLine (e.Message);
 					Globals.firebaseData.savedRecipes = new List<Recipe> ();
 					Globals.firebaseData.savedRecipes.Add (recipe);
 
-					await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+					//await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
+					Toast.MakeText (Forms.Context, "This recipe has been saved to your favorited list.", ToastLength.Short).Show ();
 				}
 
 				SaveAndLoad.SaveToFirebase (Globals.firebaseData);
@@ -91,7 +100,7 @@ namespace Ingrediscan
 
 			// Creation of Prep Page
 
-			ListView resultsViewIngredients = new ListView {
+			Xamarin.Forms.ListView resultsViewIngredients = new Xamarin.Forms.ListView {
 				ItemsSource = ingredients,
 				ItemTemplate = new DataTemplate (() => {
 					var imageCell = new ImageCell ();
@@ -132,10 +141,7 @@ namespace Ingrediscan
 
 			// Creation of Cook Page
 
-			//List<RecipePageItem.RecipePageStep> recipeSteps = new List<RecipePageItem.RecipePageStep> ();
-
-			ListView resultsViewSteps = new ListView {
-				//ItemsSource = recipeSteps,
+			Xamarin.Forms.ListView resultsViewSteps = new Xamarin.Forms.ListView {
 				IsGroupingEnabled = true,
 				GroupDisplayBinding = new Binding ("Number"),
 				GroupShortNameBinding = new Binding ("Number"),
@@ -145,8 +151,6 @@ namespace Ingrediscan
 				HasUnevenRows = true,
 				SeparatorVisibility = SeparatorVisibility.None
 			};
-
-			//resultsViewSteps.ItemsSource = this.CreateListViewFromSteps (recipe);
 
 			string cookTime = "";
 			if (instructions.cookingMinutes == 0) 

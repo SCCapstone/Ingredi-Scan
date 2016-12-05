@@ -4,7 +4,7 @@ namespace Ingrediscan
 	public class Ingredient
 	{
 		public string name { get; set; }
-		public int amount { get; set; }
+		public double amount { get; set; }
 		//private int upc = 0;
 		public string units { get; set; }
 		public string id { get; set; }
@@ -18,7 +18,7 @@ namespace Ingrediscan
 		/// <param name="aName">A name.</param>
 		/// <param name="anAmount">An amount.</param>
 		/// <param name="anUPC">An upc.</param>
-		public Ingredient (string aName, int anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage, bool aSwitch)
+		public Ingredient (string aName, double anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage, bool aSwitch)
 		{
 			name = aName;
 			amount = anAmount;

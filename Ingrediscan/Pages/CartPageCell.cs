@@ -9,20 +9,20 @@ namespace Ingrediscan
 		public CartPageCell ()
 		{
 			var image = new Image {
-				HorizontalOptions = LayoutOptions.StartAndExpand,
+				HorizontalOptions = LayoutOptions.EndAndExpand,
 			};
 
 			image.SetBinding (Image.SourceProperty, "Image");
 
 			var label = new Label {
 				VerticalTextAlignment = TextAlignment.Center,
-				HorizontalOptions = LayoutOptions.Start,
+				HorizontalOptions = LayoutOptions.StartAndExpand,
 			};
 
 			label.SetBinding (Label.TextProperty, "Name");
 
 			var tick = new Switch {
-				HorizontalOptions = LayoutOptions.EndAndExpand,
+				HorizontalOptions = LayoutOptions.Start,
 			};
 
 			tick.SetBinding (Switch.IsEnabledProperty, "Switch");
@@ -33,10 +33,8 @@ namespace Ingrediscan
 			};
 
 			var layout = new StackLayout {
-				//Padding = new Thickness (5, 0, 0, 0),
 				Orientation = StackOrientation.Horizontal,
-				//HorizontalOptions = LayoutOptions.StartAndExpand,
-				Children = { image, label, tick }
+				Children = { tick, label, image }
 			};
 
 			View = layout;

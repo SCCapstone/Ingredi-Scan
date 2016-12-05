@@ -8,12 +8,12 @@ namespace Ingrediscan
 	public class ScanResultsPage : ContentPage
 	{
 		ListView resultsView = new ListView ();
-		List<SearchResultItem> recipes = new List<SearchResultItem> ();
+		//List<SearchResultItem> recipes = new List<SearchResultItem> ();
 
 		public ScanResultsPage (SpoonacularClasses.FindByUPC resultsFromUPC)
 		{
 			resultsView = new ListView {
-				ItemsSource = recipes,
+				//ItemsSource = recipes,
 				ItemTemplate = new DataTemplate (() => {
 					var imageCell = new ImageCell ();
 					imageCell.SetBinding (TextCell.TextProperty, "Text");
@@ -46,12 +46,10 @@ namespace Ingrediscan
 		public List<SearchResultItem> CreateListViewFromUPC (SpoonacularClasses.FindByUPC resultsFromUPC)
 		{
 			var items = REST_API.GET_FindByIngredients (resultsFromUPC.title).Result;
-
 			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
 			items.ForEach (x => searchResultItems.Add (new SearchResultItem {
 				ImageSource = x.image,
 				Text = x.title,
-				//Detail = ,
 				TargetType = typeof (RecipePage),
 				Id = x.id
 			}));

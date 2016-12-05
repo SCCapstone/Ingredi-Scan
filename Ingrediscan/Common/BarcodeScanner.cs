@@ -1,56 +1,43 @@
 ﻿using Ingrediscan.Utilities;
 using System;
-using ZXing.Mobile;
+//using ZXing.Mobile;
+using System.Threading.Tasks;
+using ZXing.Net.Mobile.Forms;
+using Xamarin.Forms;
 
 namespace Ingrediscan
 {
 	public class BarcodeScanner
 	{
-		private string lastUPC = "";
+		private string lastUPC { get; set; }
 
 		/// <summary>
 		/// Scans the barcode.
 		/// </summary>
 		/// <returns>The barcode.</returns>
-		public async System.Threading.Tasks.Task<SpoonacularClasses.FindByUPC> scanBarcode (MobileBarcodeScanner barcodeScanner)
+		public async Task<SpoonacularClasses.FindByUPC> scanBarcode (ZXing.Result upc)
 		{
 			Console.WriteLine ("Scan in progress...");
 
-			// This handles the scanning
-			ZXing.Result upc = await barcodeScanner.Scan ();
-
-			Console.WriteLine ("Scan completed!");
+			Console.WriteLine ("Scan completed! " + upc.Text);
 
 			if (upc != null) 
 			{
 				Console.WriteLine ("Scanned Barcode: " + upc.Text);
 
 				// Set our last UPC scanned from the text which we parse to a long
-				this.setUPC (upc.Text);
+				lastUPC = upc.Text;
 				// Grab our item json from this GET call
 				var upcJson = await REST_API.GET_FindByUPC (this.lastUPC);
 
-				return upcJson;
+				if (upcJson != null) 
+				{
+
+					return upcJson;
+				}
 			}
 
-			return null;//TODO Do we need to return something else here?
-		}
-
-		/// <summary>
-		/// Sets the upc.
-		/// </summary>
-		/// <param name="upc">Upc.</param>
-		public void setUPC(string upc)
-		{
-			lastUPC = upc;
-		}
-		/// <summary>
-		/// Gets the upc.
-		/// </summary>
-		/// <returns>The upc.</returns>
-		public string getUPC()
-		{
-			return lastUPC;
+			return null;
 		}
 	}
 }

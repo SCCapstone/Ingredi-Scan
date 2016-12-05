@@ -4,6 +4,7 @@ using System.IO;
 using Xamarin.Forms;
 
 using Ingrediscan.Utilities;
+using Android.Widget;
 
 namespace Ingrediscan
 {
@@ -11,16 +12,18 @@ namespace Ingrediscan
 	{
 		public CartPage ()
 		{
-			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", async () => {
-				await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
+			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", () => {
+				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
+				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
 			}));
 
-			ToolbarItems.Add (new ToolbarItem ("Delete Cart", "drawable/delete.png", async () => {
-				await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
+			ToolbarItems.Add (new ToolbarItem ("Delete Cart", "drawable/delete.png", () => {
+				//await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
+				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
 			}));
 
 			// Create our data from our load data
-			var list = this.CreateListViewFromList (Globals.firebaseData.cart);//GlobalVariables.CurrentRecipes);
+			var list = this.CreateListViewFromList (Globals.firebaseData.cart);
 
 			var template = new DataTemplate (typeof (CartPageCell));
 			var items = new List<GroupCart> ();
@@ -39,7 +42,8 @@ namespace Ingrediscan
 			SearchBar searchBar = new SearchBar {
 				Placeholder = "Enter search term",
 				SearchCommand = new Command (() => {
-					DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
+					//DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
+					Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
 				})
 			};
 
@@ -47,7 +51,7 @@ namespace Ingrediscan
 			Content = new StackLayout {
 				Children = {
 					searchBar,
-					new ListView {
+					new Xamarin.Forms.ListView {
 						IsGroupingEnabled = true,
 						GroupDisplayBinding = new Binding ("Name"),
 						GroupShortNameBinding = new Binding ("Name"),
@@ -59,6 +63,7 @@ namespace Ingrediscan
 			};
 		}
 
+		// TODO Not yet implemented
 		public List<string> searchCart(string query)
 		{
 			List<string> items = new List<string> ();
@@ -86,8 +91,8 @@ namespace Ingrediscan
 					//subItem.Name = ss.getName ();
 					subItem.Name = ss.formattedName;
 					subItem.Image = ss.image;
-					subItem.Switch = new Switch();
-					subItem.Switch.SetValue(Switch.IsEnabledProperty, ss.itemSwitch);
+					subItem.Switch = new Xamarin.Forms.Switch();
+					subItem.Switch.SetValue(Xamarin.Forms.Switch.IsEnabledProperty, ss.itemSwitch);
 
 					subItems.Add (subItem);
 				}

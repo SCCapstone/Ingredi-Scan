@@ -1,9 +1,8 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
 
-using ZXing.Mobile;
 using Ingrediscan.Utilities;
-using Auth0.SDK;
 
 namespace Ingrediscan
 {
@@ -14,18 +13,18 @@ namespace Ingrediscan
 		{
 			base.OnCreate (savedInstanceState);
 
-			// Set our view from the "main" layout resource
-			//TODO Is this slowing everything down?
-			MobileBarcodeScanner.Initialize (Application);
-
-			//GlobalVariables.loadRecipes ();
-			// Initialize the interface to Firebase.
-			//var fb = FirebaseInterface.Instance;
+			ZXing.Net.Mobile.Forms.Android.Platform.Init ();
+			ZXing.Mobile.MobileBarcodeScanner.Initialize (Application);
 
 			Xamarin.Forms.Forms.Init (this, savedInstanceState);
 			LoadApplication (new App ());
 
 			FirebaseInterface.LoginAuth0 ();
+		}
+
+		public override void OnRequestPermissionsResult (int requestCode, string [] permissions, Permission [] grantResults)
+		{
+			global::ZXing.Net.Mobile.Forms.Android.PermissionsHandler.OnRequestPermissionsResult (requestCode, permissions, grantResults);
 		}
 	}
 }

@@ -44,12 +44,17 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<SpoonacularClasses.FindByUPC> (request).Data;
+			var response = client.Execute<SpoonacularClasses.FindByUPC> (request);
 
-			Console.WriteLine ("RESPONSE: " + response.title);
+			Console.WriteLine ("RESPONSE: " + response.Data.title);
 			//var itemResp = JsonConvert.DeserializeObject<SpoonacularClasses.FindByUPC> (response.Body);
 			Console.WriteLine ("Exit GET - UPC");
-			return response;
+			if(response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				return response.Data;
+			}
+
+			return null;
 		}
 
 
