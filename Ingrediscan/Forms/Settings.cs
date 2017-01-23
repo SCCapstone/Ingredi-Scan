@@ -103,28 +103,27 @@ namespace Ingrediscan
 
 		public static void LoadSettings(SearchSettings searchSettings)
 		{
-			if (searchSettings.cuisine.Count == 0 || searchSettings.diets.Count == 0 || searchSettings.intolerances.Count == 0) 
-			{
-				var l = initialSettings ();
+			if (searchSettings != null) {
+				if (searchSettings.cuisine.Count == 0 || searchSettings.diets.Count == 0 || searchSettings.intolerances.Count == 0) {
+					var l = initialSettings ();
 
-				foreach (KeyValuePair<string, bool> k in l [0])
-					Console.WriteLine (k.Key + " " + k.Value);
+					foreach (KeyValuePair<string, bool> k in l [0])
+						Console.WriteLine (k.Key + " " + k.Value);
 
-				cuisineSettings = l [0];
-				dietSettings = l [1];
-				intolSettings = l [2];
+					cuisineSettings = l [0];
+					dietSettings = l [1];
+					intolSettings = l [2];
 
-				Globals.firebaseData.searchSettings.cuisine = cuisineSettings;
-				Globals.firebaseData.searchSettings.diets = dietSettings;
-				Globals.firebaseData.searchSettings.intolerances = intolSettings;
+					Globals.firebaseData.searchSettings.cuisine = cuisineSettings;
+					Globals.firebaseData.searchSettings.diets = dietSettings;
+					Globals.firebaseData.searchSettings.intolerances = intolSettings;
 
-				SaveAndLoad.SaveToFirebase (Globals.firebaseData);
-			} 
-			else 
-			{
-				cuisineSettings = searchSettings.cuisine;
-				dietSettings = searchSettings.diets;
-				intolSettings = searchSettings.intolerances;
+					SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+				} else {
+					cuisineSettings = searchSettings.cuisine;
+					dietSettings = searchSettings.diets;
+					intolSettings = searchSettings.intolerances;
+				}
 			}
 		}
 	}

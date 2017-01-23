@@ -50,7 +50,7 @@ namespace Ingrediscan
 						try {
 							await Navigation.PushAsync (new ScanResultsPage (itemResp));
 						}
-						catch(Exception ex)
+						catch(Exception)
 						{
 							Toast.MakeText (Forms.Context, "An error occurred. It's possible the barcode is not a valid ingredient or not " +
 										"currently in Spoonacular's database.", ToastLength.Short).Show ();

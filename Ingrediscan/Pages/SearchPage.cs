@@ -124,10 +124,16 @@ namespace Ingrediscan
 
 		public static void LoadSearchHistory(List<string> history)
 		{
-			//TODO Finish
-			Console.WriteLine ("History");
-			history.ForEach (x => Console.WriteLine (x));
-			Globals.firebaseData.history = history;
+			if (history != null) {
+				Console.WriteLine ("History");
+				history.ForEach (x => Console.WriteLine (x));
+
+				Globals.firebaseData.history = history;
+			}
+			else
+			{
+				Globals.firebaseData.history = new List<string> ();
+			}
 		}
 	}
 }
