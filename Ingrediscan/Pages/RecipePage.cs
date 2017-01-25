@@ -5,6 +5,7 @@ using Xamarin.Forms;
 
 using Ingrediscan.Utilities;
 using Android.Widget;
+using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
@@ -229,7 +230,7 @@ namespace Ingrediscan
 			// TODO An additional API Call... Able to parse steps from RecipeInformation, but format is not always the same
 			// Maybe we can create cases for the most general 
 
-			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.id, false).Result;
+			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.id, false);
 
 			if (steps.Count > 0) 
 			{

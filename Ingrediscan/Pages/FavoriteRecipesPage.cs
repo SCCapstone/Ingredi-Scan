@@ -27,12 +27,20 @@ namespace Ingrediscan
 					listView
 				}
 			};
-
+			bool finished = true;
 			listView.ItemTapped += async (sender, e) => {
-				var id = ((SearchResultItem)e.Item).Id;
-				var recipe = REST_API.GET_RecipeInformation (id, false).Result;
-				await Navigation.PushAsync (new RecipePage (recipe));
-				listView.SelectedItem = null;
+				if (finished) 
+				{
+					finished = false;
+					var id = ((SearchResultItem)e.Item).Id;
+					var recipe = await REST_API.GET_RecipeInformation (id, false);
+					await Navigation.PushAsync (new RecipePage (recipe));
+					listView.SelectedItem = null;
+					finished = true;
+				}
+				else if (finished == false) {
+					listView.SelectedItem = null;
+				}
 			};
 		}
 

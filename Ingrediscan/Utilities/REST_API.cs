@@ -44,24 +44,22 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<SpoonacularClasses.FindByUPC> (request);
+			//var response = client.Execute<SpoonacularClasses.FindByUPC> (request);
 
-			Console.WriteLine ("RESPONSE: " + response.Data.title);
+			var response = await ExecuteAsync<SpoonacularClasses.FindByUPC> (request, client);
+
+			Console.WriteLine ("RESPONSE: " + response.title);
 			//var itemResp = JsonConvert.DeserializeObject<SpoonacularClasses.FindByUPC> (response.Body);
 			Console.WriteLine ("Exit GET - UPC");
-			if(response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				return response.Data;
-			}
 
-			return null;
+			return response;
 		}
 
 
 		/// <summary>
 		/// Get the recipes from Spoonacular.
 		/// </summary>
-		/// <param name="itemName">Item name which we get from the UPC's title.</param>
+		/// <param name="ingredients">Item name which we get from the UPC's title.</param>
 		public static async Task<List<SpoonacularClasses.FindByIngredients>> 
 		                                                GET_FindByIngredients(/*bool fillIngredients, */string ingredients)//,
 		                                                                     //bool limitLicense, int number, int ranking) // TODO Add await
@@ -88,7 +86,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
+			//var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
+
+			var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
 
 			Console.WriteLine (client.BaseUrl.ToString () + client.BuildUri (request).ToString());
 
@@ -123,7 +123,9 @@ namespace Ingrediscan
 				request.RequestFormat = DataFormat.Json;
 
 				// Generate a response TODO Make async
-				var response = client.Execute<List<SpoonacularClasses.AutocompleteIngredientSearch>> (request).Data;
+				//var response = client.Execute<List<SpoonacularClasses.AutocompleteIngredientSearch>> (request).Data;
+
+				var response = await ExecuteAsync<List<SpoonacularClasses.AutocompleteIngredientSearch>> (request, client);
 
 				Console.WriteLine ("RESPONSE: ");
 				response.ForEach (x => Console.WriteLine (x.name));
@@ -161,7 +163,9 @@ namespace Ingrediscan
 				request.RequestFormat = DataFormat.Json;
 
 				// Generate a response TODO Make async
-				var response = client.Execute<List<SpoonacularClasses.AutocompleteRecipeSearch>> (request).Data;
+				//var response = client.Execute<List<SpoonacularClasses.AutocompleteRecipeSearch>> (request).Data;
+
+				var response = await ExecuteAsync<List<SpoonacularClasses.AutocompleteRecipeSearch>> (request, client);
 
 				Console.WriteLine ("RESPONSE: ");
 				response.ForEach (x => Console.WriteLine (x.title));
@@ -196,7 +200,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<List<SpoonacularClasses.FindSimilarRecipes>> (request).Data;
+			//var response = client.Execute<List<SpoonacularClasses.FindSimilarRecipes>> (request).Data;
+
+			var response = await ExecuteAsync<List<SpoonacularClasses.FindSimilarRecipes>> (request, client);
 
 			Console.WriteLine ("RESPONSE: ");
 			response.ForEach (x => Console.WriteLine (x.title));
@@ -206,7 +212,7 @@ namespace Ingrediscan
 			return response;
 		}
 
-		public static async Task<List<SpoonacularClasses.RecipeInstructions>> 
+		public static List<SpoonacularClasses.RecipeInstructions> 
 		                                                GET_RecipeInstructions(string id, bool stepBreakdown)
 		{
 			Console.WriteLine ("Enter GET - RECIPE INSTRUCTIONS");
@@ -228,6 +234,8 @@ namespace Ingrediscan
 
 			// Generate a response TODO Make async
 			var response = client.Execute<List<SpoonacularClasses.RecipeInstructions>> (request).Data;
+
+			//var response = await ExecuteAsync<List<SpoonacularClasses.RecipeInstructions>> (request, client);
 
 			Console.WriteLine ("RESPONSE: ");
 			response.ForEach (x => Console.WriteLine (x.name));
@@ -256,7 +264,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<SpoonacularClasses.SummarizeRecipe> (request).Data;
+			//var response = client.Execute<SpoonacularClasses.SummarizeRecipe> (request).Data;
+
+			var response = await ExecuteAsync<SpoonacularClasses.SummarizeRecipe> (request, client);
 
 			Console.WriteLine ("RESPONSE: " + response.title);
 
@@ -284,7 +294,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<SpoonacularClasses.SearchRecipes> (request).Data;
+			//var response = client.Execute<SpoonacularClasses.SearchRecipes> (request).Data;
+
+			var response = await ExecuteAsync<SpoonacularClasses.SearchRecipes> (request, client);
 
 			Console.WriteLine ("RESPONSE: ");
 			response.results.ForEach (x => Console.WriteLine (x.title));
@@ -296,7 +308,7 @@ namespace Ingrediscan
 		public static async Task<SpoonacularClasses.RecipeInformation>
 														GET_RecipeInformation (string id, bool includeNutrition = false)
 		{
-			Console.WriteLine ("Enter GET - RECIPE INSTRUCTIONS");
+			Console.WriteLine ("Enter GET - RECIPE INFORMATION");
 
 			string action = "/recipes/{id}/information";
 
@@ -314,14 +326,21 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<SpoonacularClasses.RecipeInformation> (request).Data;
+			//var response = client.Execute<SpoonacularClasses.RecipeInformation> (request).Data;
+
+			var response = await ExecuteAsync<SpoonacularClasses.RecipeInformation> (request, client);
 
 			Console.WriteLine ("RESPONSE: " + response.id);
-
-
-			Console.WriteLine ("Exit GET - RECIPE INSTRUCTIONS");
+			Console.WriteLine ("Exit GET - RECIPE INFORMATION");
 
 			return response;
+		}
+
+		public static Task<T> ExecuteAsync<T> (RestRequest request, RestClient client) where T : new()
+		{
+			var taskCompletionSource = new TaskCompletionSource<T> ();
+			client.ExecuteAsync<T> (request, (response) => taskCompletionSource.SetResult (response.Data));
+			return taskCompletionSource.Task;
 		}
 	}
 }

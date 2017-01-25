@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using Ingrediscan.Utilities;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
@@ -26,7 +27,7 @@ namespace Ingrediscan
 
 			Globals.firebaseData.history.ToList().ForEach(x => picker.Items.Add(x));
 
-			picker.SelectedIndexChanged += (sender, args) => {
+			picker.SelectedIndexChanged += async (sender, args) => {
 				if (picker.SelectedIndex == -1) 
 				{
 					// Do nothing
@@ -36,7 +37,7 @@ namespace Ingrediscan
 					if (searchBar.Text != picker.Items [picker.SelectedIndex]) 
 					{
 						searchBar.Text = picker.Items [picker.SelectedIndex];
-						resultsView.ItemsSource = this.CreateListViewFromSearch (searchBar.Text);
+						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
 					}
 				}
 			};
@@ -51,12 +52,21 @@ namespace Ingrediscan
 				}),
 				VerticalOptions = LayoutOptions.StartAndExpand,
 			};
+			bool finished = true;
 			resultsView.ItemSelected += async (sender, e) => {
-				if (Navigation.NavigationStack.Count < 2) 
+				if (Navigation.NavigationStack.Count < 2 && finished == true) 
 				{
+					finished = false;
 					var id = ((SearchResultItem)e.SelectedItem).Id;
-					var recipe = REST_API.GET_RecipeInformation (id, false).Result;
+					var recipe = await REST_API.GET_RecipeInformation (id, false);
+					Console.WriteLine ("Recipe Page:");
 					await Navigation.PushAsync (new RecipePage (recipe));
+					Console.WriteLine ("Recipe Page: Complete");
+					((ListView)sender).SelectedItem = null;
+					finished = true;
+				}
+				else if(finished == false)
+				{
 					((ListView)sender).SelectedItem = null;
 				}
 			};
@@ -68,10 +78,10 @@ namespace Ingrediscan
 
 			searchBar = new SearchBar {
 				Placeholder = "Enter search term",
-				SearchCommand = new Command (() => {
+				SearchCommand = new Command (async () => {
 					if (prevSearch != searchBar.Text) 
 					{
-						resultsView.ItemsSource = this.CreateListViewFromSearch (searchBar.Text);
+						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
 
 						if (Globals.firebaseData.history.Count > 10) 
 						{
@@ -106,9 +116,9 @@ namespace Ingrediscan
 		}
 
 		//TODO Make async
-		public List<SearchResultItem> CreateListViewFromSearch(string search)
+		public async Task<List<SearchResultItem>> CreateListViewFromSearch(string search)
 		{
-			var items = REST_API.GET_SearchRecipes (search).Result;
+			var items = await REST_API.GET_SearchRecipes (search);
 
 			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
 			items.results.ForEach (x => searchResultItems.Add (new SearchResultItem {
