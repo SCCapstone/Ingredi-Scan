@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Ingrediscan.Utilities;
 using Android.Widget;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Ingrediscan
 {
@@ -234,19 +235,61 @@ namespace Ingrediscan
 
 			if (steps.Count > 0) 
 			{
+				var recipeSteps = steps [0].steps;
 				int counter = 1;
-				for (int i = 0; i < steps[0].steps.Count; ++i)
+				Console.WriteLine ("COUNT: " + recipeSteps.Count);
+				if (recipeSteps.Count > 1) 
 				{
-					if (!char.IsDigit (steps [0].steps [i].step [0]) && steps[0].steps[i].step.ToLower() != "kitchen-friendly view") 
+					//TODO Make every recipe available, not just the first one. ie steps[0] <- steps[0...]
+					// Have the user decide which recipe variant they want to use.
+					for (int i = 0; i < recipeSteps.Count; ++i) 
 					{
-						GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
-						var text = new RecipePageItem.RecipePageStep ();
-						text.Step = steps [0].steps [i].step;
+						if (!char.IsDigit (recipeSteps[i].step [0]) && 
+						    recipeSteps[i].step.ToLower () != "kitchen-friendly view") 
+						{
+							GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
+							var text = new RecipePageItem.RecipePageStep ();
+							text.Step = recipeSteps[i].step;
 
-						recGroup.Add (text);
-						searchResultItems.Add (recGroup);
+							recGroup.Add (text);
+							searchResultItems.Add (recGroup);
 
-						++counter;
+							++counter;
+						}
+					}
+				
+				}
+				else
+				{
+					Console.WriteLine ("Why u do dis...?");
+					var recipeStrings = recipeSteps [0].step.Split('.');
+
+					for (int i = 0; i < recipeStrings.Length; ++i) 
+					{
+						var step = recipeStrings [i];
+
+
+						if (step.Length > 0) 
+						{
+							char letter = step [0];
+							if (letter == ' ') 
+							{
+								step = step.Substring (1);
+							}
+
+							if (!char.IsDigit (step [0]) &&
+							step.ToLower () != "kitchen-friendly view") 
+							{
+								GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
+								var text = new RecipePageItem.RecipePageStep ();
+								text.Step = step + ".";
+
+								recGroup.Add (text);
+								searchResultItems.Add (recGroup);
+
+								++counter;
+							}
+						}
 					}
 				}
 			}
