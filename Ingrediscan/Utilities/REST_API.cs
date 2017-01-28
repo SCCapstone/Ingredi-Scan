@@ -61,10 +61,12 @@ namespace Ingrediscan
 		/// </summary>
 		/// <param name="ingredients">Item name which we get from the UPC's title.</param>
 		public static  List<SpoonacularClasses.FindByIngredients>
-		                                                GET_FindByIngredients(/*bool fillIngredients, */string ingredients)//,
-		                                                                     //bool limitLicense, int number, int ranking) // TODO Add await
+		                                                GET_FindByIngredients(/*bool fillIngredients, */string ingredients,//,
+		                                                                    bool limitLicense = false)//, int number, int ranking) // TODO Add await
 		{
-			Console.WriteLine ("Enter GET - SPOONACULAR");
+            //ingredients = ingredients.Replace(" ", "");
+			Console.WriteLine ("Enter GET - SPOONACULAR: " + ingredients);
+
 
 			// The URL we are currently using
 			string action = "/recipes/findByIngredients";
@@ -80,7 +82,7 @@ namespace Ingrediscan
 			request.AddHeader ("Accept", "application/json");
 			//request.AddQueryParameter ("fillIngredients", fillIngredients.ToString());
 			request.AddQueryParameter ("ingredients", ingredients);
-			//request.AddQueryParameter ("limitLicense", limitLicense.ToString ());
+			request.AddQueryParameter ("limitLicense", limitLicense.ToString ());
 			//request.AddQueryParameter ("number", number.ToString());
 			//request.AddQueryParameter ("ranking", ranking.ToString ());
 			request.RequestFormat = DataFormat.Json;

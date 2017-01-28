@@ -13,8 +13,8 @@ namespace Ingrediscan
 		public ScanResultsPage (SpoonacularClasses.FindByUPC resultsFromUPC)
 		{
 			PrintItem (resultsFromUPC);
-            if (!resultsFromUPC.title.Equals(""))
-            {
+            //if (!resultsFromUPC.title.Equals(""))
+            //{
                 resultsView = new ListView
                 {
                     //ItemsSource = recipes,
@@ -56,30 +56,41 @@ namespace Ingrediscan
                 },
                     Padding = new Thickness(10, Device.OnPlatform(20, 0, 0), 10, 5)
                 };
-            }
+            //}
 
+           /* else
+            {
+                Navigation.PopAsync();
+                Android.Widget.Toast.MakeText(Forms.Context, "An error occurred. It's possible the barcode is not a valid ingredient or not " +
+                                        "currently in Spoonacular's database.", Android.Widget.ToastLength.Short).Show();
+            }*/
+		}
+
+        public List<SearchResultItem> CreateListViewFromUPC(SpoonacularClasses.FindByUPC resultsFromUPC)
+        {
+            var items = REST_API.GET_FindByIngredients(resultsFromUPC.title);
+            if (items.Count > 0)
+            {
+                List<SearchResultItem> searchResultItems = new List<SearchResultItem>();
+                items.ForEach(x => searchResultItems.Add(new SearchResultItem
+                {
+                    ImageSource = x.image,
+                    Text = x.title,
+                    TargetType = typeof(RecipePage),
+                    Id = x.id
+                }));
+
+                return searchResultItems;
+
+            }
             else
             {
                 Navigation.PopAsync();
                 Android.Widget.Toast.MakeText(Forms.Context, "An error occurred. It's possible the barcode is not a valid ingredient or not " +
                                         "currently in Spoonacular's database.", Android.Widget.ToastLength.Short).Show();
+                return null;
             }
-		}
-
-		public List<SearchResultItem> CreateListViewFromUPC (SpoonacularClasses.FindByUPC resultsFromUPC)
-		{
-			var items = REST_API.GET_FindByIngredients (resultsFromUPC.title);
-			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
-			items.ForEach (x => searchResultItems.Add (new SearchResultItem {
-				ImageSource = x.image,
-				Text = x.title,
-				TargetType = typeof (RecipePage),
-				Id = x.id
-			}));
-
-			return searchResultItems;
-		}
-
+        }
 		public void PrintItem(SpoonacularClasses.FindByUPC resultsFromUPC)
 		{
 			Console.WriteLine ("ID: " + resultsFromUPC.id);
