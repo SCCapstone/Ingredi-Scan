@@ -60,7 +60,7 @@ namespace Ingrediscan
 		/// Get the recipes from Spoonacular.
 		/// </summary>
 		/// <param name="ingredients">Item name which we get from the UPC's title.</param>
-		public static async Task<List<SpoonacularClasses.FindByIngredients>> 
+		public static  List<SpoonacularClasses.FindByIngredients>
 		                                                GET_FindByIngredients(/*bool fillIngredients, */string ingredients)//,
 		                                                                     //bool limitLicense, int number, int ranking) // TODO Add await
 		{
@@ -86,9 +86,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			//var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
+			var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
 
-			var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
+			//var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
 
 			Console.WriteLine (client.BaseUrl.ToString () + client.BuildUri (request).ToString());
 
