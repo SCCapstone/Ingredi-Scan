@@ -12,6 +12,7 @@ namespace Ingrediscan
 
 		public ScanResultsPage (SpoonacularClasses.FindByUPC resultsFromUPC)
 		{
+			PrintItem (resultsFromUPC);
             if (!resultsFromUPC.title.Equals(""))
             {
                 resultsView = new ListView
@@ -77,6 +78,28 @@ namespace Ingrediscan
 			}));
 
 			return searchResultItems;
+		}
+
+		public void PrintItem(SpoonacularClasses.FindByUPC resultsFromUPC)
+		{
+			Console.WriteLine ("ID: " + resultsFromUPC.id);
+			Console.WriteLine ("Title: " + resultsFromUPC.title);
+			Console.WriteLine ("Price: " + resultsFromUPC.price);
+			Console.WriteLine ("Likes: " + resultsFromUPC.likes);
+			Console.WriteLine ("Badges: ");
+			resultsFromUPC.badges.ForEach (x => Console.WriteLine (x));
+			Console.WriteLine ("Important Badges: ");
+			resultsFromUPC.important_badges.ForEach (x => Console.WriteLine (x));
+			Console.WriteLine ("Nutrition Widget: " + resultsFromUPC.nutrition_widget);
+			Console.WriteLine ("Serving Size: " + resultsFromUPC.serving_size);
+			Console.WriteLine ("Number of Servings: " + resultsFromUPC.number_of_servings);
+			Console.WriteLine ("Spoonacular Score: " + resultsFromUPC.spoonacular_score);
+			Console.WriteLine ("Breadcrumbs: ");
+			resultsFromUPC.breadcrumbs.ForEach (x => Console.WriteLine (x));
+			Console.WriteLine ("Generated Text: " + resultsFromUPC.generated_text);
+			Console.WriteLine ("Ingredient Count: " + resultsFromUPC.ingredientCount);
+			Console.WriteLine ("Images: ");
+			resultsFromUPC.images.ForEach (x => Console.WriteLine (x));
 		}
 	}
 }

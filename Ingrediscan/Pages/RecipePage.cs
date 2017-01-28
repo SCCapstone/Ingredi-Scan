@@ -233,6 +233,8 @@ namespace Ingrediscan
 
 			List<SpoonacularClasses.RecipeInstructions> steps = REST_API.GET_RecipeInstructions (recipe.id, false);
 
+			int characterLimit = 50;
+
 			if (steps.Count > 0) 
 			{
 				var recipeSteps = steps [0].steps;
@@ -261,13 +263,11 @@ namespace Ingrediscan
 				}
 				else
 				{
-					Console.WriteLine ("Why u do dis...?");
 					var recipeStrings = recipeSteps [0].step.Split('.');
 
 					for (int i = 0; i < recipeStrings.Length; ++i) 
 					{
 						var step = recipeStrings [i];
-
 
 						if (step.Length > 0) 
 						{
@@ -278,7 +278,7 @@ namespace Ingrediscan
 							}
 
 							if (!char.IsDigit (step [0]) &&
-							step.ToLower () != "kitchen-friendly view") 
+							    step.ToLower () != "kitchen-friendly view") 
 							{
 								GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
 								var text = new RecipePageItem.RecipePageStep ();
