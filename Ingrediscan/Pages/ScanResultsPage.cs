@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Ingrediscan.Utilities;
 using Xamarin.Forms;
 
 namespace Ingrediscan
@@ -79,7 +79,6 @@ namespace Ingrediscan
                     TargetType = typeof(RecipePage),
                     Id = x.id
                 }));
-
                 return searchResultItems;
 
             }

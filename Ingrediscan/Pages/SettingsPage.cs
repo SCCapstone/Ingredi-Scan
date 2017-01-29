@@ -14,11 +14,13 @@ namespace Ingrediscan
 		{
 			Settings.LoadSettings(Globals.firebaseData.searchSettings);
 
-			ToolbarItems.Add (new ToolbarItem ("Save Settings", "drawable/save.png", () => {
-				Settings.SaveSettings ();
+			ToolbarItems.Add (new ToolbarItem ("Clear Settings", "drawable/save.png", () => {
+				Settings.initialSettings();
 
-				Toast.MakeText (Forms.Context, "Settings have been saved.", ToastLength.Short).Show ();
+				Toast.MakeText (Forms.Context, "Settings have been cleared.", ToastLength.Short).Show ();
 			}));
+
+            Settings.SaveSettings();
 
 			var cuisineSwitches = Settings.populateSettings("cuisine");
 			var dietSwitches = Settings.populateSettings ("diet");
