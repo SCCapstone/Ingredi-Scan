@@ -253,6 +253,7 @@ namespace Ingrediscan
 							var text = new RecipePageItem.RecipePageStep ();
 							text.Step = recipeSteps[i].step;
 
+
 							recGroup.Add (text);
 							searchResultItems.Add (recGroup);
 
@@ -271,22 +272,21 @@ namespace Ingrediscan
 
 						if (step.Length > 0) 
 						{
-							char letter = step [0];
-							if (letter == ' ') 
-							{
-								step = step.Substring (1);
-							}
+							step = step.Trim ();
 
 							if (!char.IsDigit (step [0]) &&
 							    step.ToLower () != "kitchen-friendly view") 
 							{
-								GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
-								var text = new RecipePageItem.RecipePageStep ();
-								text.Step = step + ".";
+								if (step.Length <= characterLimit && i != 0) {
+									searchResultItems [searchResultItems.Count - 1] [0].Step += " " + step + ".";
+								} else {
+									GroupRecipe recGroup = new GroupRecipe ("Step " + counter);
+									var text = new RecipePageItem.RecipePageStep ();
+									text.Step = step + ".";
 
-								recGroup.Add (text);
-								searchResultItems.Add (recGroup);
-
+									recGroup.Add (text);
+									searchResultItems.Add (recGroup);
+								}
 								++counter;
 							}
 						}
