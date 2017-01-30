@@ -13,11 +13,11 @@ namespace Ingrediscan.Utilities
 	{
 		public static async void LoginAuth0()
 		{
-			var auth0 = new Auth0Client (
+			Globals.auth0client = new Auth0Client (
 				Globals.Auth0URI,
 				Globals.FirebaseAPIKey);
 
-			Globals.user = await auth0.LoginAsync (Forms.Context);
+			Globals.user = await Globals.auth0client.LoginAsync (Forms.Context);
 			Globals.userData = JsonConvert.DeserializeObject<Auth0Json> (Globals.user.Profile.ToString());
 
 			Globals.firebaseData = await SaveAndLoad.LoadFromFirebase ();

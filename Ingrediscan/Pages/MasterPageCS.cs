@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ingrediscan.Utilities;
+using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 
@@ -42,6 +43,15 @@ namespace Ingrediscan
 				Title = "About",
 				IconSource = "Resources/drawable/about.png",
 				TargetType = typeof (AboutPage)
+			});
+			// Not sure if we want this delegate here. Perhaps we should move this to the FirebaseInterface class.
+			Action logout = () => { Globals.auth0client.Logout(); FirebaseInterface.LoginAuth0(); };
+			masterPageItems.Add(new MasterPageItem
+			{
+				Title = "Logout",
+				IconSource = "Resources/drawable/logout.png",
+				TargetType = typeof (ScanPage),
+				Action = logout
 			});
 
 			listView = new ListView {

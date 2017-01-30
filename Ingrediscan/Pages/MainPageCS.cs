@@ -20,6 +20,10 @@ namespace Ingrediscan
 		void OnItemSelected (object sender, SelectedItemChangedEventArgs e)
 		{
 			var item = e.SelectedItem as MasterPageItem;
+			if (item != null && item.Action != null)
+			{
+				item.Action.Invoke();
+			}
 			if (item != null && item.TargetType.FullName != prevPageStr) 
 			{
 				Detail = new NavigationPage ((Page)Activator.CreateInstance (item.TargetType));
@@ -28,6 +32,7 @@ namespace Ingrediscan
 				IsPresented = false;
 
 				prevPageStr = item.TargetType.FullName;
+
 			}
 			else
 			{

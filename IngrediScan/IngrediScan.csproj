@@ -295,7 +295,9 @@
     <AndroidResource Include="Resources\drawable\faveBefore.png" />
     <AndroidResource Include="Resources\drawable\logo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\logout.png" />
+  </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="SettingsAsset.txt" />
   </ItemGroup>
