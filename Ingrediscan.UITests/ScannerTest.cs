@@ -9,7 +9,7 @@ using Xamarin.UITest.Queries;
 namespace Ingrediscan.UITests
 {
 	[TestFixture]
-	public class Tests
+	public class ScannerTest
 	{
 		AndroidApp app;
 
@@ -20,16 +20,15 @@ namespace Ingrediscan.UITests
 		}
 
 		[Test]
-		public void CartPageTest ()
+		public void ScanPageTest ()
 		{
-			Func<AppQuery, AppQuery> MyButton = c => c.Button ("myButton");
+			Func<AppQuery, AppQuery> MyButton = c => c.Button ("ScanButton");
 
-			app.Tap (MyButton);
 			app.Tap (MyButton);
 			AppResult [] results = app.Query (MyButton);
-			app.Screenshot ("Button clicked twice.");
+			//app.Screenshot ("Button clicked once.");
 
-			Assert.AreEqual ("2 clicks!", results [0].Text);
+			Assert.NotNull (results);
 		}
 	}
 }

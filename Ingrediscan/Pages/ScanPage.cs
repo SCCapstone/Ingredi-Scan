@@ -4,6 +4,7 @@ using Xamarin.Forms;
 
 using ZXing.Net.Mobile.Forms;
 using Android.Widget;
+using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
@@ -18,7 +19,8 @@ namespace Ingrediscan
 				Font = Font.SystemFontOfSize (NamedSize.Large),
 				BorderWidth = 2,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand
+				VerticalOptions = LayoutOptions.CenterAndExpand,
+				AutomationId = "ScanButton"
 			};
 			scanButton.Clicked += OnScanClicked;
 
