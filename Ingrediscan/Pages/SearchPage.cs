@@ -121,8 +121,9 @@ namespace Ingrediscan
 			var items = await REST_API.GET_SearchRecipes (search);
 
 			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
+
 			items.results.ForEach (x => searchResultItems.Add (new SearchResultItem {
-				ImageSource = items.baseUri + x.imageUrls [0],
+				ImageSource = items.baseUri + x.image,
 				Text = x.title,
 				//Detail = 
 				TargetType = typeof (RecipePage),
