@@ -55,7 +55,21 @@ namespace Ingrediscan
 				}
 			});
 
-			faveBefore = new ToolbarItem ("Favorite Recipe", "drawable/faveBefore.png", () => {
+			string faveStr = "drawable/faveBefore.png";
+			int removeIndex = -1;
+
+			// If this is already a favorited recipe, then mark it as such
+			foreach (var tempR in Globals.firebaseData.savedRecipes) 
+			{
+				if (recipe.name == tempR.name) 
+				{
+					faveStr = "drawable/faveAfter.png";
+					removeIndex = Globals.firebaseData.savedRecipes.IndexOf (tempR);
+					break;
+				}
+			}
+
+			faveBefore = new ToolbarItem ("Favorite Recipe", faveStr, () => {
 				try
 				{
 					bool contains = false;
@@ -64,6 +78,7 @@ namespace Ingrediscan
 					{
 						if(recipe.name == tempR.name)
 						{
+							Console.WriteLine ("CONTAINED");
 							contains = true;
 							break;
 						}
@@ -73,13 +88,19 @@ namespace Ingrediscan
 					{
 						Globals.firebaseData.savedRecipes.Add (recipe);
 
+						faveBefore.Icon = "drawable/faveAfter.png";
+
 						//await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
-						Toast.MakeText (Forms.Context, "This recipe has been favorited.", ToastLength.Short).Show ();
+						Toast.MakeText (Forms.Context, "This recipe has been added to your favorites.", ToastLength.Short).Show ();
 					}
 					else
 					{
+						Globals.firebaseData.savedRecipes.RemoveAt (removeIndex);
+
+						faveBefore.Icon = "drawable/faveBefore.png";
+
 						//await DisplayAlert ("Favorite Recipe", "This recipe is already a favorited recipe.", "Ok");
-						Toast.MakeText (Forms.Context, "This recipe is already a favorited recipe.", ToastLength.Short).Show ();
+						Toast.MakeText (Forms.Context, "This recipe has been removed from your favorites.", ToastLength.Short).Show ();
 					}
 				}
 				catch(Exception e)
@@ -89,7 +110,7 @@ namespace Ingrediscan
 					Globals.firebaseData.savedRecipes.Add (recipe);
 
 					//await DisplayAlert ("Favorite Recipe", "This recipe has been saved to your favorited list.", "Ok");
-					Toast.MakeText (Forms.Context, "This recipe has been saved to your favorited list.", ToastLength.Short).Show ();
+					Toast.MakeText (Forms.Context, "This recipe has been added to your favorites.", ToastLength.Short).Show ();
 				}
 
 				SaveAndLoad.SaveToFirebase (Globals.firebaseData);

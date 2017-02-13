@@ -9,6 +9,18 @@ namespace Ingrediscan
 {
 	public class FavoriteRecipesPage : ContentPage
 	{
+		ListView faveView;
+
+		protected override void OnAppearing ()
+		{
+			base.OnAppearing ();
+
+			if(faveView != null)
+			{
+				faveView.ItemsSource = CreateListViewFromSearch (Globals.firebaseData.savedRecipes);
+			}
+		}
+
 		public FavoriteRecipesPage ()
 		{
 			ListView listView = new ListView {
@@ -21,20 +33,25 @@ namespace Ingrediscan
 				}),
 			};
 
+			faveView = listView;
+
 			Title = "Favorited Recipes";
 			Content = new StackLayout {
 				Children = {
 					listView
 				}
 			};
+
 			bool finished = true;
+
 			listView.ItemTapped += async (sender, e) => {
 				if (finished) 
 				{
 					finished = false;
 					var id = ((SearchResultItem)e.Item).Id;
 					var recipe = await REST_API.GET_RecipeInformation (id, false);
-					await Navigation.PushAsync (new RecipePage (recipe));
+					var recipePage = new RecipePage (recipe);
+					await Navigation.PushAsync (recipePage);
 					listView.SelectedItem = null;
 					finished = true;
 				}

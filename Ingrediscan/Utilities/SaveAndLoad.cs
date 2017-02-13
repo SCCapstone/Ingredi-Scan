@@ -19,15 +19,13 @@ namespace Ingrediscan
 	{
 		public static async void SaveToFirebase (FirebaseSaveFormat fbData)
 		{
-			Console.WriteLine ("Saving");
 			var id_token = RetrieveToken ();
-
 			var _client = new FirebaseClient (Globals.FirebaseAppURL);
 
-			Console.WriteLine (id_token);
-			Console.WriteLine (Globals.userData.name);
-			Console.WriteLine (fbData);
-			await _client.Child (Globals.userData.name).WithAuth (id_token).PutAsync (fbData);
+			await _client
+				.Child (Globals.userData.name)
+				.WithAuth (id_token)
+				.PutAsync (fbData);
 		}
 
 		public static async Task<FirebaseSaveFormat> LoadFromFirebase ()
@@ -87,8 +85,6 @@ namespace Ingrediscan
 
 			// Response creation TODO Make async
 			var response = client.Execute<Auth0Firebase> (request).Data;
-
-			Console.WriteLine (response.expires_in);
 
 			return response.id_token;
 		}
