@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Ingrediscan
 {
-	public class Ingredient
+	public class Ingredient : IComparable<Ingredient>
 	{
 		public string name { get; set; }
 		public double amount { get; set; }
@@ -45,5 +45,9 @@ namespace Ingrediscan
 			formattedName = formattedString;
 		}
 
+		public int CompareTo(Ingredient other)
+		{
+			return name.CompareTo(other.name);
+		}
 	}
 }
