@@ -21,20 +21,30 @@ namespace Ingrediscan
 
 			label.SetBinding (Label.TextProperty, "Name");
 
-			var tick = new Switch {
+			var checkbox = new Button {
 				HorizontalOptions = LayoutOptions.Start,
+				Image = "drawable/unchecked.png",
+				BackgroundColor = Color.Transparent,
 			};
 
-			tick.SetBinding (Switch.IsEnabledProperty, "Switch");
+			//checkbox.SetBinding (Image.SourceProperty, new Binding ("CheckBox", BindingMode.Default,
+			  //                                                      new CheckBoxConverter (), null));
 
-			tick.PropertyChanged += (sender, e) => {
-				Console.WriteLine (tick.IsEnabled);
+			checkbox.Clicked += (sender, e) => {
+				if(checkbox.Image == "drawable/unchecked.png")
+				{
+					checkbox.Image = "drawable/checked.png";
+				}
+				else
+				{
+					checkbox.Image = "drawable/unchecked.png";
+				}
 				//TODO Do something in the list with this new value
 			};
 
 			var layout = new StackLayout {
 				Orientation = StackOrientation.Horizontal,
-				Children = { tick, label, image }
+				Children = { checkbox, label, image }
 			};
 
 			View = layout;

@@ -91,8 +91,8 @@ namespace Ingrediscan
 					//subItem.Name = ss.getName ();
 					subItem.Name = ss.formattedName;
 					subItem.Image = ss.image;
-					subItem.Switch = new Xamarin.Forms.Switch();
-					subItem.Switch.SetValue(Xamarin.Forms.Switch.IsEnabledProperty, ss.itemSwitch);
+					subItem.CheckBox = new Xamarin.Forms.Button();
+					subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ss.itemSwitch);
 
 					subItems.Add (subItem);
 				}

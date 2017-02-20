@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Tests.cs" />
     <Compile Include="ScannerTest.cs" />
+    <Compile Include="IngredientTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -17,7 +17,7 @@ namespace Ingrediscan
 		{
 			public string Name { get; set; }
 			public string Image { get; set; }
-			public Switch Switch { get; set; }
+			public Button CheckBox { get; set; }
 		}
 
 	}

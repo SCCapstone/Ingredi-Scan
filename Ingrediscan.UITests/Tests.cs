@@ -6,7 +6,7 @@ using Xamarin.UITest;
 using Xamarin.UITest.Android;
 using Xamarin.UITest.Queries;
 
-namespace Ingrediscan.UITests
+namespace IngrediscanUITests
 {
 	[TestFixture]
 	public class Tests
