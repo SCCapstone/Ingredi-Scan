@@ -58,7 +58,18 @@ namespace Ingrediscan
 			string faveStr = "drawable/faveBefore.png";
 			int removeIndex = -1;
 
+			//TODO Get this code working as it would be much faster
+			//if(Globals.firebaseData.savedRecipes.Contains(recipe))
+			//{
+			//	faveStr = "drawable/faveAfter.png";
+			//	removeIndex = Globals.firebaseData.savedRecipes.IndexOf (recipe);
+			//}
 			// If this is already a favorited recipe, then mark it as such
+			if(Globals.firebaseData.savedRecipes == null)
+			{
+				Globals.firebaseData.savedRecipes = new List<Recipe> ();
+			}
+
 			foreach (var tempR in Globals.firebaseData.savedRecipes) 
 			{
 				if (recipe.name == tempR.name) 
@@ -139,7 +150,8 @@ namespace Ingrediscan
 			if (instructions.preparationMinutes == 0) 
 			{
 				prepTime = "N/A";
-			} else 
+			} 
+			else 
 			{
 				prepTime = instructions.preparationMinutes.ToString () + " Minutes";
 			}

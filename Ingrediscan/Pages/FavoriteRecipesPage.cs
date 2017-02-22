@@ -4,12 +4,15 @@ using Xamarin.Forms;
 
 using Ingrediscan.Utilities;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Ingrediscan
 {
 	public class FavoriteRecipesPage : ContentPage
 	{
-		ListView faveView;
+		public static ListView faveView;
+		ToolbarItem faveDeleteButton;
+		public static ObservableCollection<FavoritePageItem> savedRecipes;
 
 		protected override void OnAppearing ()
 		{
@@ -23,14 +26,45 @@ namespace Ingrediscan
 
 		public FavoriteRecipesPage ()
 		{
+			faveDeleteButton = new ToolbarItem ("Delete Favorites", "drawable/delete.png", () => { });
+
+			ToolbarItems.Add (faveDeleteButton);
+
 			ListView listView = new ListView {
-				ItemsSource = CreateListViewFromSearch(Globals.firebaseData.savedRecipes),
-				ItemTemplate = new DataTemplate (() => {
-					var imageCell = new ImageCell ();
-					imageCell.SetBinding (TextCell.TextProperty, "Text");
-					imageCell.SetBinding (ImageCell.ImageSourceProperty, "ImageSource");
-					return imageCell;
-				}),
+				ItemsSource = CreateListViewFromSearch (Globals.firebaseData.savedRecipes),
+				ItemTemplate = new DataTemplate (typeof (FavoritePageCell))
+			};
+
+			faveDeleteButton.Clicked += (sender, e) => {
+
+				//TODO Awful way to do this, but there doesn't seem to be
+				// a better way to do it right now
+				var tempList = new ObservableCollection<FavoritePageItem> ();
+				if (faveDeleteButton.Icon == "drawable/delete.png") 
+				{
+					faveDeleteButton.Icon = "drawable/cancel.png";
+
+
+					foreach (var item in listView.ItemsSource)
+					{
+						var buttonItem = ((FavoritePageItem)item);
+						buttonItem.Visible = true;
+						buttonItem.Enabled = true;
+						tempList.Add (buttonItem);
+					}
+				}
+				else 
+				{
+					faveDeleteButton.Icon = "drawable/delete.png";
+					foreach (var item in listView.ItemsSource) 
+					{
+						var buttonItem = ((FavoritePageItem)item);
+						buttonItem.Visible = false;
+						buttonItem.Enabled = false;
+						tempList.Add (buttonItem);
+					}
+				}
+				listView.ItemsSource = tempList;
 			};
 
 			faveView = listView;
@@ -48,7 +82,7 @@ namespace Ingrediscan
 				if (finished) 
 				{
 					finished = false;
-					var id = ((SearchResultItem)e.Item).Id;
+					var id = ((FavoritePageItem)e.Item).Id;
 					var recipe = await REST_API.GET_RecipeInformation (id, false);
 					var recipePage = new RecipePage (recipe);
 					await Navigation.PushAsync (recipePage);
@@ -61,18 +95,29 @@ namespace Ingrediscan
 			};
 		}
 
-		public List<SearchResultItem> CreateListViewFromSearch (List<Recipe> recipe)
+		public ObservableCollection<FavoritePageItem>  CreateListViewFromSearch (List<Recipe> recipe)
 		{
 			//var items = REST_API.GET_SearchRecipes (recipe).Result;
+			var searchResultItems = new ObservableCollection<FavoritePageItem> ();
 
-			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
-			recipe.ForEach (x => searchResultItems.Add (new SearchResultItem {
-				ImageSource = x.image,
-				Text = x.name,
-				//Detail = 
-				TargetType = typeof (RecipePage),
-				Id = x.id
-			}));
+			if (recipe != null) 
+			{
+				recipe.ForEach (x => searchResultItems.Add (new FavoritePageItem {
+					Image = x.image,
+					Name = x.name,
+					//RemoveButton = new Button {
+					//	Image = "drawable/remove.png",
+					//	BackgroundColor = Color.Transparent,
+					//	IsEnabled = false,
+					//	IsVisible = true,
+					//},
+					Id = x.id,
+					Enabled = false,
+					Visible = false,
+				}));
+			}
+
+			savedRecipes = searchResultItems;
 
 			return searchResultItems;
 		}

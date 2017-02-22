@@ -261,6 +261,8 @@
     <Compile Include="Utilities\FirebaseSaveFormat.cs" />
     <Compile Include="Pages\FavoriteRecipesPage.cs" />
     <Compile Include="Pages\SearchResultItem.cs" />
+    <Compile Include="Pages\FavoritePageCell.cs" />
+    <Compile Include="Pages\FavoritePageItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -298,6 +300,8 @@
     <AndroidResource Include="Resources\drawable\logo.png" />
     <AndroidResource Include="Resources\drawable\checked.png" />
     <AndroidResource Include="Resources\drawable\unchecked.png" />
+    <AndroidResource Include="Resources\drawable\remove.png" />
+    <AndroidResource Include="Resources\drawable\cancel.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\logout.png" />

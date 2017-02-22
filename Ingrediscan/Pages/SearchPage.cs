@@ -24,8 +24,8 @@ namespace Ingrediscan
 				IsEnabled = false,
 				IsVisible = false,
 			};
-
-			Globals.firebaseData.history.ToList().ForEach(x => picker.Items.Add(x));
+			if(Globals.firebaseData.history != null)
+				Globals.firebaseData.history.ToList().ForEach(x => picker.Items.Add(x));
 
 			picker.SelectedIndexChanged += async (sender, args) => {
 				if (picker.SelectedIndex == -1) 
