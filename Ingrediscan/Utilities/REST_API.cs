@@ -288,11 +288,21 @@ namespace Ingrediscan
 			client.BaseUrl = new Uri (SpoonacularURL);
 			client.AddHandler ("application/json", new RestSharp.Deserializers.JsonDeserializer ());
 
+			string diets = Utilities.Utilities.RetrieveSettings (Settings.dietSettings);
+			string cuisines = Utilities.Utilities.RetrieveSettings (Settings.cuisineSettings);
+			string intol = Utilities.Utilities.RetrieveSettings (Settings.intolSettings);
+
 			// Request creation
 			var request = new RestRequest (action);
 			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
 			request.AddQueryParameter ("query", query);
+			if (!diets.Equals (""))
+				request.AddQueryParameter ("diet", diets);
+			if(!cuisines.Equals(""))
+				request.AddQueryParameter ("cuisine", cuisines);
+			if (!intol.Equals (""))
+				request.AddQueryParameter ("intolerances", intol);
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
