@@ -14,10 +14,15 @@ namespace Ingrediscan
 		{
 			Settings.LoadSettings(Globals.firebaseData.searchSettings);
 
-			ToolbarItems.Add (new ToolbarItem ("Clear Settings", "drawable/save.png", () => {
-				Settings.initialSettings();
-
-				Toast.MakeText (Forms.Context, "Settings have been cleared.", ToastLength.Short).Show ();
+			ToolbarItems.Add (new ToolbarItem ("Clear Settings", "drawable/reset.png", async () => {
+				
+				bool resetSettings = await DisplayAlert ("Reset Settings", "Do you want to reset your settings?", "Confirm", "Cancel");
+				if (resetSettings) 
+				{
+					Settings.clearSettings ();
+					Content = Settings.tableView;
+					Toast.MakeText (Forms.Context, "Settings have been cleared.", ToastLength.Short).Show ();
+				}
 			}));
 
             Settings.SaveSettings();
@@ -33,45 +38,6 @@ namespace Ingrediscan
 			cuisineSwitches.ForEach (cuisineSection.Add);
 			dietSwitches.ForEach (dietSection.Add);
 			intolSwitches.ForEach (intolSection.Add);
-
-			//TODO Over winter break implement custom renderer and custom cells
-
-			/*Picker cuisinePicker = new Picker {
-				Title = "Cuisines Settings",
-			};
-			foreach(KeyValuePair<string, bool> kv in Globals.firebaseData.searchSettings.cuisine)
-			{
-				cuisinePicker.Items.Add (kv.Key);
-			}
-
-			cuisinePicker.SelectedIndexChanged += (sender, e) => {
-				
-			};
-
-
-			Picker dietPicker = new Picker {
-				Title = "Diets Settings",
-			};
-			foreach (KeyValuePair<string, bool> kv in Globals.firebaseData.searchSettings.diets) {
-				dietPicker.Items.Add (kv.Key);
-			}
-
-			Picker intolPicker = new Picker {
-				Title = "Intolerances Settings",
-			};
-			foreach (KeyValuePair<string, bool> kv in Globals.firebaseData.searchSettings.intolerances) {
-				intolPicker.Items.Add (kv.Key);
-			}
-
-
-			StackLayout layout = new StackLayout {
-				VerticalOptions = LayoutOptions.StartAndExpand,
-				Children = {
-					cuisinePicker,
-					dietPicker,
-					intolPicker
-				}
-			};*/
 
 			Settings.tableView = new TableView 
 			{

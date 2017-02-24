@@ -29,6 +29,25 @@ namespace Ingrediscan
 			cuisineSettings.Clear ();
 			dietSettings.Clear ();
 			intolSettings.Clear ();
+
+			var settings = initialSettings ();
+
+			Globals.firebaseData.searchSettings.cuisine = settings[0];
+			Globals.firebaseData.searchSettings.diets = settings [1];
+			Globals.firebaseData.searchSettings.intolerances = settings [2];
+
+			resetTableView ();
+			SaveSettings ();
+		}
+
+		public static void resetTableView ()
+		{
+			for (int i = 0; i < tableView.Root.Count; ++i) {
+				for (int j = 0; j < tableView.Root [i].Count; ++j) {
+					var s = (SwitchCell)tableView.Root [i] [j];
+					s.On = false;
+				}
+			}
 		}
 
 		public static List<Dictionary<string, bool>> initialSettings()

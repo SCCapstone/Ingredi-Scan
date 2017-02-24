@@ -2264,7 +2264,7 @@ namespace Ingrediscan
 			public const int remove = 2130837678;
 			
 			// aapt resource value: 0x7f0200af
-			public const int save = 2130837679;
+			public const int reset = 2130837679;
 			
 			// aapt resource value: 0x7f0200b0
 			public const int scan = 2130837680;
