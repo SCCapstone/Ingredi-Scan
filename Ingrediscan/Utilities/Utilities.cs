@@ -7,18 +7,21 @@ namespace Ingrediscan.Utilities
 	{
 		public static string RetrieveSettings(Dictionary<string, bool> setting)
 		{
-			string diets = "";
+			string item = "";
 
 			foreach(var kv in setting)
 			{
 				if(kv.Value)
 				{
-					diets += kv.Key + ",";
+					item += kv.Key + ",";
 				}
 			}
-			diets.Substring (0, diets.Length - 2);
+			if (item.Length > 0) 
+			{
+				item.Substring (0, item.Length - 2);
+			}
 
-			return diets;
+			return item;
 		}
 	}
 }
