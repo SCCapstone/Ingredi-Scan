@@ -34,8 +34,11 @@ namespace Ingrediscan
 
 			// Addition to toolbar
 			addToCart = new ToolbarItem ("Add To Cart", "drawable/addToCart.png", async () => {
+				// If this bool is true, we will go to the cart after the add to cart dialog navigation is finished. We can change the UX on how
+				// this confirmation is achieved.
+				bool goToCart = false;
 				bool result = await DisplayAlert ("Add To Cart", "Would you like to add all of these items to your cart?", "Confirm", "Cancel");
-				if (result == true) {
+				if (result) {
 					if (Globals.firebaseData.cart.ContainsKey (recipe.name)) {
 						bool cont = await DisplayAlert ("Add To Cart", "This item is already contained within your cart. " +
 															"Would you still like to add all of these items to your cart?", "Confirm", "Cancel");
@@ -44,14 +47,21 @@ namespace Ingrediscan
 
 							//await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
 							Toast.MakeText (Forms.Context, "This item has been added to your cart.", ToastLength.Short).Show ();
+							// This feels clunky, but I'm not sure of a better UX pattern on how to accomplish this.
+							goToCart = await DisplayAlert("Go To Cart", "Would you like to go to your shopping cart?", "Yes", "No");
 						}
 					} else {
 						recipe.addToCart ();
 
 						//await DisplayAlert ("Add To Cart", "This item has been successfully added to the cart.", "Ok");
 						Toast.MakeText (Forms.Context, "This item has been added to your cart.", ToastLength.Short).Show ();
+						goToCart = await DisplayAlert("Go To Cart", "Would you like to go to your shopping cart?", "Yes", "No");
 					}
 
+				}
+				if(goToCart)
+				{
+					await Navigation.PushAsync(new CartPage());
 				}
 			});
 
