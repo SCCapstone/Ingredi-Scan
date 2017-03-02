@@ -16,6 +16,7 @@ namespace Ingrediscan
 		public class Ingredients
 		{
 			public string Name { get; set; }
+            public string RecipeName { get; set; }
 			public string Image { get; set; }
 			public Button CheckBox { get; set; }
 		}

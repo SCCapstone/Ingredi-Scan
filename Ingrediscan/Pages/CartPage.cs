@@ -5,13 +5,18 @@ using Xamarin.Forms;
 
 using Ingrediscan.Utilities;
 using Android.Widget;
+using System.Threading.Tasks;
 
 namespace Ingrediscan
 {
 	public class CartPage : ContentPage
 	{
-		public CartPage ()
+        public static Dictionary<string, bool> markedItems = new Dictionary<string, bool>();
+
+        public CartPage ()
 		{
+            UpdateCheckBoxes();
+
 			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", () => {
 				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
 				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
@@ -87,15 +92,27 @@ namespace Ingrediscan
 				List<CartPageItem.Ingredients> subItems = new List<CartPageItem.Ingredients> ();
 				foreach(var ss in recipe.Value.ingredients)
 				{
-					CartPageItem.Ingredients subItem = new CartPageItem.Ingredients ();
+                    CartPageItem.Ingredients subItem = new CartPageItem.Ingredients ();
 					//subItem.Name = ss.getName ();
 					subItem.Name = ss.formattedName;
-					subItem.Image = ss.image;
+                    subItem.Image = ss.image;
+                    subItem.RecipeName = recipe.Value.name;
 					subItem.CheckBox = new Xamarin.Forms.Button();
 					subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ss.itemSwitch);
+         
+                    if(ss.itemSwitch)
+                    {
+                        subItem.CheckBox.Image = "drawable/checked.png";
+                    }
+                    else
+                    {
+                        subItem.CheckBox.Image = "drawable/unchecked.png";
+                    }
 
 					subItems.Add (subItem);
+                   
 				}
+                
 				//Sub items complete
 
 				item.Ingredients = subItems;
@@ -103,8 +120,45 @@ namespace Ingrediscan
 
 				items.Add (item);
 			}
-
+            
 			return items;
 		}
+        
+        public static void UpdateCheckBoxes()
+        {
+            foreach (var rec in Globals.firebaseData.cart)
+            {
+                var recipeName = rec.Value.name;
+                foreach (var ing in rec.Value.ingredients)
+                {
+                    Console.WriteLine(recipeName + " " + ing.formattedName);
+                    if (!markedItems.ContainsKey(recipeName + " " + ing.formattedName))
+                    {
+                        markedItems.Add(recipeName + " " + ing.formattedName, ing.itemSwitch);
+                    }
+                    else
+                    {
+                        markedItems[recipeName + " " + ing.formattedName] = ing.itemSwitch;
+                    }
+                }
+            }
+            Console.WriteLine("UPDATED!!!!!!!!!!!");
+        }
+
+        public static void saveCart()
+        {
+            foreach(var rec in Globals.firebaseData.cart)
+            {
+                var recipeName = rec.Value.name;
+                foreach(var ing in rec.Value.ingredients)
+                {
+                    ing.itemSwitch = markedItems[recipeName + " " + ing.formattedName];
+                    //Console.WriteLine(recipeName + " " + ing.formattedName + ":" + markedItems[recipeName + " " + ing.formattedName]);
+                }
+            }
+            
+            SaveAndLoad.SaveToFirebase(Globals.firebaseData);
+        }
+
 	}
 }

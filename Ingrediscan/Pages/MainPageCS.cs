@@ -26,6 +26,10 @@ namespace Ingrediscan
 			}
 			if (item != null && item.TargetType.FullName != prevPageStr) 
 			{
+                if(item.TargetType.FullName == "Ingrediscan.CartPage")
+                {
+                    CartPage.UpdateCheckBoxes();
+                }
 				Detail = new NavigationPage ((Page)Activator.CreateInstance (item.TargetType));
 				Console.WriteLine (item.TargetType + " Finished");
 				masterPage.ListView.SelectedItem = null;
