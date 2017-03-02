@@ -8,7 +8,7 @@ namespace Ingrediscan
 {
 	public class CartPageCell : ViewCell
 	{
-		public CartPageCell (string key)
+		public CartPageCell ()
 		{
 			var image = new Image {
 				HorizontalOptions = LayoutOptions.EndAndExpand,
@@ -34,15 +34,15 @@ namespace Ingrediscan
                 HorizontalOptions = LayoutOptions.Start,
                 BackgroundColor = Color.Transparent,
             };
-
-            if(CartPage.markedItems[key])
+            checkbox.SetBinding(Button.ImageProperty, "CheckBoxName");
+           /* if(CartPage.markedItems[key])
             {
                 checkbox.Image = "drawable/checked.png";
             }
             else
             {
                 checkbox.Image = "drawable/unchecked.png";
-            }
+            }*/
                     //checkbox.SetBinding (Image.SourceProperty, new Binding ("CheckBox", BindingMode.Default,
                     //                                                      new CheckBoxConverter (), null));
 

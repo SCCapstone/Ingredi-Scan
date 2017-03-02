@@ -99,17 +99,17 @@ namespace Ingrediscan
                     subItem.RecipeName = recipe.Value.name;
 					subItem.CheckBox = new Xamarin.Forms.Button();
 					subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ss.itemSwitch);
-         
-                    if(ss.itemSwitch)
+
+                    if (ss.itemSwitch)
                     {
-                        subItem.CheckBox.Image = "drawable/checked.png";
+                        subItem.CheckBoxName = "drawable/checked.png";
                     }
                     else
                     {
-                        subItem.CheckBox.Image = "drawable/unchecked.png";
+                        subItem.CheckBoxName = "drawable/unchecked.png";
                     }
 
-					subItems.Add (subItem);
+                    subItems.Add (subItem);
                    
 				}
                 
