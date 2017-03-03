@@ -85,15 +85,20 @@ namespace Ingrediscan
 
 						if (Globals.firebaseData.history.Count > 10) 
 						{
-							Globals.firebaseData.history.Reverse ();
+						    Globals.firebaseData.history.Reverse ();
 							Globals.firebaseData.history.RemoveAt (Globals.firebaseData.history.Count - 1);
 							Globals.firebaseData.history.Reverse ();
 						}
 
-						picker.Items.Add (searchBar.Text);
+
+                        //if (picker.Items.Count > 2)
+                        //{
+                        //    picker.Items.RemoveAt(picker.Items.Count - 1);
+                        //}
+						picker.Items.Insert (0,searchBar.Text); // adds to list in current screen
 
 						Globals.firebaseData.history.Reverse ();
-						Globals.firebaseData.history.Add (searchBar.Text);
+						Globals.firebaseData.history.Add (searchBar.Text); //adds text when returning to screen
 						Globals.firebaseData.history.Reverse ();
 
 						SaveAndLoad.SaveToFirebase (Globals.firebaseData);
