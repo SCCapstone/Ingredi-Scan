@@ -102,11 +102,11 @@ namespace Ingrediscan
 
                     if (ss.itemSwitch)
                     {
-                        subItem.CheckBoxName = "drawable/checked.png";
+                        subItem.CheckBoxName = "drawable/selected.png";
                     }
                     else
                     {
-                        subItem.CheckBoxName = "drawable/unchecked.png";
+                        subItem.CheckBoxName = null;
                     }
 
                     subItems.Add (subItem);

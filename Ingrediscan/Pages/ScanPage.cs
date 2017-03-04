@@ -16,9 +16,14 @@ namespace Ingrediscan
 
 			Xamarin.Forms.Button scanButton = new Xamarin.Forms.Button {
 				Text = "Scan",
+				FontAttributes = FontAttributes.Bold,
 				Font = Font.SystemFontOfSize (NamedSize.Large),
 				BorderWidth = 2,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
+				WidthRequest = 120,
+				HeightRequest = 120,
+				BackgroundColor = Color.FromHex("#1D89E4"),
+				TextColor = Color.White,
+				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				AutomationId = "ScanButton"
 			};

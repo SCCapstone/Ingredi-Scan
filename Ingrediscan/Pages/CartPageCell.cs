@@ -19,6 +19,7 @@ namespace Ingrediscan
 			var label = new Label {
 				VerticalTextAlignment = TextAlignment.Center,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
+				Style = Application.Current.Resources["labelStyle"] as Style
 			};
 
 			label.SetBinding (Label.TextProperty, "Name");
@@ -30,9 +31,12 @@ namespace Ingrediscan
             recipeLabel.SetBinding(Label.TextProperty, "RecipeName");
 
 			var checkbox = new Button
-            {
-                HorizontalOptions = LayoutOptions.Start,
-                BackgroundColor = Color.Transparent,
+			{
+				BorderWidth = 1,
+				HorizontalOptions = LayoutOptions.Start,
+				BackgroundColor = Color.Transparent,
+				WidthRequest = 40,
+				HeightRequest = 10
             };
             checkbox.SetBinding(Button.ImageProperty, "CheckBoxName");
            /* if(CartPage.markedItems[key])
@@ -47,14 +51,18 @@ namespace Ingrediscan
                     //                                                      new CheckBoxConverter (), null));
 
             checkbox.Clicked += (sender, e) => {
-				if(checkbox.Image == "drawable/unchecked.png")
+				if(checkbox.Image == null)
 				{
-					checkbox.Image = "drawable/checked.png";
+					//checkbox.Image = "selected.png"
+					checkbox.Image = "drawable/selected.png";
+					checkbox.BorderWidth = 0;
+					label.FontAttributes = FontAttributes.Italic;
                     CartPage.markedItems[recipeLabel.Text + " " + label.Text] = true;
 				}
 				else
 				{
-					checkbox.Image = "drawable/unchecked.png";
+					checkbox.Image = null;
+					label.FontAttributes = FontAttributes.None;
                     CartPage.markedItems[recipeLabel.Text+ " " + label.Text] = false;
                 }
                 CartPage.saveCart();

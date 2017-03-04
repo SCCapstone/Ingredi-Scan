@@ -294,12 +294,12 @@
     <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\faveAfter.png" />
     <AndroidResource Include="Resources\drawable\faveBefore.png" />
-    <AndroidResource Include="Resources\drawable\logo.png" />
     <AndroidResource Include="Resources\drawable\checked.png" />
     <AndroidResource Include="Resources\drawable\unchecked.png" />
     <AndroidResource Include="Resources\drawable\remove.png" />
     <AndroidResource Include="Resources\drawable\cancel.png" />
     <AndroidResource Include="Resources\drawable\reset.png" />
+    <AndroidResource Include="Resources\drawable\selected.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\logout.png" />
