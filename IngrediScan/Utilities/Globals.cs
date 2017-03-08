@@ -23,7 +23,7 @@ namespace Ingrediscan.Utilities
 
 		public static Auth0User user;
 		public static Auth0Json userData;
-		public static Auth0Client auth0client;
+		public static Auth0ClientLocal auth0client;
 
 		// DATA
 		public static FirebaseSaveFormat firebaseData = new FirebaseSaveFormat ();
