@@ -13,6 +13,7 @@ namespace Ingrediscan
 	{
         public static Dictionary<string, bool> markedItems = new Dictionary<string, bool>();
 		public static List<GroupCart> items;
+		public bool sortByRecipe = true;
 
         public CartPage ()
 		{
@@ -29,7 +30,7 @@ namespace Ingrediscan
 
 			var sortCartToolbarItem = new ToolbarItem("Sort Cart", "drawable/list.png", () =>
 			{
-				if(false)
+				if(!sortByRecipe)
 				{
 					// Create our data from our load data
 					var _list = CreateRecipeListViewFromList(Globals.firebaseData.cart);
@@ -58,11 +59,9 @@ namespace Ingrediscan
 							}
 						}
 					};
-
 				}
 				else
 				{
-					Console.WriteLine("We are here1");
 					// Create our data from our load data
 					var _list = CreateIngredientListViewFromList(Globals.firebaseData.cart);
 					items = new List<GroupCart>();
@@ -91,6 +90,14 @@ namespace Ingrediscan
 							}
 						}
 					};
+				}
+				if(sortByRecipe)
+				{
+					sortByRecipe = false;
+				}
+				else
+				{
+					sortByRecipe = true;
 				}
 			});
 
