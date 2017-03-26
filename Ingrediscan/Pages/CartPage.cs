@@ -12,10 +12,96 @@ namespace Ingrediscan
 	public class CartPage : ContentPage
 	{
         public static Dictionary<string, bool> markedItems = new Dictionary<string, bool>();
+		public static List<GroupCart> items;
+		public bool sortByRecipe = true;
 
         public CartPage ()
 		{
             UpdateCheckBoxes();
+
+			SearchBar searchBar = new SearchBar {
+				Placeholder = "Enter search term",
+				SearchCommand = new Command (() => {
+					//DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
+					Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
+				})
+			};
+			var template = new DataTemplate (typeof (CartPageCell));
+
+			var sortCartToolbarItem = new ToolbarItem("Sort Cart", "drawable/list.png", () =>
+			{
+				if(!sortByRecipe)
+				{
+					// Create our data from our load data
+					var _list = CreateRecipeListViewFromList(Globals.firebaseData.cart);
+					items = new List<GroupCart>();
+					foreach(var rec in _list)
+					{
+						var group = new GroupCart(rec.Name);
+						foreach(var ing in rec.Ingredients)
+						{
+							group.Add(ing);
+						}
+						items.Add(group);
+					}
+					Title = "Shopping Cart";
+					Content = new StackLayout
+					{
+						Children = {
+							searchBar,
+							new Xamarin.Forms.ListView {
+								IsGroupingEnabled = true,
+								GroupDisplayBinding = new Binding ("Name"),
+								GroupShortNameBinding = new Binding ("Name"),
+
+								ItemTemplate = template,
+								ItemsSource = items
+							}
+						}
+					};
+				}
+				else
+				{
+					// Create our data from our load data
+					var _list = CreateIngredientListViewFromList(Globals.firebaseData.cart);
+					items = new List<GroupCart>();
+					var group = new GroupCart("Ingredients");
+					foreach(var rec in _list)
+					{
+						foreach(var ing in rec.Ingredients)
+						{
+							group.Add(ing);
+						}
+					}
+					items.Add(group);
+					Console.WriteLine("We are here2");
+					Title = "Shopping Cart";
+					Content = new StackLayout
+					{
+						Children = {
+							searchBar,
+							new Xamarin.Forms.ListView {
+								IsGroupingEnabled = true,
+								GroupDisplayBinding = new Binding ("Name"),
+								GroupShortNameBinding = new Binding ("Name"),
+
+								ItemTemplate = template,
+								ItemsSource = items
+							}
+						}
+					};
+				}
+				if(sortByRecipe)
+				{
+					sortByRecipe = false;
+				}
+				else
+				{
+					sortByRecipe = true;
+				}
+			});
+
+			ToolbarItems.Add(sortCartToolbarItem);
 
 			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", () => {
 				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
@@ -28,10 +114,9 @@ namespace Ingrediscan
 			}));
 
 			// Create our data from our load data
-			var list = this.CreateListViewFromList (Globals.firebaseData.cart);
+			var list = this.CreateRecipeListViewFromList (Globals.firebaseData.cart);
 
-			var template = new DataTemplate (typeof (CartPageCell));
-			var items = new List<GroupCart> ();
+			items = new List<GroupCart> ();
 
 			foreach(var rec in list)
 			{
@@ -44,13 +129,6 @@ namespace Ingrediscan
 				items.Add (group);
 			}
 
-			SearchBar searchBar = new SearchBar {
-				Placeholder = "Enter search term",
-				SearchCommand = new Command (() => {
-					//DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
-					Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
-				})
-			};
 
 			Title = "Shopping Cart";
 			Content = new StackLayout {
@@ -77,7 +155,72 @@ namespace Ingrediscan
 			return items;
 		}
 
-		public List<CartPageItem.Recipes> CreateListViewFromList (Dictionary<string, Recipe> recipes)
+		public List<CartPageItem.Recipes> CreateIngredientListViewFromList(Dictionary<string, Recipe> recipes)
+		{
+			List<CartPageItem.Recipes> items = new List<CartPageItem.Recipes>();
+
+			// Create item
+			CartPageItem.Recipes item = new CartPageItem.Recipes();
+			item.Name = "Ingredients";
+
+			List<Ingredient> ings = new List<Ingredient>();
+			foreach(KeyValuePair<string, Recipe> recipe in recipes)
+			{
+				// Add ingredients to array
+				foreach(var ss in recipe.Value.ingredients)
+				{
+					var existing = ings.FindAll(x => x.name == ss.name);
+					if(existing.Count == 0)
+					{
+						ings.Add(ss);
+					}
+					else
+					{
+						var found = false;
+						for(int i = 0; i < existing.Count; i++)
+						{
+							if(ss.units == existing[i].units)
+							{
+								existing[i].amount += ss.amount;
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+						{
+							ings.Add(ss);
+						}
+					}
+				}
+			}
+			List<CartPageItem.RecipeIngredients> subItems = new List<CartPageItem.RecipeIngredients>();
+			foreach(var ing in ings)
+			{
+				CartPageItem.RecipeIngredients subItem = new CartPageItem.RecipeIngredients();
+				ing.setFormattedName();
+				subItem.Name = ing.formattedName;
+				subItem.Image = ing.image;
+				subItem.CheckBox = new Xamarin.Forms.Button();
+				subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ing.itemSwitch);
+
+				if(ing.itemSwitch)
+				{
+					subItem.CheckBoxName = "drawable/selected.png";
+				}
+				else
+				{
+					subItem.CheckBoxName = null;
+				}
+
+				subItems.Add(subItem);
+			}
+			item.Ingredients = subItems;
+			items.Add(item);
+
+			return items;
+		}
+
+		public List<CartPageItem.Recipes> CreateRecipeListViewFromList (Dictionary<string, Recipe> recipes)
 		{
 			List<CartPageItem.Recipes> items = new List<CartPageItem.Recipes> ();
 
@@ -89,10 +232,10 @@ namespace Ingrediscan
 				item.Image = recipe.Value.image;
 
 				// Create sub items
-				List<CartPageItem.Ingredients> subItems = new List<CartPageItem.Ingredients> ();
+				List<CartPageItem.RecipeIngredients> subItems = new List<CartPageItem.RecipeIngredients> ();
 				foreach(var ss in recipe.Value.ingredients)
 				{
-                    CartPageItem.Ingredients subItem = new CartPageItem.Ingredients ();
+                    CartPageItem.RecipeIngredients subItem = new CartPageItem.RecipeIngredients ();
 					//subItem.Name = ss.getName ();
 					subItem.Name = ss.formattedName;
                     subItem.Image = ss.image;

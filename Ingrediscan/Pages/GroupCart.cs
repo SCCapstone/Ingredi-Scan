@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Ingrediscan
 {
-	public class GroupCart : ObservableCollection<CartPageItem.Ingredients>
+	public class GroupCart : ObservableCollection<CartPageItem.RecipeIngredients>
 	{
 		public GroupCart (string name)//, string image)
 		{

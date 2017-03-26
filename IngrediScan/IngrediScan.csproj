@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Ingrediscan</RootNamespace>
     <AssemblyName>Ingrediscan</AssemblyName>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -216,7 +216,6 @@
     <Reference Include="Auth0Client.Android">
       <HintPath>Components\Auth0Client-0.5.0\lib\android\Auth0Client.Android.dll</HintPath>
     </Reference>
-
     <Reference Include="Xamarin.Auth.Android">
       <HintPath>Components\Auth0Client-0.5.0\lib\android\Xamarin.Auth.Android.dll</HintPath>
     </Reference>
@@ -318,6 +317,12 @@
       <Version>0.5.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\recipes.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

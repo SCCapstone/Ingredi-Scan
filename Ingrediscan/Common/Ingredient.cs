@@ -34,7 +34,10 @@ namespace Ingrediscan
 		/// </summary>
 		public void setFormattedName()
 		{
-			string formattedString = amount + " " + units + " ";
+			string formattedString = Math.Round(amount, 2) + " ";
+			if(units.Length > 0) {
+				formattedString += units + " ";
+			}
 
 			foreach(string s in name.Split(' '))
 			{
