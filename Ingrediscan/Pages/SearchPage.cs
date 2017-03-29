@@ -6,6 +6,8 @@ using Ingrediscan.Utilities;
 using System.Linq;
 using System.Threading.Tasks;
 
+using XLabs.Forms.Controls;
+
 namespace Ingrediscan
 {
 	public class SearchPage : ContentPage
@@ -15,6 +17,8 @@ namespace Ingrediscan
 
 		SearchBar searchBar;
 		string prevSearch = "";
+
+		PopupLayout _PopUpLayout = new PopupLayout ();
 
 		public SearchPage ()
 		{
@@ -76,6 +80,22 @@ namespace Ingrediscan
 				picker.Focus ();
 			}));
 
+			var tableView = CreatePopUpLayout ();
+
+			var PopUp = new Frame {
+				//HorizontalOptions = LayoutOptions.Center,
+				//VerticalOptions = LayoutOptions.StartAndExpand,
+				WidthRequest = 300,
+				HeightRequest = 300,
+				Content = tableView,
+				HasShadow = true,
+				OutlineColor = Color.Silver
+			};
+
+			ToolbarItems.Add (new ToolbarItem ("Settings", "drawable/settings", () => {
+				_PopUpLayout.ShowPopup (PopUp);
+			}));
+
 			searchBar = new SearchBar {
 				Placeholder = "Enter search term",
 				SearchCommand = new Command (async () => {
@@ -109,7 +129,8 @@ namespace Ingrediscan
 			};
 
 			Title = "Search By Recipe Name";
-			Content = new StackLayout {
+
+			_PopUpLayout.Content = new StackLayout {
 				VerticalOptions = LayoutOptions.StartAndExpand,
 				Children = {
 					searchBar,
@@ -118,6 +139,8 @@ namespace Ingrediscan
 				},
 				Padding = new Thickness (10, Device.OnPlatform (20, 0, 0), 10, 0)
 			};
+
+			Content = _PopUpLayout;
 		}
 
 		//TODO Make async
@@ -150,6 +173,127 @@ namespace Ingrediscan
 			{
 				Globals.firebaseData.history = new List<string> ();
 			}
+		}
+
+		public TableView CreatePopUpLayout()
+		{
+			var tableView = new TableView ();
+			tableView.Intent = TableIntent.Settings;
+
+			var tableRoot = new TableRoot ();
+
+			// Search by ingredient(s) or recipe
+			var recipeSearch = new SwitchCell {
+				Text = "Search By Recipe",
+				On = true
+			};
+
+			var ingredientSearch = new SwitchCell {
+				Text = "Search By Ingredient(s)",
+				On = false
+			};
+
+			recipeSearch.OnChanged += (sender, e) => {
+				ingredientSearch.On = !ingredientSearch.On;
+				Globals.firebaseData.searchSettings.recipeSearch = recipeSearch.On;
+				Globals.firebaseData.searchSettings.ingredientSearch = ingredientSearch.On;
+			};
+
+			ingredientSearch.OnChanged += (sender, e) => {
+				recipeSearch.On = !recipeSearch.On;
+				Globals.firebaseData.searchSettings.recipeSearch = recipeSearch.On;
+				Globals.firebaseData.searchSettings.ingredientSearch = ingredientSearch.On;
+			};
+
+			// Increase max limit size
+			var maxResults = new EntryCell {
+				Text = "10",
+				Placeholder = "10",
+				Label = "Number Of Items To List"
+			};
+
+			maxResults.Completed += (sender, e) => {
+				var result = 10;
+				if(int.TryParse(maxResults.Text, out result))
+				{
+					Globals.firebaseData.searchSettings.limitOfSearch = result;
+				}
+			};
+
+			// Do Not include this kind of item(s)
+			var notIncludedItem = new EntryCell {
+				Label = "Search Without Ingredient(s)",
+				Placeholder = "ingredient1,ingredient2,..",
+			};
+
+			notIncludedItem.Completed += (sender, e) => {
+				Globals.firebaseData.searchSettings.notIncludedIngredients = notIncludedItem.Text.Split (',').ToList ();
+			};
+
+			// Persistent Data 
+			if (Globals.firebaseData.searchSettings != null)
+			{
+				if (Globals.firebaseData.searchSettings.ingredientSearch != Globals.firebaseData.searchSettings.recipeSearch)
+				{
+					recipeSearch.On = Globals.firebaseData.searchSettings.recipeSearch;
+					ingredientSearch.On = Globals.firebaseData.searchSettings.ingredientSearch;
+				}
+				if (Globals.firebaseData.searchSettings.limitOfSearch > 10)
+				{
+					maxResults.Text = Globals.firebaseData.searchSettings.limitOfSearch.ToString();
+				}
+				if (Globals.firebaseData.searchSettings.notIncludedIngredients.Count > 0)
+				{
+					Globals.firebaseData.searchSettings.notIncludedIngredients.ForEach (x => notIncludedItem.Text += x + ",");
+					notIncludedItem.Text.Substring (0, notIncludedItem.Text.Length - 2);
+				}
+			}
+
+			// Exit Settings
+			var layout = new StackLayout {
+				Orientation = StackOrientation.Vertical
+			};
+			var exitSettings = new Button {
+				Text = "Save Settings",
+				BackgroundColor = Color.FromHex ("#1D89E4"),
+				TextColor = Color.White,
+			};
+
+			exitSettings.Clicked += (sender, e) => {
+				_PopUpLayout.DismissPopup ();
+			};
+
+			layout.Children.Add (exitSettings);
+
+			var exitSettingsView = new ViewCell {
+				View = layout
+			};
+
+			var searchSection = new TableSection ("Search By Ingredient(s) Or Recipe Name") {
+				recipeSearch,
+				ingredientSearch
+			};
+
+			var limitSection = new TableSection ("Number Of Items To List") {
+				maxResults
+			};
+
+			var notIncludeSection = new TableSection ("Do Not Include Ingredient(s)") {
+				notIncludedItem
+			};
+
+			var exitSettingsSection = new TableSection {
+				exitSettingsView
+			};
+
+			tableRoot.Add (searchSection);
+			tableRoot.Add (limitSection);
+			tableRoot.Add (notIncludeSection);
+			tableRoot.Add (exitSettingsSection);
+
+			tableView.Root = tableRoot;
+
+			return tableView;
 		}
 	}
 }

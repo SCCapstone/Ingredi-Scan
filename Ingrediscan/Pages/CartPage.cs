@@ -7,6 +7,8 @@ using Ingrediscan.Utilities;
 using Android.Widget;
 using System.Threading.Tasks;
 
+using XLabs.Forms.Controls;
+
 namespace Ingrediscan
 {
 	public class CartPage : ContentPage
@@ -14,10 +16,12 @@ namespace Ingrediscan
         public static Dictionary<string, bool> markedItems = new Dictionary<string, bool>();
 		public static List<GroupCart> items;
 		public bool sortByRecipe = true;
+		PopupLayout popupLayout = new PopupLayout ();
 
         public CartPage ()
 		{
             UpdateCheckBoxes();
+
 
 			SearchBar searchBar = new SearchBar {
 				Placeholder = "Enter search term",
@@ -101,8 +105,8 @@ namespace Ingrediscan
 				}
 			});
 
-			ToolbarItems.Add(sortCartToolbarItem);
-
+			//ToolbarItems.Add(sortCartToolbarItem);
+			/*
 			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", () => {
 				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
 				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
@@ -111,7 +115,7 @@ namespace Ingrediscan
 			ToolbarItems.Add (new ToolbarItem ("Delete Cart", "drawable/delete.png", () => {
 				//await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
 				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
-			}));
+			}));*/
 
 			// Create our data from our load data
 			var list = this.CreateRecipeListViewFromList (Globals.firebaseData.cart);
@@ -131,19 +135,72 @@ namespace Ingrediscan
 
 
 			Title = "Shopping Cart";
-			Content = new StackLayout {
+			var listView = new Xamarin.Forms.ListView {
+				IsGroupingEnabled = true,
+				GroupDisplayBinding = new Binding ("Name"),
+				GroupShortNameBinding = new Binding ("Name"),
+
+				ItemTemplate = template,
+				ItemsSource = items
+			};
+
+			/*Content = new StackLayout {
 				Children = {
 					searchBar,
-					new Xamarin.Forms.ListView {
-						IsGroupingEnabled = true,
-						GroupDisplayBinding = new Binding ("Name"),
-						GroupShortNameBinding = new Binding ("Name"),
+					listView
+				}
+			};*/
 
-						ItemTemplate = template,
-						ItemsSource = items
-					}
+			popupLayout.Content = new StackLayout {
+				Children = {
+					searchBar,
+					listView
 				}
 			};
+
+			Content = popupLayout;
+
+			ToolbarItems.Add (new ToolbarItem ("Add To Cart", "drawable/add.png", () => {
+				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
+				//Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
+				var label = new Label {
+					Text = "Add To Cart"
+				};
+
+				SearchBar search = new SearchBar ();
+				search = new SearchBar {
+					Placeholder = "Item to add...",
+					SearchCommand = new Command (() => {
+						var groupItem = new GroupCart (search.Text);
+						var tempList = new List<GroupCart> ();
+						foreach (var l in listView.ItemsSource) {
+							tempList.Add ((GroupCart)l);
+						}
+						tempList.Add (groupItem);
+						listView.ItemsSource = tempList;
+						popupLayout.DismissPopup ();
+					})
+				};
+
+				var frame = new Frame // define a Frame as PopUp and add the StackLayout as content
+				{
+					Content = new StackLayout {
+						Children = {
+						label, search
+						}
+					},
+					HasShadow = true,
+					OutlineColor = Color.White,
+				};
+
+				popupLayout.ShowPopup (frame);
+				search.Focus ();
+			}));
+
+			ToolbarItems.Add (new ToolbarItem ("Delete From Cart", "drawable/delete.png", () => {
+				//await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
+				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
+			}));
 		}
 
 		// TODO Not yet implemented

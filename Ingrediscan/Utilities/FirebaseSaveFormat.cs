@@ -19,5 +19,10 @@ namespace Ingrediscan
 		public Dictionary<string, bool> cuisine { get; set; }
 		public Dictionary<string, bool> diets { get; set; }
 		public Dictionary<string, bool> intolerances { get; set; }
+
+		public bool recipeSearch { get; set; }
+		public bool ingredientSearch { get; set; }
+		public int limitOfSearch { get; set; }
+		public List<string> notIncludedIngredients { get; set; }
 	}
 }
