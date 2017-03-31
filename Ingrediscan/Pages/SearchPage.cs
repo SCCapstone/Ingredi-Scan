@@ -18,34 +18,79 @@ namespace Ingrediscan
 		SearchBar searchBar;
 		string prevSearch = "";
 
+		Picker dishSelector;
+
 		PopupLayout _PopUpLayout = new PopupLayout ();
 
 		public SearchPage ()
 		{
-			Picker picker = new Picker {
+			Picker history = new Picker {
 				Title = "History",
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				IsEnabled = false,
 				IsVisible = false,
 			};
-			if(Globals.firebaseData.history != null)
-				Globals.firebaseData.history.ToList().ForEach(x => picker.Items.Add(x));
 
-			picker.SelectedIndexChanged += async (sender, args) => {
-				if (picker.SelectedIndex == -1) 
-				{
+			dishSelector = new Picker {
+				Title = "Dish Selection",
+				VerticalOptions = LayoutOptions.CenterAndExpand,
+				IsVisible = true,
+				IsEnabled = true,
+			};
+
+			var listOfDishSelections = new List<string> () { "Main Course", "Side Dish", "Dessert", "Appetizer", "Salad", 
+				"Bread", "Breakfast", "Soup", "Beverage", "Sauce", "Drink" };
+
+			listOfDishSelections.ForEach (x => dishSelector.Items.Add (x));
+			dishSelector.SelectedIndexChanged += async (sender, args) => {
+				if (dishSelector.SelectedIndex == -1) {
 					// Do nothing
-				} 
-				else
-				{
-					if (searchBar.Text != picker.Items [picker.SelectedIndex]) 
+				} else {
+					Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
+					SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+
+					if(searchBar.Text != null)
 					{
-						searchBar.Text = picker.Items [picker.SelectedIndex];
 						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
 					}
 				}
 			};
 
+			if (Globals.firebaseData.searchSettings.dishType != null) {
+				dishSelector.SelectedIndex = dishSelector.Items.IndexOf (Globals.firebaseData.searchSettings.dishType);
+			} else {
+				dishSelector.SelectedIndex = 0;
+			}
+
+			Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
+
+			// Search Bar creation
+			searchBar = new SearchBar {
+				Placeholder = "Enter search term",
+				SearchCommand = new Command (async () => {
+					if (prevSearch != searchBar.Text) {
+						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
+
+						if (Globals.firebaseData.history.Count > 10) {
+							Globals.firebaseData.history.Reverse ();
+							Globals.firebaseData.history.RemoveAt (Globals.firebaseData.history.Count - 1);
+							Globals.firebaseData.history.Reverse ();
+						}
+
+						history.Items.Insert (0, searchBar.Text); // adds to list in current screen
+
+						Globals.firebaseData.history.Reverse ();
+						Globals.firebaseData.history.Add (searchBar.Text); //adds text when returning to screen
+						Globals.firebaseData.history.Reverse ();
+
+						SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+
+						prevSearch = searchBar.Text;
+					}
+				})
+			};
+
+			// Result View creation
 			resultsView = new ListView {
 				ItemsSource = recipes,
 				ItemTemplate = new DataTemplate (() => {
@@ -56,6 +101,27 @@ namespace Ingrediscan
 				}),
 				VerticalOptions = LayoutOptions.StartAndExpand,
 			};
+
+			// History management
+			if(Globals.firebaseData.history != null)
+				Globals.firebaseData.history.ToList().ForEach(x => history.Items.Add(x));
+
+			history.SelectedIndexChanged += async (sender, args) => {
+				if (history.SelectedIndex == -1) 
+				{
+					// Do nothing
+				} 
+				else
+				{
+					if (searchBar.Text != history.Items [history.SelectedIndex]) 
+					{
+						searchBar.Text = history.Items [history.SelectedIndex];
+						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
+					}
+				}
+			};
+
+			// Results View selection management
 			bool finished = true;
 			resultsView.ItemSelected += async (sender, e) => {
 				if (Navigation.NavigationStack.Count < 2 && finished == true) 
@@ -75,92 +141,97 @@ namespace Ingrediscan
 				}
 			};
 
-			// Toolbar addition
-			ToolbarItems.Add (new ToolbarItem ("History", "drawable/history.png", () => {
-				picker.Focus ();
-			}));
-
+			// Popup layout creation
 			var tableView = CreatePopUpLayout ();
 
 			var PopUp = new Frame {
-				//HorizontalOptions = LayoutOptions.Center,
-				//VerticalOptions = LayoutOptions.StartAndExpand,
-				WidthRequest = 300,
-				HeightRequest = 300,
+				HorizontalOptions = LayoutOptions.Center,
+				VerticalOptions = LayoutOptions.StartAndExpand,
+				WidthRequest = 260,
+				HeightRequest = 400,
 				Content = tableView,
 				HasShadow = true,
-				OutlineColor = Color.Silver
+				OutlineColor = Color.Silver,
 			};
 
+			// Toolbar History addition
+			ToolbarItems.Add (new ToolbarItem ("History", "drawable/history.png", () => {
+				history.Focus ();
+			}));
+
+			// Toolbar Settings addition
 			ToolbarItems.Add (new ToolbarItem ("Settings", "drawable/settings", () => {
+				double width = this.Width;
+				double height = this.Height;
+				double Position = (width - 300) / 2;
+
+				_PopUpLayout.ShowPopup (PopUp, Constraint.Constant (Position), Constraint.Constant (20));
+
+				_PopUpLayout.Content.IsVisible = false;
+
 				_PopUpLayout.ShowPopup (PopUp);
 			}));
 
-			searchBar = new SearchBar {
-				Placeholder = "Enter search term",
-				SearchCommand = new Command (async () => {
-					if (prevSearch != searchBar.Text) 
-					{
-						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
-
-						if (Globals.firebaseData.history.Count > 10) 
-						{
-						    Globals.firebaseData.history.Reverse ();
-							Globals.firebaseData.history.RemoveAt (Globals.firebaseData.history.Count - 1);
-							Globals.firebaseData.history.Reverse ();
-						}
-
-
-                        //if (picker.Items.Count > 2)
-                        //{
-                        //    picker.Items.RemoveAt(picker.Items.Count - 1);
-                        //}
-						picker.Items.Insert (0,searchBar.Text); // adds to list in current screen
-
-						Globals.firebaseData.history.Reverse ();
-						Globals.firebaseData.history.Add (searchBar.Text); //adds text when returning to screen
-						Globals.firebaseData.history.Reverse ();
-
-						SaveAndLoad.SaveToFirebase (Globals.firebaseData);
-
-						prevSearch = searchBar.Text;
-					}
-				})
-			};
-
-			Title = "Search By Recipe Name";
+			Title = "Search";
 
 			_PopUpLayout.Content = new StackLayout {
 				VerticalOptions = LayoutOptions.StartAndExpand,
 				Children = {
+					dishSelector,
 					searchBar,
 					resultsView,
-					picker
+					history,
 				},
-				Padding = new Thickness (10, Device.OnPlatform (20, 0, 0), 10, 0)
+				//Padding = new Thickness (10, Device.OnPlatform (20, 0, 0), 10, 0)
 			};
 
 			Content = _PopUpLayout;
+
+			SaveAndLoad.SaveToFirebase (Globals.firebaseData);
 		}
 
 		//TODO Make async
+		/// <summary>
+		/// Creates the list view from search.
+		/// </summary>
+		/// <returns>The list view from search.</returns>
+		/// <param name="search">Search.</param>
 		public async Task<List<SearchResultItem>> CreateListViewFromSearch(string search)
 		{
-			var items = await REST_API.GET_SearchRecipes (search);
+			var settings = Globals.firebaseData.searchSettings;
 
 			List<SearchResultItem> searchResultItems = new List<SearchResultItem> ();
 
-			items.results.ForEach (x => searchResultItems.Add (new SearchResultItem {
-				ImageSource = items.baseUri + x.image,
-				Text = x.title,
-				//Detail = 
-				TargetType = typeof (RecipePage),
-				Id = x.id
-			}));
+			if (settings.searchPref == "By Recipe") 
+			{
+				var items = await REST_API.GET_SearchRecipes (search, settings.limitOfSearch, settings.dishType.ToLower());
+
+				items.results.ForEach (x => searchResultItems.Add (new SearchResultItem {
+					ImageSource = items.baseUri + x.image,
+					Text = x.title,
+					TargetType = typeof (RecipePage),
+					Id = x.id
+				}));
+			} 
+			else if (settings.searchPref == "By Ingredients")
+			{
+				var items = await REST_API.GET_FindByIngredients (search, settings.limitOfSearch);
+
+				items.ForEach (x => searchResultItems.Add (new SearchResultItem {
+					ImageSource = x.image,
+					Text = x.title,
+					TargetType = typeof (RecipePage),
+					Id = x.id
+				}));
+			}
 
 			return searchResultItems;
 		}
 
+		/// <summary>
+		/// Loads the search history.
+		/// </summary>
+		/// <param name="history">History.</param>
 		public static void LoadSearchHistory(List<string> history)
 		{
 			if (history != null) {
@@ -175,6 +246,10 @@ namespace Ingrediscan
 			}
 		}
 
+		/// <summary>
+		/// Creates the pop up layout.
+		/// </summary>
+		/// <returns>The pop up layout.</returns>
 		public TableView CreatePopUpLayout()
 		{
 			var tableView = new TableView ();
@@ -183,27 +258,36 @@ namespace Ingrediscan
 			var tableRoot = new TableRoot ();
 
 			// Search by ingredient(s) or recipe
-			var recipeSearch = new SwitchCell {
-				Text = "Search By Recipe",
-				On = true
+			var searchPref = new Picker {
+				Title = "Search Preference",
+				VerticalOptions = LayoutOptions.CenterAndExpand,
+				IsVisible = true,
+				IsEnabled = true,
 			};
 
-			var ingredientSearch = new SwitchCell {
-				Text = "Search By Ingredient(s)",
-				On = false
+			var choices = new List<string> () { "By Recipe", "By Ingredients" };
+			choices.ForEach(x => searchPref.Items.Add (x));
+
+			searchPref.SelectedIndexChanged += (sender, e) => {
+				Globals.firebaseData.searchSettings.searchPref = searchPref.Items [searchPref.SelectedIndex];
+
+				if (Globals.firebaseData.searchSettings.searchPref == "By Recipe")
+				{
+					dishSelector.IsVisible = true;
+					dishSelector.IsEnabled = true;
+
+					searchBar.Placeholder = "Recipe Name";
+				} 
+				else if (Globals.firebaseData.searchSettings.searchPref == "By Ingredients")
+				{
+					dishSelector.IsVisible = false;
+					dishSelector.IsEnabled = false;
+
+					searchBar.Placeholder = "Ingredient1,Ingredient2,..";
+				}
 			};
 
-			recipeSearch.OnChanged += (sender, e) => {
-				ingredientSearch.On = !ingredientSearch.On;
-				Globals.firebaseData.searchSettings.recipeSearch = recipeSearch.On;
-				Globals.firebaseData.searchSettings.ingredientSearch = ingredientSearch.On;
-			};
-
-			ingredientSearch.OnChanged += (sender, e) => {
-				recipeSearch.On = !recipeSearch.On;
-				Globals.firebaseData.searchSettings.recipeSearch = recipeSearch.On;
-				Globals.firebaseData.searchSettings.ingredientSearch = ingredientSearch.On;
-			};
+			searchPref.SelectedIndex = 0;
 
 			// Increase max limit size
 			var maxResults = new EntryCell {
@@ -214,7 +298,7 @@ namespace Ingrediscan
 
 			maxResults.Completed += (sender, e) => {
 				var result = 10;
-				if(int.TryParse(maxResults.Text, out result))
+				if(int.TryParse(maxResults.Text, out result) && result < 100 && result > 0)
 				{
 					Globals.firebaseData.searchSettings.limitOfSearch = result;
 				}
@@ -227,25 +311,23 @@ namespace Ingrediscan
 			};
 
 			notIncludedItem.Completed += (sender, e) => {
-				Globals.firebaseData.searchSettings.notIncludedIngredients = notIncludedItem.Text.Split (',').ToList ();
+				Globals.firebaseData.searchSettings.excludeIngredients = notIncludedItem.Text;
 			};
 
 			// Persistent Data 
 			if (Globals.firebaseData.searchSettings != null)
 			{
-				if (Globals.firebaseData.searchSettings.ingredientSearch != Globals.firebaseData.searchSettings.recipeSearch)
+				if (Globals.firebaseData.searchSettings.searchPref != "")
 				{
-					recipeSearch.On = Globals.firebaseData.searchSettings.recipeSearch;
-					ingredientSearch.On = Globals.firebaseData.searchSettings.ingredientSearch;
+					searchPref.SelectedIndex = searchPref.Items.IndexOf (Globals.firebaseData.searchSettings.searchPref);
 				}
 				if (Globals.firebaseData.searchSettings.limitOfSearch > 10)
 				{
 					maxResults.Text = Globals.firebaseData.searchSettings.limitOfSearch.ToString();
 				}
-				if (Globals.firebaseData.searchSettings.notIncludedIngredients.Count > 0)
+				if (Globals.firebaseData.searchSettings.excludeIngredients != "")
 				{
-					Globals.firebaseData.searchSettings.notIncludedIngredients.ForEach (x => notIncludedItem.Text += x + ",");
-					notIncludedItem.Text.Substring (0, notIncludedItem.Text.Length - 2);
+					notIncludedItem.Text = Globals.firebaseData.searchSettings.excludeIngredients;
 				}
 			}
 
@@ -260,6 +342,8 @@ namespace Ingrediscan
 			};
 
 			exitSettings.Clicked += (sender, e) => {
+				SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+				_PopUpLayout.Content.IsVisible = true;
 				_PopUpLayout.DismissPopup ();
 			};
 
@@ -270,8 +354,7 @@ namespace Ingrediscan
 			};
 
 			var searchSection = new TableSection ("Search By Ingredient(s) Or Recipe Name") {
-				recipeSearch,
-				ingredientSearch
+				new ViewCell {View = searchPref}
 			};
 
 			var limitSection = new TableSection ("Number Of Items To List") {

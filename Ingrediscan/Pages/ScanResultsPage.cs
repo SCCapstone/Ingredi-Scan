@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ingrediscan.Utilities;
 using Xamarin.Forms;
 
@@ -45,7 +46,7 @@ namespace Ingrediscan
                     }
                 };
 
-                resultsView.ItemsSource = this.CreateListViewFromUPC(resultsFromUPC);
+			    resultsView.ItemsSource = this.CreateListViewFromUPC(resultsFromUPC).Result;
 
                 Title = "Search Results";
                 Content = new StackLayout
@@ -66,9 +67,9 @@ namespace Ingrediscan
             }*/
 		}
 
-        public List<SearchResultItem> CreateListViewFromUPC(SpoonacularClasses.FindByUPC resultsFromUPC)
+        public async Task<List<SearchResultItem>> CreateListViewFromUPC(SpoonacularClasses.FindByUPC resultsFromUPC)
         {
-            var items = REST_API.GET_FindByIngredients(resultsFromUPC.title);
+            var items = await REST_API.GET_FindByIngredients(resultsFromUPC.title);
             if (items.Count > 0)
             {
                 List<SearchResultItem> searchResultItems = new List<SearchResultItem>();
@@ -84,7 +85,7 @@ namespace Ingrediscan
             }
             else
             {
-                Navigation.PopAsync();
+                await Navigation.PopAsync();
                 Android.Widget.Toast.MakeText(Forms.Context, "An error occurred. It's possible the barcode is not a valid ingredient or not " +
                                         "currently in Spoonacular's database.", Android.Widget.ToastLength.Short).Show();
                 return null;

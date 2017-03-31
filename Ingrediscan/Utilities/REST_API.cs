@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using RestSharp;
+using Ingrediscan.Utilities;
 
 namespace Ingrediscan
 {
@@ -60,13 +61,11 @@ namespace Ingrediscan
 		/// Get the recipes from Spoonacular.
 		/// </summary>
 		/// <param name="ingredients">Item name which we get from the UPC's title.</param>
-		public static  List<SpoonacularClasses.FindByIngredients>
-		                                                GET_FindByIngredients(/*bool fillIngredients, */string ingredients,//,
-		                                                                    bool limitLicense = false)//, int number, int ranking) // TODO Add await
+		public static async Task<List<SpoonacularClasses.FindByIngredients>>
+		                                                GET_FindByIngredients(string ingredients, int number = 10,
+		                                                                    bool limitLicense = false)
 		{
-            //ingredients = ingredients.Replace(" ", "");
 			Console.WriteLine ("Enter GET - SPOONACULAR: " + ingredients);
-
 
 			// The URL we are currently using
 			string action = "/recipes/findByIngredients";
@@ -83,14 +82,14 @@ namespace Ingrediscan
 			//request.AddQueryParameter ("fillIngredients", fillIngredients.ToString());
 			request.AddQueryParameter ("ingredients", ingredients);
 			request.AddQueryParameter ("limitLicense", limitLicense.ToString ());
-			//request.AddQueryParameter ("number", number.ToString());
+			request.AddQueryParameter ("number", number.ToString());
 			//request.AddQueryParameter ("ranking", ranking.ToString ());
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
+			//var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
 
-			//var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
+			var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
 
 			Console.WriteLine (client.BaseUrl.ToString () + client.BuildUri (request).ToString());
 
@@ -98,7 +97,7 @@ namespace Ingrediscan
 			response.ForEach(x => Console.WriteLine(x.title));
 
 			Console.WriteLine ("Exit GET - SPOONACULAR");
-			return response;//TODO Do we need to return something else here?
+			return response;
 		}
 
 		public static async Task<List<SpoonacularClasses.AutocompleteIngredientSearch>> 
@@ -277,7 +276,8 @@ namespace Ingrediscan
 		}
 
 		//TODO Add optional parameters
-		public static async Task<SpoonacularClasses.SearchRecipes> GET_SearchRecipes (string query)
+		public static async Task<SpoonacularClasses.SearchRecipes> GET_SearchRecipes (string query, int number = 10, 
+		                                                                              string type = "main course")
 		{
 			Console.WriteLine ("Enter GET - SEARCH RECIPE");
 
@@ -296,15 +296,28 @@ namespace Ingrediscan
 			var request = new RestRequest (action);
 			request.AddHeader ("X-Mashape-Key", SpoonacularKey);
 			request.AddHeader ("Accept", "application/json");
-			request.AddQueryParameter ("query", query);
-			if (!diets.Equals (""))
-				request.AddQueryParameter ("diet", diets);
-			if(!cuisines.Equals(""))
+			if (!cuisines.Equals ("")) {
 				request.AddQueryParameter ("cuisine", cuisines);
-			if (!intol.Equals (""))
+			}
+			if(Globals.firebaseData.searchSettings.excludeIngredients != "")
+			{
+				request.AddQueryParameter ("excludeIngredients", Globals.firebaseData.searchSettings.excludeIngredients);
+			}
+			if (!diets.Equals ("")) 
+			{
+				request.AddQueryParameter ("diet", diets);
+			}
+			if (!intol.Equals ("")) 
+			{
 				request.AddQueryParameter ("intolerances", intol);
+			}
+			request.AddQueryParameter ("number", number.ToString());
+			request.AddQueryParameter ("query", query);
+			request.AddQueryParameter ("type", type);
+
 			request.RequestFormat = DataFormat.Json;
 
+			Console.WriteLine ("REQUEST: " + client.BaseUrl.ToString () + client.BuildUri (request).ToString ());
 			// Generate a response TODO Make async
 			//var response = client.Execute<SpoonacularClasses.SearchRecipes> (request).Data;
 
