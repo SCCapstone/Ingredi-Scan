@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Ingrediscan</RootNamespace>
     <AssemblyName>Ingrediscan</AssemblyName>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -19,6 +19,8 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidTlsProvider></AndroidTlsProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,10 +30,10 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AndroidLinkMode>None</AndroidLinkMode>
-    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <AndroidSupportedAbis>arm64-v8a;armeabi;armeabi-v7a;x86;x86_64</AndroidSupportedAbis>
+    <AndroidSupportedAbis>x86_64;arm64-v8a;x86;armeabi-v7a;armeabi</AndroidSupportedAbis>
+    <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,7 +44,8 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <AndroidSupportedAbis>armeabi-v7a;x86</AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a;armeabi</AndroidSupportedAbis>
+    <AndroidLinkMode>Full</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Auth0.AuthenticationApi, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -214,11 +217,33 @@
     <Reference Include="Auth0Client.Android">
       <HintPath>Components\Auth0Client-0.5.0\lib\android\Auth0Client.Android.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Components\Auth0Client-0.5.0\lib\android\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Xamarin.Auth.Android">
       <HintPath>Components\Auth0Client-0.5.0\lib\android\Xamarin.Auth.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Core">
+      <HintPath>..\packages\XLabs.Core.2.0.5782\lib\portable-net45+netcore45+wp8+MonoAndroid1+MonoTouch1\XLabs.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ExifLib">
+      <HintPath>..\packages\ExifLib.PCL.1.0.1\lib\portable-net45+sl50+win+WindowsPhoneApp81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\ExifLib.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Platform">
+      <HintPath>..\packages\XLabs.Platform.2.0.5782\lib\MonoAndroid\XLabs.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Platform.Droid">
+      <HintPath>..\packages\XLabs.Platform.2.0.5782\lib\MonoAndroid\XLabs.Platform.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android.Export" />
+    <Reference Include="XLabs.Ioc">
+      <HintPath>..\packages\XLabs.IoC.2.0.5782\lib\portable-net45+netcore45+wp8+MonoAndroid1+MonoTouch1\XLabs.Ioc.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Serialization">
+      <HintPath>..\packages\XLabs.Serialization.2.0.5782\lib\portable-net45+netcore45+wp8+MonoAndroid1+MonoTouch1\XLabs.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Forms">
+      <HintPath>..\packages\XLabs.Forms.2.0.5782\lib\MonoAndroid\XLabs.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Forms.Droid">
+      <HintPath>..\packages\XLabs.Forms.2.0.5782\lib\MonoAndroid\XLabs.Forms.Droid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -289,19 +314,19 @@
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\drawable\addToCart.png" />
-    <AndroidResource Include="Resources\drawable\edit.png" />
     <AndroidResource Include="Resources\drawable\delete.png" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\drawable\scan.png" />
     <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\faveAfter.png" />
     <AndroidResource Include="Resources\drawable\faveBefore.png" />
-    <AndroidResource Include="Resources\drawable\logo.png" />
     <AndroidResource Include="Resources\drawable\checked.png" />
     <AndroidResource Include="Resources\drawable\unchecked.png" />
     <AndroidResource Include="Resources\drawable\remove.png" />
     <AndroidResource Include="Resources\drawable\cancel.png" />
     <AndroidResource Include="Resources\drawable\reset.png" />
+    <AndroidResource Include="Resources\drawable\selected.png" />
+    <AndroidResource Include="Resources\drawable\add.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\logout.png" />
@@ -318,6 +343,12 @@
       <Version>0.5.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\recipes.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

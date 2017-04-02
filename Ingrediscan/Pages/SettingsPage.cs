@@ -12,7 +12,19 @@ namespace Ingrediscan
 	{
 		public SettingsPage ()
 		{
-			Settings.LoadSettings(Globals.firebaseData.searchSettings);
+
+            Title = "Settings";
+
+            var label = new Label
+            {
+                Text = "Mark Items to Narrow Search.",
+                FontSize = 20,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center
+            };
+            StackLayout layout = new StackLayout();
+
+            Settings.LoadSettings(Globals.firebaseData.searchSettings);
 
 			ToolbarItems.Add (new ToolbarItem ("Clear Settings", "drawable/reset.png", async () => {
 				
@@ -20,12 +32,16 @@ namespace Ingrediscan
 				if (resetSettings) 
 				{
 					Settings.clearSettings ();
-					Content = Settings.tableView;
+                    layout.Children.Add(label);
+                    layout.Children.Add(Settings.tableView);
+					Content = layout;
 					Toast.MakeText (Forms.Context, "Settings have been cleared.", ToastLength.Short).Show ();
 				}
 			}));
 
             Settings.SaveSettings();
+
+           
 
 			var cuisineSwitches = Settings.populateSettings("cuisine");
 			var dietSwitches = Settings.populateSettings ("diet");
@@ -50,7 +66,9 @@ namespace Ingrediscan
 				}
 			};
 
-			Content = Settings.tableView;
+            layout.Children.Add(label);
+            layout.Children.Add(Settings.tableView);
+            Content = layout;
 		}
 	}
 }
