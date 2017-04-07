@@ -41,29 +41,6 @@ namespace Ingrediscan
 			var listOfDishSelections = new List<string> () { "Main Course", "Side Dish", "Dessert", "Appetizer", "Salad", 
 				"Bread", "Breakfast", "Soup", "Beverage", "Sauce", "Drink" };
 
-			listOfDishSelections.ForEach (x => dishSelector.Items.Add (x));
-			dishSelector.SelectedIndexChanged += async (sender, args) => {
-				if (dishSelector.SelectedIndex == -1) {
-					// Do nothing
-				} else {
-					Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
-					SaveAndLoad.SaveToFirebase (Globals.firebaseData);
-
-					if(searchBar.Text != null)
-					{
-						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
-					}
-				}
-			};
-
-			if (Globals.firebaseData.searchSettings.dishType != null) {
-				dishSelector.SelectedIndex = dishSelector.Items.IndexOf (Globals.firebaseData.searchSettings.dishType);
-			} else {
-				dishSelector.SelectedIndex = 0;
-			}
-
-			Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
-
 			// Search Bar creation
 			searchBar = new SearchBar {
 				Placeholder = "Enter search term",
@@ -89,6 +66,30 @@ namespace Ingrediscan
 					}
 				})
 			};
+
+			listOfDishSelections.ForEach (x => dishSelector.Items.Add (x));
+			dishSelector.SelectedIndexChanged += async (sender, args) => {
+				if (dishSelector.SelectedIndex == -1) {
+					// Do nothing
+				} else {
+					Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
+					SaveAndLoad.SaveToFirebase (Globals.firebaseData);
+
+					if(searchBar.Text != null)
+					{
+						resultsView.ItemsSource = await this.CreateListViewFromSearch (searchBar.Text);
+					}
+				}
+			};
+
+			if (Globals.firebaseData.searchSettings.dishType != null) {
+				dishSelector.SelectedIndex = dishSelector.Items.IndexOf (Globals.firebaseData.searchSettings.dishType);
+			} else {
+				dishSelector.SelectedIndex = 0;
+			}
+
+			Globals.firebaseData.searchSettings.dishType = dishSelector.Items [dishSelector.SelectedIndex];
+
 
 			// Result View creation
 			resultsView = new ListView {
