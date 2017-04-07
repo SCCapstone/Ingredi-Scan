@@ -216,8 +216,74 @@ namespace Ingrediscan
                     }
                     markedI.ForEach(x => markedItems.Remove(x));
                 }
+                UpdateCheckBoxes();
+                saveCart();
 
-			}));
+                //Used code from above to regenerate the List of Ingredients
+                if (!sortByRecipe)
+                {
+                    // Create our data from our load data
+                    var _list = CreateRecipeListViewFromList(Globals.firebaseData.cart);
+                    items = new List<GroupCart>();
+                    foreach (var rec in _list)
+                    {
+                        var group = new GroupCart(rec.Name);
+                        foreach (var ing in rec.Ingredients)
+                        {
+                            group.Add(ing);
+                        }
+                        items.Add(group);
+                    }
+                    Title = "Shopping Cart";
+                    Content = new StackLayout
+                    {
+                        Children = {
+                            searchBar,
+                            new Xamarin.Forms.ListView {
+                                IsGroupingEnabled = true,
+                                GroupDisplayBinding = new Binding ("Name"),
+                                GroupShortNameBinding = new Binding ("Name"),
+
+                                ItemTemplate = template,
+                                ItemsSource = items
+                            }
+                        }
+                    };
+                }
+                else
+                {
+                    // Create our data from our load data
+                    var _list = CreateIngredientListViewFromList(Globals.firebaseData.cart);
+                    items = new List<GroupCart>();
+                    var group = new GroupCart("Ingredients");
+                    foreach (var rec in _list)
+                    {
+                        foreach (var ing in rec.Ingredients)
+                        {
+                            group.Add(ing);
+                        }
+                    }
+                    items.Add(group);
+                    Console.WriteLine("We are here2");
+                    Title = "Shopping Cart";
+                    Content = new StackLayout
+                    {
+                        Children = {
+                            searchBar,
+                            new Xamarin.Forms.ListView {
+                                IsGroupingEnabled = true,
+                                GroupDisplayBinding = new Binding ("Name"),
+                                GroupShortNameBinding = new Binding ("Name"),
+
+                                ItemTemplate = template,
+                                ItemsSource = items
+                            }
+                        }
+                    };
+                }
+
+
+            }));
 		}
 
 		// TODO Not yet implemented
