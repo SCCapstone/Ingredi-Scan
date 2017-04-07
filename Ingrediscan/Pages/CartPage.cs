@@ -58,6 +58,9 @@ namespace Ingrediscan
 								GroupDisplayBinding = new Binding ("Name"),
 								GroupShortNameBinding = new Binding ("Name"),
 
+								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+								SeparatorVisibility = SeparatorVisibility.None,
+
 								ItemTemplate = template,
 								ItemsSource = items
 							}
@@ -88,6 +91,9 @@ namespace Ingrediscan
 								IsGroupingEnabled = true,
 								GroupDisplayBinding = new Binding ("Name"),
 								GroupShortNameBinding = new Binding ("Name"),
+
+								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+								SeparatorVisibility = SeparatorVisibility.None,
 
 								ItemTemplate = template,
 								ItemsSource = items
@@ -139,6 +145,9 @@ namespace Ingrediscan
 				IsGroupingEnabled = true,
 				GroupDisplayBinding = new Binding ("Name"),
 				GroupShortNameBinding = new Binding ("Name"),
+
+				GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+				SeparatorVisibility = SeparatorVisibility.None,
 
 				ItemTemplate = template,
 				ItemsSource = items
@@ -244,6 +253,9 @@ namespace Ingrediscan
                                 GroupDisplayBinding = new Binding ("Name"),
                                 GroupShortNameBinding = new Binding ("Name"),
 
+								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+								SeparatorVisibility = SeparatorVisibility.None,
+
                                 ItemTemplate = template,
                                 ItemsSource = items
                             }
@@ -274,6 +286,9 @@ namespace Ingrediscan
                                 IsGroupingEnabled = true,
                                 GroupDisplayBinding = new Binding ("Name"),
                                 GroupShortNameBinding = new Binding ("Name"),
+
+								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+								SeparatorVisibility = SeparatorVisibility.None,
 
                                 ItemTemplate = template,
                                 ItemsSource = items

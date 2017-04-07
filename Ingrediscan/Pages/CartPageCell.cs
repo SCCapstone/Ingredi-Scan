@@ -17,8 +17,6 @@ namespace Ingrediscan
 			image.SetBinding (Image.SourceProperty, "Image");
 
 			var label = new Label {
-				VerticalTextAlignment = TextAlignment.Center,
-				HorizontalOptions = LayoutOptions.StartAndExpand,
 				Style = Application.Current.Resources["labelStyle"] as Style
 			};
 
@@ -32,11 +30,7 @@ namespace Ingrediscan
 
 			var checkbox = new Button
 			{
-				BorderWidth = 1,
-				HorizontalOptions = LayoutOptions.Start,
-				BackgroundColor = Color.Transparent,
-				WidthRequest = 40,
-				HeightRequest = 10
+				Style = Application.Current.Resources["checkboxStyle"] as Style
             };
             checkbox.SetBinding(Button.ImageProperty, "CheckBoxName");
            /* if(CartPage.markedItems[key])
@@ -62,6 +56,7 @@ namespace Ingrediscan
 				else
 				{
 					checkbox.Image = null;
+					checkbox.BorderWidth = 0.5;
 					label.FontAttributes = FontAttributes.None;
                     CartPage.markedItems[recipeLabel.Text+ " " + label.Text] = false;
                 }

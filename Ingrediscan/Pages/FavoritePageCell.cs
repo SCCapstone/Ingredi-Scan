@@ -11,21 +11,20 @@ namespace Ingrediscan
 		{
 			var image = new Image {
 				HorizontalOptions = LayoutOptions.StartAndExpand,
+			//	HeightRequest = 100,
+			//	WidthRequest = 60
 			};
 
 			image.SetBinding (Image.SourceProperty, "Image");
 
 			var label = new Label {
-				VerticalTextAlignment = TextAlignment.Center,
-				HorizontalOptions = LayoutOptions.StartAndExpand,
+				Style = Application.Current.Resources["labelStyle"] as Style
 			};
 
 			label.SetBinding (Label.TextProperty, "Name");
 
 			var deleteButton = new Button {
-				HorizontalOptions = LayoutOptions.EndAndExpand,
-				BackgroundColor = Color.Transparent,
-				Image = "drawable/remove.png"
+				Style = Application.Current.Resources["itemDeleteButtonStyle"] as Style
 			};
 
 			deleteButton.SetBinding (Button.IsEnabledProperty, "Enabled");
