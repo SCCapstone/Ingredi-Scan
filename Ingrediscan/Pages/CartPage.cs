@@ -197,10 +197,12 @@ namespace Ingrediscan
 				search.Focus ();
 			}));
 
+
 			ToolbarItems.Add (new ToolbarItem ("Delete From Cart", "drawable/delete.png", async () => {
                 //await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
                 //Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
                 UpdateCheckBoxes();
+                var markedI = new List<string>();
                 bool result = await DisplayAlert("Delete From Cart", "Would you like to delete all of these items from your cart?", "Confirm", "Cancel");
 
                 if (result)
@@ -209,9 +211,10 @@ namespace Ingrediscan
                     {
                         if (marked.Value == true)
                         {
-                            markedItems.Remove(marked.Key);
+                            markedI.Add(marked.Key);
                         }
                     }
+                    markedI.ForEach(x => markedItems.Remove(x));
                 }
 
 			}));
