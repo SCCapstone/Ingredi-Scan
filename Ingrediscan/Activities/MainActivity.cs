@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 
 using Ingrediscan.Utilities;
+using PerpetualEngine.Storage;
 
 namespace Ingrediscan
 {
@@ -15,6 +16,8 @@ namespace Ingrediscan
 
 			ZXing.Net.Mobile.Forms.Android.Platform.Init ();
 			ZXing.Mobile.MobileBarcodeScanner.Initialize (Application);
+
+			SimpleStorage.SetContext(ApplicationContext);
 
 			Xamarin.Forms.Forms.Init (this, savedInstanceState);
 			LoadApplication (new App ());

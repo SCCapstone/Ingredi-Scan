@@ -5,6 +5,7 @@ using Android.Content;
 using Newtonsoft.Json.Linq;
 using Xamarin.Auth;
 using Xamarin.Forms;
+using PerpetualEngine.Storage;
 
 namespace Auth0.SDK
 {
@@ -57,6 +58,8 @@ namespace Auth0.SDK
 				tcs.TrySetException(ex);
 			};
 
+			var storage = SimpleStorage.EditGroup("user_account");
+
 			auth.Completed += (o, e) =>
 			{
 				if(!e.IsAuthenticated)
@@ -65,25 +68,19 @@ namespace Auth0.SDK
 					return;
 				}
 
+				storage.Put<System.Collections.Generic.Dictionary<string, string>>("account", e.Account.Properties);
 				this.SetupCurrentUser(e.Account.Properties);
-				Console.WriteLine("JER: Attempting to set the user account properties.");
-				Application.Current.Properties["user_account"] = e.Account.Properties;
-				Console.WriteLine("JER: Got past set...");
-				Application.Current.SavePropertiesAsync();
-				Console.WriteLine("JER: Saved properties.");
 				tcs.TrySetResult(this.CurrentUser);
 			};
 
 			// We are already logged in.
-			if(Application.Current.Properties.ContainsKey("user_account"))
+			if(storage.HasKey("account"))
 			{
-				Console.WriteLine("JER: Properties contains the key.");
-				this.SetupCurrentUser(Application.Current.Properties["user_account"] as System.Collections.Generic.Dictionary<string, string>);
+				this.SetupCurrentUser(storage.Get<System.Collections.Generic.Dictionary<string, string>>("account"));
 				tcs.TrySetResult(this.CurrentUser);
 			}
 			else
 			{
-				Console.WriteLine("JER: Properties did not contain the key.");
 				Intent intent = auth.GetUI(context);
 				context.StartActivity(intent);
 			}
