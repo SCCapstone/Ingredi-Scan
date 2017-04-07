@@ -166,6 +166,11 @@ namespace Ingrediscan
 				prepTime = instructions.preparationMinutes.ToString () + " Minutes";
 			}
 
+			var titleGrid = new Grid();
+
+			titleGrid.Padding = new Thickness(5, 0, 2, 5);
+			titleGrid.Children.Add(new Label { Text = recipe.name, FontSize = 13.0, FontAttributes = FontAttributes.Italic }, 0, 1);
+
 			var gridP = new Grid ();
 
 			gridP.Padding = new Thickness (5, 0, 2, 5);
@@ -175,6 +180,7 @@ namespace Ingrediscan
 			var prepPage = new ContentPage {
 				Content = new StackLayout {
 					Children = {
+						titleGrid,
 						gridP,
 						resultsViewIngredients
 					}
