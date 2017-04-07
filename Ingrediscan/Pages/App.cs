@@ -37,6 +37,28 @@ namespace Ingrediscan
 			};
 			Application.Current.Resources.Add("headerLabelStyle", headerLabelStyle);
 
+			var aboutIntroLabelStyle = new Style(typeof(Label))
+			{
+				Setters = {
+					new Setter { Property = Label.FontFamilyProperty, Value = "sans-serif-light" },
+					new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("#095594") },
+					new Setter { Property = Label.VerticalTextAlignmentProperty, Value = TextAlignment.Center },
+					new Setter { Property = Label.XAlignProperty, Value = TextAlignment.Center }
+				}
+			};
+			Application.Current.Resources.Add("aboutIntroLabelStyle", aboutIntroLabelStyle);
+
+
+			var aboutBodyLabelStyle = new Style(typeof(Label))
+			{
+				Setters = {
+					new Setter { Property = Label.FontFamilyProperty, Value = "sans-serif-light" },
+					new Setter { Property = Label.VerticalTextAlignmentProperty, Value = TextAlignment.Center },
+					new Setter { Property = Label.XAlignProperty, Value = TextAlignment.Center },
+				}
+			};
+			Application.Current.Resources.Add("aboutBodyLabelStyle", aboutBodyLabelStyle);
+
 			var checkboxStyle = new Style(typeof(Button))
 			{
 				Setters = {
