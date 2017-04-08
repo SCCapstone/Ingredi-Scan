@@ -87,9 +87,9 @@ namespace Ingrediscan
 			request.RequestFormat = DataFormat.Json;
 
 			// Generate a response TODO Make async
-			//var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
+			var response = client.Execute<List<SpoonacularClasses.FindByIngredients>> (request).Data;
 
-			var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
+			// var response = await ExecuteAsync<List<SpoonacularClasses.FindByIngredients>> (request, client);
 
 			Console.WriteLine (client.BaseUrl.ToString () + client.BuildUri (request).ToString());
 

@@ -24,6 +24,7 @@ namespace Ingrediscan
 
 		public SearchPage ()
 		{
+			Globals.firebaseData.searchSettings.limitOfSearch = 10;
 			Picker history = new Picker {
 				Title = "History",
 				VerticalOptions = LayoutOptions.CenterAndExpand,

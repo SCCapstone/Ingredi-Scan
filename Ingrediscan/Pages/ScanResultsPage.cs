@@ -85,7 +85,7 @@ namespace Ingrediscan
             }
             else
             {
-                await Navigation.PopAsync();
+                Navigation.PopAsync();
                 Android.Widget.Toast.MakeText(Forms.Context, "An error occurred. It's possible the barcode is not a valid ingredient or not " +
                                         "currently in Spoonacular's database.", Android.Widget.ToastLength.Short).Show();
                 return null;
