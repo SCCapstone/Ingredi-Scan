@@ -1,4 +1,5 @@
 ﻿using Ingrediscan.Utilities;
+using PerpetualEngine.Storage;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
@@ -45,7 +46,13 @@ namespace Ingrediscan
 				TargetType = typeof (AboutPage)
 			});
 			// Not sure if we want this delegate here. Perhaps we should move this to the FirebaseInterface class.
-			Action logout = () => { Globals.auth0client.Logout(); FirebaseInterface.LoginAuth0(); };
+			Action logout = () => {
+				var storage = SimpleStorage.EditGroup("user_account");
+				storage.Delete("account");
+				Console.WriteLine("Logging out.");
+				Globals.auth0client.Logout();
+				FirebaseInterface.LoginAuth0();
+			};
 			masterPageItems.Add(new MasterPageItem
 			{
 				Title = "Logout",

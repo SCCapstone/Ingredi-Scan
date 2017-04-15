@@ -22,6 +22,7 @@ namespace Ingrediscan
 			var item = e.SelectedItem as MasterPageItem;
 			if (item != null && item.Action != null)
 			{
+				Console.WriteLine("Invoking action.");
 				item.Action.Invoke();
 			}
 			if (item != null && item.TargetType.FullName != prevPageStr) 
