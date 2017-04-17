@@ -32,7 +32,7 @@ namespace Ingrediscan
 			};
 			var template = new DataTemplate (typeof (CartPageCell));
 
-			var sortCartToolbarItem = new ToolbarItem("Sort Cart", "drawable/list.png", () =>
+            ToolbarItems.Add(new ToolbarItem("Sort Cart", "drawable/list.png", () =>
 			{
 				if(!sortByRecipe)
 				{
@@ -109,7 +109,7 @@ namespace Ingrediscan
 				{
 					sortByRecipe = true;
 				}
-			});
+			}));
 
 			//ToolbarItems.Add(sortCartToolbarItem);
 			/*
