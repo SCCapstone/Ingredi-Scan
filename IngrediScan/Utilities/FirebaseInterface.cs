@@ -17,7 +17,7 @@ namespace Ingrediscan.Utilities
 				Globals.Auth0URI,
 				Globals.FirebaseAPIKey);
 
-			Globals.user = await Globals.auth0client.LoginAsync (Forms.Context);
+			Globals.user = await Globals.auth0client.LoginAsync (Forms.Context, "google-oauth2");
 			Globals.userData = JsonConvert.DeserializeObject<Auth0Json> (Globals.user.Profile.ToString());
 
 			Globals.firebaseData = await SaveAndLoad.LoadFromFirebase ();

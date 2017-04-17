@@ -210,7 +210,7 @@ namespace Ingrediscan
 			ToolbarItems.Add (new ToolbarItem ("Delete From Cart", "drawable/delete.png", async () => {
                 //await DisplayAlert ("Delete Cart", "This feature has not been implemented yet.", "OK");
                 //Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
-                UpdateCheckBoxes();
+                //UpdateCheckBoxes();
                 var markedI = new List<string>();
                 bool result = await DisplayAlert("Delete From Cart", "Would you like to delete all of these items from your cart?", "Confirm", "Cancel");
 
@@ -220,8 +220,19 @@ namespace Ingrediscan
                     {
                         if (marked.Value == true)
                         {
-                            markedI.Add(marked.Key);
-                        }
+                            //markedI.Add(marked.Key);
+                            var recipeName = marked.Key.Split(' ')[0];
+                            var ingName = marked.Key.Split(' ')[1];
+
+                            foreach(var item in Globals.firebaseData.cart[recipeName].ingredients)
+                            {
+                                if (item.name.ToLower() == ingName.ToLower())
+                                {
+                                    item.deleted = true;
+                                    break;
+                                }
+                            }
+                       }
                     }
                     markedI.ForEach(x => markedItems.Remove(x));
                 }
@@ -244,8 +255,28 @@ namespace Ingrediscan
                         items.Add(group);
                     }
                     Title = "Shopping Cart";
-                    Content = new StackLayout
+
+                    popupLayout.Content = new StackLayout{
+                        Children = {
+
+                            searchBar,
+                            new Xamarin.Forms.ListView {
+                                IsGroupingEnabled = true,
+                                GroupDisplayBinding = new Binding ("Name"),
+                                GroupShortNameBinding = new Binding ("Name"),
+
+                                GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+                                SeparatorVisibility = SeparatorVisibility.None,
+
+                                ItemTemplate = template,
+                                ItemsSource = items
+                            }
+                        }
+                    };
+                    Content = popupLayout;
+                    /*Content = new StackLayout
                     {
+
                         Children = {
                             searchBar,
                             new Xamarin.Forms.ListView {
@@ -260,7 +291,7 @@ namespace Ingrediscan
                                 ItemsSource = items
                             }
                         }
-                    };
+                    };*/
                 }
                 else
                 {
@@ -388,26 +419,29 @@ namespace Ingrediscan
 
 				// Create sub items
 				List<CartPageItem.RecipeIngredients> subItems = new List<CartPageItem.RecipeIngredients> ();
-				foreach(var ss in recipe.Value.ingredients)
-				{
-                    CartPageItem.RecipeIngredients subItem = new CartPageItem.RecipeIngredients ();
-					//subItem.Name = ss.getName ();
-					subItem.Name = ss.formattedName;
-                    subItem.Image = ss.image;
-                    subItem.RecipeName = recipe.Value.name;
-					subItem.CheckBox = new Xamarin.Forms.Button();
-					subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ss.itemSwitch);
+                foreach (var ss in recipe.Value.ingredients)
+                {
+                    if (!ss.deleted)
+                    { 
+                        CartPageItem.RecipeIngredients subItem = new CartPageItem.RecipeIngredients();
+                        //subItem.Name = ss.getName ();
+                        subItem.Name = ss.formattedName;
+                        subItem.Image = ss.image;
+                        subItem.RecipeName = recipe.Value.name;
+                        subItem.CheckBox = new Xamarin.Forms.Button();
+                        subItem.CheckBox.SetValue(Xamarin.Forms.Button.IsEnabledProperty, ss.itemSwitch);
 
-                    if (ss.itemSwitch)
-                    {
-                        subItem.CheckBoxName = "drawable/selected.png";
-                    }
-                    else
-                    {
-                        subItem.CheckBoxName = null;
-                    }
+                        if (ss.itemSwitch)
+                        {
+                            subItem.CheckBoxName = "drawable/selected.png";
+                        }
+                        else
+                        {
+                            subItem.CheckBoxName = null;
+                        }
 
-                    subItems.Add (subItem);
+                        subItems.Add(subItem);
+                    }
                    
 				}
                 

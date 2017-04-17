@@ -11,6 +11,7 @@ namespace Ingrediscan
 		public string image { get; set; }
 		public string formattedName = "";
 		public bool itemSwitch { get; set; }
+        public bool deleted { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ingrediscan.Ingredient"/> class.
@@ -18,7 +19,7 @@ namespace Ingrediscan
 		/// <param name="aName">A name.</param>
 		/// <param name="anAmount">An amount.</param>
 		/// <param name="anUPC">An upc.</param>
-		public Ingredient (string aName, double anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage, bool aSwitch)
+		public Ingredient (string aName, double anAmount, /*int anUPC,*/ string aUnit, string anID, string anImage, bool aSwitch, bool isDeleted)
 		{
 			name = aName;
 			amount = anAmount;
@@ -27,6 +28,7 @@ namespace Ingrediscan
 			aUnit = anID;
 			image = anImage;
 			itemSwitch = aSwitch;
+            deleted = isDeleted;
 		}
 
 		/// <summary>

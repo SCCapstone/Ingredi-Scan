@@ -20,7 +20,7 @@ namespace Ingrediscan
 			List<Ingredient> ingredients = new List<Ingredient> ();
 			foreach(var item in instructions.extendedIngredients)
 			{
-				Ingredient ing = new Ingredient (item.name, item.amount, item.unit, item.id, item.image, false);
+				Ingredient ing = new Ingredient (item.name, item.amount, item.unit, item.id, item.image, false, false);
 				ing.setFormattedName ();
 				Console.WriteLine (ing.formattedName);
 				ingredients.Add (ing);

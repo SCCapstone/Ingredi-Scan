@@ -9,8 +9,9 @@ namespace Ingrediscan
 
 		public string user { get; set; }
 		public List<string> history { get; set; }
-		public Dictionary<string, Recipe> cart { get; set; }
-		public SearchSettings searchSettings { get; set; }
+        public Dictionary<string, Recipe> cart { get; set; }
+        //public Dictionary<string, > cart { get; set; }
+        public SearchSettings searchSettings { get; set; }
 		public List<Recipe> savedRecipes { get; set; }
 	}
 
