@@ -1,1 +1,3 @@
 # Ingredi-Scan
+
+IngrediScan is a powerful Android app that is designed to keep your cooking and shopping experience short and simple. To achieve this, IngrediScan integrates the scanning of barcodes to query Spoonacular's Database for recipes that contain that ingredient. The app also allows users to manually search by one or more ingredients, or even by recipe. Choose from a variety of settings, such as specifying diets and intolerances, which are used to limit your searches and to quickly help you find recipes that fit your needs. You can also choose to search for particular meal types, such as breakfast, lunch or dinner, among many other choices. 
