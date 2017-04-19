@@ -45,17 +45,17 @@ namespace Ingrediscan
                     //                                                      new CheckBoxConverter (), null));
 
             checkbox.Clicked += (sender, e) => {
-				if(checkbox.Image == null)
+				if(checkbox.Image == "drawable/unchecked.png")
 				{
 					//checkbox.Image = "selected.png"
 					checkbox.Image = "drawable/selected.png";
 					checkbox.BorderWidth = 0;
-					label.FontAttributes = FontAttributes.Italic;
+					label.FontAttributes = FontAttributes.None;
                     CartPage.markedItems[recipeLabel.Text + " " + label.Text] = true;
 				}
 				else
 				{
-					checkbox.Image = null;
+					checkbox.Image = "drawable/unchecked.png";
 					checkbox.BorderWidth = 0.5;
 					label.FontAttributes = FontAttributes.None;
                     CartPage.markedItems[recipeLabel.Text+ " " + label.Text] = false;

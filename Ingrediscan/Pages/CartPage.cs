@@ -49,20 +49,20 @@ namespace Ingrediscan
 						items.Add(group);
 					}
 					Title = "Shopping Cart";
-					Content = new StackLayout
-					{
-						Children = {
-							searchBar,
-							new Xamarin.Forms.ListView {
-								IsGroupingEnabled = true,
-								GroupDisplayBinding = new Binding ("Name"),
-								GroupShortNameBinding = new Binding ("Name"),
+                    Content = new StackLayout
+                    {
+                        Children = {
+                            searchBar,
+                            new Xamarin.Forms.ListView {
+                                IsGroupingEnabled = true,
+                                GroupDisplayBinding = new Binding ("Name"),
+                                GroupShortNameBinding = new Binding ("Name"),
 
 								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
 								SeparatorVisibility = SeparatorVisibility.None,
 
 								ItemTemplate = template,
-								ItemsSource = items
+								ItemsSource = items,
 							}
 						}
 					};
@@ -232,32 +232,29 @@ namespace Ingrediscan
                                     break;
                                 }
                             }
-                       }
-                    }
-                    markedI.ForEach(x => markedItems.Remove(x));
-                }
-                UpdateCheckBoxes();
-                saveCart();
-
-                //Used code from above to regenerate the List of Ingredients
-                if (!sortByRecipe)
-                {
-                    // Create our data from our load data
-                    var _list = CreateRecipeListViewFromList(Globals.firebaseData.cart);
-                    items = new List<GroupCart>();
-                    foreach (var rec in _list)
-                    {
-                        var group = new GroupCart(rec.Name);
-                        foreach (var ing in rec.Ingredients)
-                        {
-                            group.Add(ing);
+                            SaveAndLoad.SaveToFirebase(Globals.firebaseData);
                         }
-                        items.Add(group);
                     }
-                    Title = "Shopping Cart";
+                    //markedI.ForEach(x => markedItems.Remove(x));
+                    if (!sortByRecipe)
+                    {
+                        // Create our data from our load data
+                        var _list = CreateRecipeListViewFromList(Globals.firebaseData.cart);
+                        items = new List<GroupCart>();
+                        foreach (var rec in _list)
+                        {
+                            var group = new GroupCart(rec.Name);
+                            foreach (var ing in rec.Ingredients)
+                            {
+                                group.Add(ing);
+                            }
+                            items.Add(group);
+                        }
+                        Title = "Shopping Cart";
 
-                    popupLayout.Content = new StackLayout{
-                        Children = {
+                        popupLayout.Content = new StackLayout
+                        {
+                            Children = {
 
                             searchBar,
                             new Xamarin.Forms.ListView {
@@ -272,61 +269,65 @@ namespace Ingrediscan
                                 ItemsSource = items
                             }
                         }
-                    };
-                    Content = popupLayout;
-                    /*Content = new StackLayout
-                    {
-
-                        Children = {
-                            searchBar,
-                            new Xamarin.Forms.ListView {
-                                IsGroupingEnabled = true,
-                                GroupDisplayBinding = new Binding ("Name"),
-                                GroupShortNameBinding = new Binding ("Name"),
-
-								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
-								SeparatorVisibility = SeparatorVisibility.None,
-
-                                ItemTemplate = template,
-                                ItemsSource = items
-                            }
-                        }
-                    };*/
-                }
-                else
-                {
-                    // Create our data from our load data
-                    var _list = CreateIngredientListViewFromList(Globals.firebaseData.cart);
-                    items = new List<GroupCart>();
-                    var group = new GroupCart("Ingredients");
-                    foreach (var rec in _list)
-                    {
-                        foreach (var ing in rec.Ingredients)
+                        };
+                        Content = popupLayout;
+                        /*Content = new StackLayout
                         {
-                            group.Add(ing);
-                        }
+
+                            Children = {
+                                searchBar,
+                                new Xamarin.Forms.ListView {
+                                    IsGroupingEnabled = true,
+                                    GroupDisplayBinding = new Binding ("Name"),
+                                    GroupShortNameBinding = new Binding ("Name"),
+
+                                    GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+                                    SeparatorVisibility = SeparatorVisibility.None,
+
+                                    ItemTemplate = template,
+                                    ItemsSource = items
+                                }
+                            }
+                        };*/
                     }
-                    items.Add(group);
-                    Console.WriteLine("We are here2");
-                    Title = "Shopping Cart";
-                    Content = new StackLayout
+                    else
                     {
-                        Children = {
+                        // Create our data from our load data
+                        var _list = CreateIngredientListViewFromList(Globals.firebaseData.cart);
+                        items = new List<GroupCart>();
+                        var group = new GroupCart("Ingredients");
+                        foreach (var rec in _list)
+                        {
+                            foreach (var ing in rec.Ingredients)
+                            {
+                                group.Add(ing);
+                            }
+                        }
+                        items.Add(group);
+                        Console.WriteLine("We are here2");
+                        Title = "Shopping Cart";
+                        Content = new StackLayout
+                        {
+                            Children = {
                             searchBar,
                             new Xamarin.Forms.ListView {
                                 IsGroupingEnabled = true,
                                 GroupDisplayBinding = new Binding ("Name"),
                                 GroupShortNameBinding = new Binding ("Name"),
 
-								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
-								SeparatorVisibility = SeparatorVisibility.None,
+                                GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+                                SeparatorVisibility = SeparatorVisibility.None,
 
                                 ItemTemplate = template,
                                 ItemsSource = items
                             }
                         }
-                    };
+                        };
+                    }
                 }
+
+                //Used code from above to regenerate the List of Ingredients
+                
 
 
             }));
@@ -395,7 +396,7 @@ namespace Ingrediscan
 				}
 				else
 				{
-					subItem.CheckBoxName = null;
+					subItem.CheckBoxName = "drawable/unchecked.png";
 				}
 
 				subItems.Add(subItem);
@@ -437,7 +438,7 @@ namespace Ingrediscan
                         }
                         else
                         {
-                            subItem.CheckBoxName = null;
+                            subItem.CheckBoxName = "drawable/unchecked.png";
                         }
 
                         subItems.Add(subItem);
