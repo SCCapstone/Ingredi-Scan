@@ -4,6 +4,7 @@ using Android.OS;
 
 using Ingrediscan.Utilities;
 using PerpetualEngine.Storage;
+using Xamarin.Forms;
 
 namespace Ingrediscan
 {
@@ -28,6 +29,13 @@ namespace Ingrediscan
 		public override void OnRequestPermissionsResult (int requestCode, string [] permissions, Permission [] grantResults)
 		{
 			global::ZXing.Net.Mobile.Forms.Android.PermissionsHandler.OnRequestPermissionsResult (requestCode, permissions, grantResults);
+		}
+
+		public override void OnBackPressed()
+		{
+			// Disable the back button, since navigation to anywhere is only two
+			// taps away.
+			return;
 		}
 	}
 }
