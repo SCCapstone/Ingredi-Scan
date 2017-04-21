@@ -158,42 +158,105 @@ namespace Ingrediscan
 
 			Content = popupLayout;
 
-			ToolbarItems.Add (new ToolbarItem ("Add To Cart", "drawable/add.png", () => {
-				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
-				//Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
-				var label = new Label {
-					Text = "Add To Cart"
-				};
+			T// adding to cart
+			ToolbarItem addToCartButton = new ToolbarItem("Add to Cart", "drawable/add.png", () => { });
+			ToolbarItems.Add(addToCartButton);
 
-				SearchBar search = new SearchBar ();
-				search = new SearchBar {
-					Placeholder = "Item to add...",
-					SearchCommand = new Command (() => {
-						var groupItem = new GroupCart (search.Text);
-						var tempList = new List<GroupCart> ();
-						foreach (var l in listView.ItemsSource) {
-							tempList.Add ((GroupCart)l);
-						}
-						tempList.Add (groupItem);
-						listView.ItemsSource = tempList;
-						popupLayout.DismissPopup ();
-					})
-				};
+			addToCartButton.Clicked += async (sender, e) =>
+			{
+				var userInput = await InputBox(this.Navigation);
+				Console.WriteLine("USER INPUT: " + userInput);
+				textInput.Unfocus(); //puts keyboard away after submit
 
-				var frame = new Frame // define a Frame as PopUp and add the StackLayout as content
+				//default values for input without amount specified (without comma)
+				var itemName = userInput;
+				var itemAmount = "";
+				var itemAmountD = 1.0;
+
+				//checking for comma and breaking down name, amount accordingly
+				if (commaCheck)
 				{
-					Content = new StackLayout {
-						Children = {
-						label, search
-						}
-					},
-					HasShadow = true,
-					OutlineColor = Color.White,
-				};
+					Console.WriteLine("INPUT CHECK FOR COMMA TRUE");
+					string[] inputArray = userInput.Split(',');
+					itemName = inputArray[0];
+					itemAmount = inputArray[1];
+					itemAmountD = Convert.ToDouble(itemAmount);
+				}
 
-				popupLayout.ShowPopup (frame);
-				search.Focus ();
-			}));
+				Console.WriteLine("ITEM NAME: " + itemName + ", AMOUNT: " + itemAmount);
+
+				//new Ingredient from new item, adds new Ingredient to firebase cart
+				Ingredient newItem = new Ingredient(itemName, itemAmountD, "", "", "", false, false);
+				//			List<Ingredient> newItemList = new List<Ingredient>();
+				Globals.firebaseData.cart["My List"].ingredients.Add(newItem);
+
+				Console.WriteLine("INGREDIENTS IN MY LIST AFTER ADDING NEW INPUT: ");
+				foreach (var item in Globals.firebaseData.cart["My List"].ingredients)
+				{
+					Console.WriteLine("ITEM =" + item.name);
+				}
+
+				//			saveCart(); //fairly certain this is not necessary, leaving here in case
+				//			SaveAndLoad.SaveToFirebase(Globals.firebaseData); //?? does this automatically when adding to firebasedata ??
+
+				/*
+				Recipe userListHead = new Recipe(newItemList, "My List", "", "", 0, 0);
+				userListHead.addToCart();
+				Console.WriteLine("NEW RECIPE CREATED AND ADDED TO CART");
+
+				GroupCart userList = new GroupCart(userListHead.name);
+				items.Add(userList);
+				Console.WriteLine("NEW GROUP CART ADDED TO ITEMS");
+				*/
+
+				//?? After submit, load new cart page? better than loading new data??
+				// creates new cart page on top of other -- bad idea, leaving here in case
+				//bool newCartPg = await DisplayAlert("Add To Cart", "This item is added to your cart!", "OK", "Cancel");
+				//if (newCartPg == true)
+				//{
+				//					Console.WriteLine("WE ARE ABOUT TO PUSH NEW CART PAGE HERE");
+				//					await (this.Navigation).PushAsync(new CartPage());
+				//}
+
+
+				//loading data from saved after new Ingredient added to user input recipe/header
+				var list2 = this.CreateRecipeListViewFromList(Globals.firebaseData.cart);
+				var items2 = new List<GroupCart>();
+				foreach (var rec in list2)
+				{
+					var group = new GroupCart(rec.Name);
+					Console.WriteLine("NEW GROUP CART: " + group.Name);
+
+					foreach (var ing in rec.Ingredients)
+					{
+						group.Add(ing);
+						Console.WriteLine("GROUP " + group.Name + "ADDING INGREDIENT " + ing.Name);
+					}
+
+					items2.Add(group);
+				}
+
+
+				this.Title = "Shopping Cart";
+				popupLayout.Content = new StackLayout
+				{
+					Children = {
+							new Xamarin.Forms.ListView {
+								IsGroupingEnabled = true,
+								GroupDisplayBinding = new Binding ("Name"),
+								GroupShortNameBinding = new Binding ("Name"),
+
+								GroupHeaderTemplate = new DataTemplate(typeof(CartPageHeader)),
+								SeparatorVisibility = SeparatorVisibility.None,
+
+								ItemTemplate = template,
+								ItemsSource = items
+							}
+						}
+				};
+				Content = popupLayout;
+
+			};
 
 
 			ToolbarItems.Add (new ToolbarItem ("Delete From Cart", "drawable/delete.png", async () => {
@@ -318,6 +381,130 @@ namespace Ingrediscan
 
 
             }));
+		}
+
+		public static Task<string> InputBox(INavigation navigation)
+		{
+			Console.WriteLine("MADE IT TO USER INPUT PAGE ON ADD CART");
+			//instance of TaskCompletionSource to return result of user input
+			var tcs = new TaskCompletionSource<string>();
+
+			//title of popup input page
+			var labelTitle = new Label
+			{
+				Text = "Add To Cart",
+				HorizontalOptions = LayoutOptions.Center,
+				FontAttributes = FontAttributes.Bold,
+				Font = Font.SystemFontOfSize(NamedSize.Large),
+				TextColor = Color.FromHex("#095594")
+			};
+			//message within input page, prompt user to enter new item
+			var labelMessage = new Label { Text = "Please enter the item you would like to add to your cart, followed by a comma and the amount: " };
+			//initialize public variable textInput as Entry to get user input
+			textInput = new Entry { Text = "" };
+
+			//submit button creation
+			var submit = new Xamarin.Forms.Button
+			{
+				Text = "Submit",
+				WidthRequest = 100,
+				BackgroundColor = Color.FromHex("#095594"),
+				TextColor = Color.White
+
+			};
+
+			//submits user input as a new item, and passes to tcs for return at end of function
+			submit.Clicked += async (sender, e) =>
+			{
+				//get result
+				var newItem = "";
+				var result = textInput.Text;
+
+				/* doing this seems to throw unhandled NRE, seemingly an issue with PopModalAsync, 
+				possible solution is to check for these after receiving input within the addToCart.Clicked method  */
+				//check for null input, 'blank', or no item name input from user, if so close entry form
+				/*				if (result != null)
+								{
+									await navigation.PopModalAsync();
+								}
+								else if (result == " ")
+								{
+									await navigation.PopModalAsync();
+								}
+								else if (result == ",")
+								{
+									await navigation.PopModalAsync();
+								} 
+								else
+								{ }  */
+
+				//check that comma is present in input
+				var commaPresent = result.IndexOf(",");
+				if ((commaPresent >= 0))
+				{
+					Console.WriteLine("COMMA CHECK GOOD");
+					commaCheck = true;
+				}
+				newItem = result;
+				Toast.MakeText(Forms.Context, "Adding item to cart . . . ", ToastLength.Long).Show();
+				await navigation.PopModalAsync();
+
+				Console.WriteLine("SUBMIT CLICKED GOOD");
+				//pass result to tcs
+				tcs.SetResult(newItem);
+				textInput.Unfocus();
+			};
+
+			//cancel button description
+			var cancel = new Xamarin.Forms.Button
+			{
+				Text = "Cancel",
+				WidthRequest = 100,
+				BackgroundColor = Color.FromHex("#095594"),
+				TextColor = Color.White
+			};
+
+			//closes popup page if user input is canceled
+			cancel.Clicked += async (sender, e) =>
+			{
+				await navigation.PopModalAsync();
+			};
+
+			//sets horizontal layout for buttons
+			var buttonLayout = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				Children = {
+					submit,
+					cancel
+				}
+			};
+
+			//sets layout for title, message, text input and buttons
+			var layout = new StackLayout
+			{
+				Padding = new Thickness(20, 40, 20, 0),
+				VerticalOptions = LayoutOptions.StartAndExpand,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				Orientation = StackOrientation.Vertical,
+				//	Style = Application.Current.Resources["aboutBodyLabelStyle"] as Style,
+				Children = {
+					labelTitle,
+					labelMessage,
+					textInput,
+					buttonLayout
+				}
+			};
+
+			//create and show page when called
+			var page = new ContentPage();
+			page.Content = layout;
+			navigation.PushModalAsync(page);
+			//brings keyboard to screen
+			textInput.Focus();
+
+			return tcs.Task;
 		}
 
 
