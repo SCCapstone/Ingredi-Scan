@@ -18,6 +18,11 @@ namespace Ingrediscan
 		public bool sortByRecipe = true;
 		PopupLayout popupLayout = new PopupLayout ();
 
+		public static Entry textInput;
+		//public static GroupCart userList;
+		public static bool commaCheck = false;
+
+
         public CartPage ()
 		{
             UpdateCheckBoxes();
@@ -158,7 +163,7 @@ namespace Ingrediscan
 
 			Content = popupLayout;
 
-			T// adding to cart
+			// adding to cart
 			ToolbarItem addToCartButton = new ToolbarItem("Add to Cart", "drawable/add.png", () => { });
 			ToolbarItems.Add(addToCartButton);
 
