@@ -19,7 +19,8 @@ namespace Ingrediscan
 		PopupLayout popupLayout = new PopupLayout ();
 
 		public static Entry textInput;
-		//public static GroupCart userList;
+		public static List<Ingredient> newItemList = new List<Ingredient>();
+		public static Recipe userInputRec = new Recipe(newItemList, "My List", "", "", 0, 0);
 		public static bool commaCheck = false;
 
 
@@ -192,7 +193,6 @@ namespace Ingrediscan
 
 				//new Ingredient from new item, adds new Ingredient to firebase cart
 				Ingredient newItem = new Ingredient(itemName, itemAmountD, "", "", "", false, false);
-				//			List<Ingredient> newItemList = new List<Ingredient>();
 				Globals.firebaseData.cart["My List"].ingredients.Add(newItem);
 
 				Console.WriteLine("INGREDIENTS IN MY LIST AFTER ADDING NEW INPUT: ");
@@ -202,7 +202,7 @@ namespace Ingrediscan
 				}
 
 				//			saveCart(); //fairly certain this is not necessary, leaving here in case
-				//			SaveAndLoad.SaveToFirebase(Globals.firebaseData); //?? does this automatically when adding to firebasedata ??
+				SaveAndLoad.SaveToFirebase(Globals.firebaseData); //?? does this automatically when adding to firebasedata ??
 
 				/*
 				Recipe userListHead = new Recipe(newItemList, "My List", "", "", 0, 0);
@@ -214,35 +214,34 @@ namespace Ingrediscan
 				Console.WriteLine("NEW GROUP CART ADDED TO ITEMS");
 				*/
 
-				//?? After submit, load new cart page? better than loading new data??
-				// creates new cart page on top of other -- bad idea, leaving here in case
-				//bool newCartPg = await DisplayAlert("Add To Cart", "This item is added to your cart!", "OK", "Cancel");
-				//if (newCartPg == true)
-				//{
-				//					Console.WriteLine("WE ARE ABOUT TO PUSH NEW CART PAGE HERE");
-				//					await (this.Navigation).PushAsync(new CartPage());
-				//}
+				/* ?? After submit, load new cart page? better than loading new data??
+				/ creates new cart page on top of other -- bad idea, leaving here in case
+				bool newCartPg = await DisplayAlert("Add To Cart", "This item is added to your cart!", "OK", "Cancel");
+				if (newCartPg == true)
+				{
+					Console.WriteLine("WE ARE ABOUT TO PUSH NEW CART PAGE HERE");
+					await (this.Navigation).PushAsync(new CartPage());
+				} */
 
 
 				//loading data from saved after new Ingredient added to user input recipe/header
-				var list2 = this.CreateRecipeListViewFromList(Globals.firebaseData.cart);
-				var items2 = new List<GroupCart>();
+				var list2 = CreateRecipeListViewFromList(Globals.firebaseData.cart);
+				var items = new List<GroupCart>();
 				foreach (var rec in list2)
 				{
 					var group = new GroupCart(rec.Name);
-					Console.WriteLine("NEW GROUP CART: " + group.Name);
 
 					foreach (var ing in rec.Ingredients)
 					{
 						group.Add(ing);
-						Console.WriteLine("GROUP " + group.Name + "ADDING INGREDIENT " + ing.Name);
+					//	Console.WriteLine("GROUP " + group.Name + ", ADDING INGREDIENT " + ing.Name);
 					}
 
-					items2.Add(group);
+					items.Add(group);
 				}
 
 
-				this.Title = "Shopping Cart";
+				Title = "Shopping Cart";
 				popupLayout.Content = new StackLayout
 				{
 					Children = {
@@ -421,6 +420,8 @@ namespace Ingrediscan
 			//submits user input as a new item, and passes to tcs for return at end of function
 			submit.Clicked += async (sender, e) =>
 			{
+				//close keyboard
+				textInput.Unfocus();
 				//get result
 				var newItem = "";
 				var result = textInput.Text;
@@ -457,7 +458,6 @@ namespace Ingrediscan
 				Console.WriteLine("SUBMIT CLICKED GOOD");
 				//pass result to tcs
 				tcs.SetResult(newItem);
-				textInput.Unfocus();
 			};
 
 			//cancel button description
