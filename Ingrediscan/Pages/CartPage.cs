@@ -22,15 +22,7 @@ namespace Ingrediscan
 		{
             UpdateCheckBoxes();
 
-
-			SearchBar searchBar = new SearchBar {
-				Placeholder = "Enter search term",
-				SearchCommand = new Command (() => {
-					//DisplayAlert ("Search Cart", "This feature has not been implemented yet.", "OK");
-					Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
-				})
-			};
-			var template = new DataTemplate (typeof (CartPageCell));
+            var template = new DataTemplate(typeof(CartPageCell));
 
             ToolbarItems.Add(new ToolbarItem("Sort Cart", "drawable/list.png", () =>
 			{
@@ -52,7 +44,6 @@ namespace Ingrediscan
                     Content = new StackLayout
                     {
                         Children = {
-                            searchBar,
                             new Xamarin.Forms.ListView {
                                 IsGroupingEnabled = true,
                                 GroupDisplayBinding = new Binding ("Name"),
@@ -86,7 +77,6 @@ namespace Ingrediscan
 					Content = new StackLayout
 					{
 						Children = {
-							searchBar,
 							new Xamarin.Forms.ListView {
 								IsGroupingEnabled = true,
 								GroupDisplayBinding = new Binding ("Name"),
@@ -111,8 +101,8 @@ namespace Ingrediscan
 				}
 			}));
 
-			//ToolbarItems.Add(sortCartToolbarItem);
-			/*
+            //ToolbarItems.Add(sortCartToolbarItem);
+            /*
 			ToolbarItems.Add (new ToolbarItem ("Edit Cart", "drawable/edit.png", () => {
 				//await DisplayAlert ("Edit Cart", "This feature has not been implemented yet.", "OK");
 				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
@@ -123,8 +113,9 @@ namespace Ingrediscan
 				Toast.MakeText (Forms.Context, "This feature has not been implemented yet.", ToastLength.Short).Show ();
 			}));*/
 
-			// Create our data from our load data
-			var list = this.CreateRecipeListViewFromList (Globals.firebaseData.cart);
+            // Create our data from our load data
+
+            var list = this.CreateRecipeListViewFromList (Globals.firebaseData.cart);
 
 			items = new List<GroupCart> ();
 
@@ -153,16 +144,14 @@ namespace Ingrediscan
 				ItemsSource = items
 			};
 
-			/*Content = new StackLayout {
+			Content = new StackLayout {
 				Children = {
-					searchBar,
 					listView
 				}
-			};*/
+			};
 
 			popupLayout.Content = new StackLayout {
 				Children = {
-					searchBar,
 					listView
 				}
 			};
@@ -256,7 +245,6 @@ namespace Ingrediscan
                         {
                             Children = {
 
-                            searchBar,
                             new Xamarin.Forms.ListView {
                                 IsGroupingEnabled = true,
                                 GroupDisplayBinding = new Binding ("Name"),
@@ -309,7 +297,6 @@ namespace Ingrediscan
                         Content = new StackLayout
                         {
                             Children = {
-                            searchBar,
                             new Xamarin.Forms.ListView {
                                 IsGroupingEnabled = true,
                                 GroupDisplayBinding = new Binding ("Name"),
@@ -333,14 +320,6 @@ namespace Ingrediscan
             }));
 		}
 
-		// TODO Not yet implemented
-		public List<string> searchCart(string query)
-		{
-			List<string> items = new List<string> ();
-
-
-			return items;
-		}
 
 		public List<CartPageItem.Recipes> CreateIngredientListViewFromList(Dictionary<string, Recipe> recipes)
 		{
