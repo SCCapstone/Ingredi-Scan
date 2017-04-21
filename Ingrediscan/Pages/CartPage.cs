@@ -193,6 +193,11 @@ namespace Ingrediscan
 
 				//new Ingredient from new item, adds new Ingredient to firebase cart
 				Ingredient newItem = new Ingredient(itemName, itemAmountD, "", "", "", false, false);
+
+                if(!Globals.firebaseData.cart.ContainsKey("My List"))
+                {
+                    Globals.firebaseData.cart.Add("My List", userInputRec);
+                }
 				Globals.firebaseData.cart["My List"].ingredients.Add(newItem);
 
 				Console.WriteLine("INGREDIENTS IN MY LIST AFTER ADDING NEW INPUT: ");
@@ -204,7 +209,7 @@ namespace Ingrediscan
 				//			saveCart(); //fairly certain this is not necessary, leaving here in case
 				SaveAndLoad.SaveToFirebase(Globals.firebaseData); //?? does this automatically when adding to firebasedata ??
 
-				/*
+                /*
 				Recipe userListHead = new Recipe(newItemList, "My List", "", "", 0, 0);
 				userListHead.addToCart();
 				Console.WriteLine("NEW RECIPE CREATED AND ADDED TO CART");
@@ -214,7 +219,7 @@ namespace Ingrediscan
 				Console.WriteLine("NEW GROUP CART ADDED TO ITEMS");
 				*/
 
-				/* ?? After submit, load new cart page? better than loading new data??
+                /* ?? After submit, load new cart page? better than loading new data??
 				/ creates new cart page on top of other -- bad idea, leaving here in case
 				bool newCartPg = await DisplayAlert("Add To Cart", "This item is added to your cart!", "OK", "Cancel");
 				if (newCartPg == true)
@@ -224,7 +229,7 @@ namespace Ingrediscan
 				} */
 
 
-				//loading data from saved after new Ingredient added to user input recipe/header
+                //loading data from saved after new Ingredient added to user input recipe/header
 				var list2 = CreateRecipeListViewFromList(Globals.firebaseData.cart);
 				var items = new List<GroupCart>();
 				foreach (var rec in list2)
