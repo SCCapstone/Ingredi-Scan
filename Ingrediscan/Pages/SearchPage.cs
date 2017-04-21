@@ -256,6 +256,7 @@ namespace Ingrediscan
 		{
 			var tableView = new TableView ();
 			tableView.Intent = TableIntent.Settings;
+			tableView.HasUnevenRows = true;
 
 			var tableRoot = new TableRoot ();
 
@@ -308,8 +309,7 @@ namespace Ingrediscan
 
 			// Do Not include this kind of item(s)
 			var notIncludedItem = new EntryCell {
-				Label = "Search Without Ingredient(s)",
-				Placeholder = "ingredient1,ingredient2,..",
+				Placeholder = "ingredient1, ingredient2, ...",
 			};
 
 			notIncludedItem.Completed += (sender, e) => {
@@ -355,7 +355,7 @@ namespace Ingrediscan
 				View = layout
 			};
 
-			var searchSection = new TableSection ("Search By Ingredient(s) Or Recipe Name") {
+			var searchSection = new TableSection ("Search By Ingredient(s) Or Recipe") {
 				new ViewCell {View = searchPref}
 			};
 
