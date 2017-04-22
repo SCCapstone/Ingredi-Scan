@@ -22,10 +22,17 @@ namespace Ingrediscan
 			var id_token = RetrieveToken ();
 			var _client = new FirebaseClient (Globals.FirebaseAppURL);
 
-			await _client
-				.Child (Globals.userData.name)
-				.WithAuth (id_token)
-				.PutAsync (fbData);
+            try
+            {
+                await _client
+                    .Child(Globals.userData.name)
+                    .WithAuth(id_token)
+                    .PutAsync(fbData);
+            }
+            catch(Exception e)
+            {
+                
+            }
 		}
 
 		public static async Task<FirebaseSaveFormat> LoadFromFirebase ()

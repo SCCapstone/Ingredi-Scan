@@ -51,14 +51,14 @@ namespace Ingrediscan
 					checkbox.Image = "drawable/selected.png";
 					checkbox.BorderWidth = 0;
 					label.FontAttributes = FontAttributes.None;
-                    CartPage.markedItems[recipeLabel.Text + " " + label.Text] = true;
+                    CartPage.markedItems[recipeLabel.Text + "!" + label.Text] = true;
 				}
 				else
 				{
 					checkbox.Image = "drawable/unchecked.png";
 					checkbox.BorderWidth = 0.5;
 					label.FontAttributes = FontAttributes.None;
-                    CartPage.markedItems[recipeLabel.Text+ " " + label.Text] = false;
+                    CartPage.markedItems[recipeLabel.Text+ "!" + label.Text] = false;
                 }
                 CartPage.saveCart();
                 //Console.WriteLine(recipeLabel.Text   + " " + label.Text);

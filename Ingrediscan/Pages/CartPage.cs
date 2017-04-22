@@ -163,6 +163,7 @@ namespace Ingrediscan
 			};
 
 			Content = popupLayout;
+            sortByRecipe = false;
 
 			// adding to cart
 			ToolbarItem addToCartButton = new ToolbarItem("Add to Cart", "drawable/add.png", () => { });
@@ -231,7 +232,7 @@ namespace Ingrediscan
 
                 //loading data from saved after new Ingredient added to user input recipe/header
 				var list2 = CreateRecipeListViewFromList(Globals.firebaseData.cart);
-				var items = new List<GroupCart>();
+				var items2 = new List<GroupCart>();
 				foreach (var rec in list2)
 				{
 					var group = new GroupCart(rec.Name);
@@ -242,7 +243,7 @@ namespace Ingrediscan
 					//	Console.WriteLine("GROUP " + group.Name + ", ADDING INGREDIENT " + ing.Name);
 					}
 
-					items.Add(group);
+					items2.Add(group);
 				}
 
 
@@ -259,7 +260,7 @@ namespace Ingrediscan
 								SeparatorVisibility = SeparatorVisibility.None,
 
 								ItemTemplate = template,
-								ItemsSource = items
+								ItemsSource = items2
 							}
 						}
 				};
@@ -282,21 +283,37 @@ namespace Ingrediscan
                         if (marked.Value == true)
                         {
                             //markedI.Add(marked.Key);
-                            var recipeName = marked.Key.Split(' ')[0];
-                            var ingName = marked.Key.Split(' ')[1];
+                            var recipeName = marked.Key.Split('!')[0];
+                            var ingName = marked.Key.Split('!')[1];
+                            Console.WriteLine("DELETING " + marked.Key);
 
-                            foreach(var item in Globals.firebaseData.cart[recipeName].ingredients)
+                            // Globals.firebaseData.cart.Remove(marked.Key);
+
+                            var itemTemp = new Ingredient("",0.0,"","","",false,false);
+                            Console.WriteLine("Recipe name " + ingName);
+                            Console.WriteLine("marked.Key " + marked.Key);
+                            var ings = Globals.firebaseData.cart[recipeName].ingredients;
+                            for (int i = 0; i < ings.Count; ++i)
                             {
-                                if (item.name.ToLower() == ingName.ToLower())
+                                if (ings[i].formattedName.ToLower() == ingName.ToLower())
                                 {
-                                    item.deleted = true;
+                                    Console.WriteLine("REMOVED");
+                                    Globals.firebaseData.cart[recipeName].ingredients.RemoveAt(i);
                                     break;
                                 }
                             }
+                            if(Globals.firebaseData.cart[recipeName].ingredients.Count == 0)
+                            {
+                                Globals.firebaseData.cart.Remove(recipeName);
+                            }
+                            //Globals.firebaseData.cart[recipeName].ingredients.Remove(itemTemp);
                             SaveAndLoad.SaveToFirebase(Globals.firebaseData);
+
                         }
                     }
-                    //markedI.ForEach(x => markedItems.Remove(x));
+                    markedI.ForEach(x => markedItems.Remove(x));
+                    SaveAndLoad.SaveToFirebase(Globals.firebaseData);
+                    //await SaveAndLoad.LoadFromFirebase();
                     if (!sortByRecipe)
                     {
                         // Create our data from our load data
@@ -601,7 +618,7 @@ namespace Ingrediscan
                     if (!ss.deleted)
                     { 
                         CartPageItem.RecipeIngredients subItem = new CartPageItem.RecipeIngredients();
-                        //subItem.Name = ss.getName ();
+                        ss.setFormattedName();
                         subItem.Name = ss.formattedName;
                         subItem.Image = ss.image;
                         subItem.RecipeName = recipe.Value.name;
@@ -641,13 +658,13 @@ namespace Ingrediscan
                 foreach (var ing in rec.Value.ingredients)
                 {
                     Console.WriteLine(recipeName + " " + ing.formattedName);
-                    if (!markedItems.ContainsKey(recipeName + " " + ing.formattedName))
+                    if (!markedItems.ContainsKey(recipeName + "!" + ing.formattedName))
                     {
-                        markedItems.Add(recipeName + " " + ing.formattedName, ing.itemSwitch);
+                        markedItems.Add(recipeName + "!" + ing.formattedName, ing.itemSwitch);
                     }
                     else
                     {
-                        markedItems[recipeName + " " + ing.formattedName] = ing.itemSwitch;
+                        markedItems[recipeName + "!" + ing.formattedName] = ing.itemSwitch;
                     }
                 }
             }
@@ -661,7 +678,7 @@ namespace Ingrediscan
                 var recipeName = rec.Value.name;
                 foreach(var ing in rec.Value.ingredients)
                 {
-                    ing.itemSwitch = markedItems[recipeName + " " + ing.formattedName];
+                    ing.itemSwitch = markedItems[recipeName + "!" + ing.formattedName];
                     //Console.WriteLine(recipeName + " " + ing.formattedName + ":" + markedItems[recipeName + " " + ing.formattedName]);
                 }
             }
