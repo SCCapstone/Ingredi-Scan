@@ -160,5 +160,13 @@ namespace Ingrediscan
 			public string originalString { get; set; }
 			public List<string> metaInformation { get; set; }
 		}
+        public class RandomJoke
+        {
+            public string text { get; set; }
+        }
+        public class RandomTrivia
+        {
+            public string text { get; set;  }
+        }
 	}
 }

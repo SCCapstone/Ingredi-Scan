@@ -361,7 +361,65 @@ namespace Ingrediscan
 			return response;
 		}
 
-		public static Task<T> ExecuteAsync<T> (RestRequest request, RestClient client) where T : new()
+        public static async Task<SpoonacularClasses.RandomJoke> GET_RandomJoke()
+        {
+            Console.WriteLine("Enter GET - RANDOM JOKE");
+
+            string action = "/food/jokes/random";
+
+            // Client creation
+            var client = new RestClient();
+            client.BaseUrl = new Uri(SpoonacularURL);
+            client.AddHandler("application/json", new RestSharp.Deserializers.JsonDeserializer());
+
+            // Request creation
+            var request = new RestRequest(action);
+            request.AddHeader("X-Mashape-Key", SpoonacularKey);
+            request.AddHeader("Accept", "application/json");
+            //request.AddUrlSegment("text", text.ToString());
+            request.RequestFormat = DataFormat.Json;
+
+            // Generate a response TODO Make async
+            //var response = client.Execute<SpoonacularClasses.RandomJoke> (request).Data;
+
+            var response = await ExecuteAsync<SpoonacularClasses.RandomJoke>(request, client);
+
+            Console.WriteLine("RESPONSE: " + response.text);
+
+            Console.WriteLine("Exit GET - RANDOM JOKE");
+            return response;
+        }
+
+        public static async Task<SpoonacularClasses.RandomTrivia> GET_RandomTrivia()
+        {
+            Console.WriteLine("Enter GET - RANDOM TRIVIA");
+
+            string action = "/food/trivia/random";
+
+            // Client creation
+            var client = new RestClient();
+            client.BaseUrl = new Uri(SpoonacularURL);
+            client.AddHandler("application/json", new RestSharp.Deserializers.JsonDeserializer());
+
+            // Request creation
+            var request = new RestRequest(action);
+            request.AddHeader("X-Mashape-Key", SpoonacularKey);
+            request.AddHeader("Accept", "application/json");
+            //request.AddUrlSegment("text", text.ToString());
+            request.RequestFormat = DataFormat.Json;
+
+            // Generate a response TODO Make async
+            //var response = client.Execute<SpoonacularClasses.RandomTrivia> (request).Data;
+
+            var response = await ExecuteAsync<SpoonacularClasses.RandomTrivia>(request, client);
+
+            Console.WriteLine("RESPONSE: " + response.text);
+
+            Console.WriteLine("Exit GET - RANDOM TRIVIA");
+            return response;
+        }
+
+        public static Task<T> ExecuteAsync<T> (RestRequest request, RestClient client) where T : new()
 		{
 			var taskCompletionSource = new TaskCompletionSource<T> ();
 			client.ExecuteAsync<T> (request, (response) => taskCompletionSource.SetResult (response.Data));
