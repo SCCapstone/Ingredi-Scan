@@ -28,6 +28,14 @@ namespace Ingrediscan
 		{
             UpdateCheckBoxes();
 
+            try
+            {
+                SaveAndLoad.LoadToIngrediscan(Globals.firebaseData);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("LOAD TO INGREDISCAN!!");
+            }
             var template = new DataTemplate(typeof(CartPageCell));
 
             ToolbarItems.Add(new ToolbarItem("Sort Cart", "drawable/list.png", () =>
@@ -278,42 +286,48 @@ namespace Ingrediscan
 
                 if (result)
                 {
-                    foreach (KeyValuePair<string, bool> marked in markedItems)
+                    try
                     {
-                        if (marked.Value == true)
+                        foreach (KeyValuePair<string, bool> marked in markedItems)
                         {
-                            //markedI.Add(marked.Key);
-                            var recipeName = marked.Key.Split('!')[0];
-                            var ingName = marked.Key.Split('!')[1];
-                            Console.WriteLine("DELETING " + marked.Key);
-
-                            // Globals.firebaseData.cart.Remove(marked.Key);
-
-                            var itemTemp = new Ingredient("",0.0,"","","",false,false);
-                            Console.WriteLine("Recipe name " + ingName);
-                            Console.WriteLine("marked.Key " + marked.Key);
-                            var ings = Globals.firebaseData.cart[recipeName].ingredients;
-                            for (int i = 0; i < ings.Count; ++i)
+                            if (marked.Value == true)
                             {
-                                if (ings[i].formattedName.ToLower() == ingName.ToLower())
+                                //markedI.Add(marked.Key);
+                                var recipeName = marked.Key.Split('!')[0];
+                                var ingName = marked.Key.Split('!')[1];
+                                Console.WriteLine("DELETING " + marked.Key);
+
+                                // Globals.firebaseData.cart.Remove(marked.Key);
+
+                                var itemTemp = new Ingredient("", 0.0, "", "", "", false, false);
+                                Console.WriteLine("Recipe name " + ingName);
+                                Console.WriteLine("marked.Key " + marked.Key);
+                                var ings = Globals.firebaseData.cart[recipeName].ingredients;
+                                for (int i = 0; i < ings.Count; ++i)
                                 {
-                                    Console.WriteLine("REMOVED");
-                                    Globals.firebaseData.cart[recipeName].ingredients.RemoveAt(i);
-                                    break;
+                                    if (ings[i].formattedName.ToLower() == ingName.ToLower())
+                                    {
+                                        Console.WriteLine("REMOVED");
+                                        Globals.firebaseData.cart[recipeName].ingredients.RemoveAt(i);
+                                        break;
+                                    }
                                 }
-                            }
-                            if(Globals.firebaseData.cart[recipeName].ingredients.Count == 0)
-                            {
-                                Globals.firebaseData.cart.Remove(recipeName);
-                            }
-                            //Globals.firebaseData.cart[recipeName].ingredients.Remove(itemTemp);
-                            SaveAndLoad.SaveToFirebase(Globals.firebaseData);
+                                if (Globals.firebaseData.cart[recipeName].ingredients.Count == 0)
+                                {
+                                    Globals.firebaseData.cart.Remove(recipeName);
+                                }
+                                //Globals.firebaseData.cart[recipeName].ingredients.Remove(itemTemp);
+                                //SaveAndLoad.SaveToFirebase(Globals.firebaseData);
 
+                            }
                         }
+                        markedI.ForEach(x => markedItems.Remove(x));
+                        //SaveAndLoad.SaveToFirebase(Globals.firebaseData);
                     }
-                    markedI.ForEach(x => markedItems.Remove(x));
-                    SaveAndLoad.SaveToFirebase(Globals.firebaseData);
-                    //await SaveAndLoad.LoadFromFirebase();
+                    catch(Exception e)
+                    {
+                        Console.WriteLine("IT TRIED TO CRASH BUT I SAY NAY!");
+                    }
                     if (!sortByRecipe)
                     {
                         // Create our data from our load data
@@ -401,7 +415,7 @@ namespace Ingrediscan
                         };
                     }
                 }
-
+                SaveAndLoad.SaveToFirebase(Globals.firebaseData);
                 //Used code from above to regenerate the List of Ingredients
                 
 
