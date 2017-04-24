@@ -22,6 +22,7 @@ namespace Ingrediscan
 			var id_token = RetrieveToken ();
 			var _client = new FirebaseClient (Globals.FirebaseAppURL);
 
+
             try
             {
                 await _client
@@ -31,7 +32,7 @@ namespace Ingrediscan
             }
             catch(Exception e)
             {
-                
+                Console.WriteLine("SAVE ERROR THROWN!!");
             }
 		}
 
